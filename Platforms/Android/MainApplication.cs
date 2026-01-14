@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace ReCoPa_MAUI;
+namespace ReCoPa;
 
 [Application]
 public class MainApplication : MauiApplication

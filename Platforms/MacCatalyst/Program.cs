@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace ReCoPa_MAUI;
+namespace ReCoPa;
 
 public class Program
 {

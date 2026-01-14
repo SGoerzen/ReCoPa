@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace ReCoPa_MAUI;
+namespace ReCoPa;
 
 [Register("AppDelegate")]
 public class AppDelegate : MauiUIApplicationDelegate

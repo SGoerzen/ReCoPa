@@ -1,4 +1,4 @@
-﻿namespace ReCoPa_MAUI;
+﻿namespace ReCoPa;
 
 public partial class AppShell : Shell
 {

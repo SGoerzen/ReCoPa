@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace ReCoPa_MAUI;
+namespace ReCoPa;
 
 public static class MauiProgram
 {

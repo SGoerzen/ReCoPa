@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCoPa MAUI", "ReCoPa MAUI.csproj", "{E9817656-23DB-4592-BFF0-9CEC6AA6D96F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCoPa", "ReCoPa.csproj", "{E9817656-23DB-4592-BFF0-9CEC6AA6D96F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

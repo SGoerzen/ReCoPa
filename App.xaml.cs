@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace ReCoPa_MAUI;
+namespace ReCoPa;
 
 public partial class App : Application
 {

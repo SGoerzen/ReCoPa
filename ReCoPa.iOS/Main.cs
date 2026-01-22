@@ -1,9 +1,8 @@
-﻿using ObjCRuntime;
 using UIKit;
 
-namespace ReCoPa;
+namespace AvaloniaApplication1.iOS;
 
-public class Program
+public class Application
 {
     // This is the main entry point of the application.
     static void Main(string[] args)

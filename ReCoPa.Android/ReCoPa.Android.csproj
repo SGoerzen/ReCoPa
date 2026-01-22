@@ -4,12 +4,12 @@
         <TargetFramework>net9.0-android</TargetFramework>
         <SupportedOSPlatformVersion>21</SupportedOSPlatformVersion>
         <Nullable>enable</Nullable>
-        <ApplicationId>com.CompanyName.AvaloniaApplication1</ApplicationId>
+        <ApplicationId>com.CompanyName.ReCoPa</ApplicationId>
         <ApplicationVersion>1</ApplicationVersion>
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
         <AndroidPackageFormat>apk</AndroidPackageFormat>
         <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
-        <RootNamespace>AvaloniaApplication1.Android</RootNamespace>
+        <RootNamespace>ReCoPa.Android</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

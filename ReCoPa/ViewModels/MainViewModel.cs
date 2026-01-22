@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace AvaloniaApplication1.ViewModels;
+namespace ReCoPa.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {

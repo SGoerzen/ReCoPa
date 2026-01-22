@@ -4,7 +4,7 @@
         <TargetFramework>net9.0-ios</TargetFramework>
         <SupportedOSPlatformVersion>13.0</SupportedOSPlatformVersion>
         <Nullable>enable</Nullable>
-        <RootNamespace>AvaloniaApplication1.iOS</RootNamespace>
+        <RootNamespace>ReCoPa.iOS</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

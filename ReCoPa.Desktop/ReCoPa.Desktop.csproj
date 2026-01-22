@@ -5,7 +5,7 @@
         See https://docs.avaloniaui.net/docs/guides/platforms/platform-specific-code/dotnet for more details.-->
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <RootNamespace>AvaloniaApplication1.Desktop</RootNamespace>
+        <RootNamespace>ReCoPa.Desktop</RootNamespace>
     </PropertyGroup>
 
     <PropertyGroup>

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Browser;
-using AvaloniaApplication1;
+using ReCoPa;
 
 internal sealed partial class Program
 {

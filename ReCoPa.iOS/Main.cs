@@ -1,6 +1,6 @@
 using UIKit;
 
-namespace AvaloniaApplication1.iOS;
+namespace ReCoPa.iOS;
 
 public class Application
 {

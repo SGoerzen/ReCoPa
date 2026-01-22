@@ -4,7 +4,7 @@
         <OutputType>Exe</OutputType>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Nullable>enable</Nullable>
-        <RootNamespace>AvaloniaApplication1.Browser</RootNamespace>
+        <RootNamespace>ReCoPa.Browser</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

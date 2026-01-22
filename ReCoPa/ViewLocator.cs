@@ -2,9 +2,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using AvaloniaApplication1.ViewModels;
+using ReCoPa.ViewModels;
 
-namespace AvaloniaApplication1;
+namespace ReCoPa;
 
 /// <summary>
 /// Given a view model, returns the corresponding view if possible.

@@ -3,7 +3,7 @@ using Android.Content.PM;
 using Avalonia;
 using Avalonia.Android;
 
-namespace AvaloniaApplication1.Android;
+namespace ReCoPa.Android;
 
 [Activity(
     Label = "ReCoPa.Android",

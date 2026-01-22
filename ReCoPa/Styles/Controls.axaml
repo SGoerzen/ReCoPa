@@ -1,0 +1,157 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ========================================================= -->
+    <!-- WINDOW                                                    -->
+    <!-- ========================================================= -->
+
+    <Style Selector="Window">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBackground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+    </Style>
+
+    <!-- ========================================================= -->
+    <!-- TEXTBLOCK / LABELS                                        -->
+    <!-- ========================================================= -->
+
+    <Style Selector="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <Style Selector="TextBlock.secondary">
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+    </Style>
+
+    <Style Selector="TextBlock.title">
+        <Setter Property="FontSize" Value="22"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+    <!-- ========================================================= -->
+    <!-- BUTTONS                                                   -->
+    <!-- ========================================================= -->
+
+    <!-- Default button -->
+    <Style Selector="Button">
+        <Setter Property="Background" Value="{DynamicResource AppPrimaryColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextOnPrimary}"/>
+        <Setter Property="Padding" Value="12,6"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style Selector="Button:pointerover">
+        <Setter Property="Background" Value="{DynamicResource AppPrimaryColorHover}"/>
+    </Style>
+
+    <Style Selector="Button:pressed">
+        <Setter Property="Background" Value="{DynamicResource AppPrimaryColorPressed}"/>
+    </Style>
+
+    <Style Selector="Button:disabled">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBorder}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextDisabled}"/>
+    </Style>
+
+    <!-- Secondary button -->
+    <Style Selector="Button.secondary">
+        <Setter Property="Background" Value="{DynamicResource SurfaceElevated}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorderStrong}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
+    <Style Selector="Button.secondary:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SurfaceHover}"/>
+    </Style>
+
+    <!-- Danger button -->
+    <Style Selector="Button.danger">
+        <Setter Property="Background" Value="{DynamicResource AppDangerColor}"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+
+    <!-- ========================================================= -->
+    <!-- TEXTBOX                                                   -->
+    <!-- ========================================================= -->
+
+    <Style Selector="TextBox">
+        <Setter Property="Background" Value="{DynamicResource SurfaceCard}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="8,5"/>
+    </Style>
+
+    <Style Selector="TextBox:focus">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppPrimaryColor}"/>
+    </Style>
+
+    <!-- ========================================================= -->
+    <!-- CHECKBOX                                                  -->
+    <!-- ========================================================= -->
+
+    <Style Selector="CheckBox">
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+    </Style>
+
+    <!-- ========================================================= -->
+    <!-- SCROLLVIEWER                                              -->
+    <!-- ========================================================= -->
+
+    <Style Selector="ScrollViewer">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBackground}"/>
+    </Style>
+
+    <!-- ========================================================= -->
+    <!-- DATAGRID                                                  -->
+    <!-- ========================================================= -->
+
+    <Style Selector="DataGrid">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBackground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="RowHeight" Value="36"/>
+        <Setter Property="HeadersVisibility" Value="Column"/>
+        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+    </Style>
+
+    <Style Selector="DataGridColumnHeader">
+        <Setter Property="Background" Value="{DynamicResource SurfaceElevated}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Padding" Value="10,6"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorder}"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+    </Style>
+
+    <Style Selector="DataGridRow">
+        <Setter Property="Background" Value="{DynamicResource SurfaceBackground}"/>
+    </Style>
+
+    <Style Selector="DataGridRow:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SurfaceHover}"/>
+    </Style>
+
+    <Style Selector="DataGridRow:selected">
+        <Setter Property="Background" Value="{DynamicResource SurfaceSelected}"/>
+    </Style>
+
+    <Style Selector="DataGridCell">
+        <Setter Property="Padding" Value="10,4"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <!-- ========================================================= -->
+    <!-- BORDER / CARD                                             -->
+    <!-- ========================================================= -->
+
+    <Style Selector="Border.card">
+        <Setter Property="Background" Value="{DynamicResource SurfaceCard}"/>
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+</Styles>

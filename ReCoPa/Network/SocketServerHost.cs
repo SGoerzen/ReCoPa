@@ -65,16 +65,31 @@ namespace ReCoPa.Network
             if (IsRunning) return Task.CompletedTask;
 
             Port = port;
-            ip ??= IPAddress.Any;
+            ip ??= IPAddress.Loopback; // 🔥 empfehlenswert statt Any (weniger Konflikte)
 
-            _listener = new TcpListener(ip, port);
-            _listener.Start();
+            try
+            {
+                _listener = new TcpListener(new IPEndPoint(ip, port));
 
-            _cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            _acceptTask = Task.Run(() => AcceptLoopAsync(_cts.Token));
+                // ✅ MUST be set BEFORE Start()
+                _listener.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                _listener.Server.ExclusiveAddressUse = false;
 
-            IsRunning = true;
-            return Task.CompletedTask;
+                _listener.Start();
+
+                _cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                _acceptTask = Task.Run(() => AcceptLoopAsync(_cts.Token));
+
+                IsRunning = true;
+                return Task.CompletedTask;
+            }
+            catch
+            {
+                try { _listener?.Stop(); } catch { }
+                _listener = null;
+                IsRunning = false;
+                throw;
+            }
         }
 
         public async Task StopAsync()

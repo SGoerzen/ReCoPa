@@ -1,0 +1,43 @@
+<ResourceDictionary
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ========================================================= -->
+    <!-- BRAND / CI COLORS                                         -->
+    <!-- ========================================================= -->
+
+    <Color x:Key="AppPrimaryColor">#3B82F6</Color>
+    <Color x:Key="AppPrimaryColorHover">#2563EB</Color>
+    <Color x:Key="AppPrimaryColorPressed">#1D4ED8</Color>
+
+    <Color x:Key="AppSecondaryColor">#22C55E</Color>
+    <Color x:Key="AppSecondaryColorHover">#16A34A</Color>
+
+    <Color x:Key="AppDangerColor">#EF4444</Color>
+    <Color x:Key="AppWarningColor">#F59E0B</Color>
+    <Color x:Key="AppSuccessColor">#10B981</Color>
+
+    <!-- ========================================================= -->
+    <!-- SURFACES / BACKGROUNDS                                    -->
+    <!-- ========================================================= -->
+
+    <Color x:Key="SurfaceBackground">#FFFFFF</Color>
+    <Color x:Key="SurfaceCard">#F9FAFB</Color>
+    <Color x:Key="SurfaceElevated">#F3F4F6</Color>
+
+    <Color x:Key="SurfaceBorder">#E5E7EB</Color>
+    <Color x:Key="SurfaceBorderStrong">#D1D5DB</Color>
+
+    <Color x:Key="SurfaceHover">#F1F5F9</Color>
+    <Color x:Key="SurfaceSelected">#DBEAFE</Color>
+
+    <!-- ========================================================= -->
+    <!-- TEXT COLORS                                               -->
+    <!-- ========================================================= -->
+
+    <Color x:Key="TextPrimary">#111827</Color>
+    <Color x:Key="TextSecondary">#6B7280</Color>
+    <Color x:Key="TextDisabled">#9CA3AF</Color>
+    <Color x:Key="TextOnPrimary">#FFFFFF</Color>
+
+</ResourceDictionary>

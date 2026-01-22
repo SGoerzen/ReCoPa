@@ -27,5 +27,6 @@
         <PackageReference Include="ReactiveUI" />
         <PackageReference Include="ReactiveUI.Avalonia" />
         <PackageReference Include="ReactiveUI.Fody" />
+        <PackageReference Include="SukiUI" />
     </ItemGroup>
 </Project>

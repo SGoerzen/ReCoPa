@@ -4,12 +4,13 @@
         xmlns:vm="clr-namespace:ReCoPa.ViewModels"
         x:Class="ReCoPa.Views.MainWindow"
         x:DataType="vm:MainViewModel"
+        xmlns:sukiUi="clr-namespace:SukiUI.Controls;assembly=SukiUI"
         Width="1000"
         Height="700"
         Title="ReCoPa">
 
     <ScrollViewer>
-        <Border Padding="20">
+        <Border Padding="20" Classes="card">
             <StackPanel Spacing="16">
 
                 <!-- Title -->
@@ -18,7 +19,7 @@
                            FontWeight="Bold"/>
 
                 <!-- Clients table -->
-                <views:ClientsTableView />
+                <views:ClientsTableView DataContext="{Binding ClientsTableViewModel}" />
 
                 <!-- Quit app -->
                 <Button Content="Quit App"

@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Threading;
 using ReactiveUI;
 using ReCoPa.Models;
 using ReCoPa.Network;
@@ -17,6 +17,7 @@ public class MainViewModel : ReactiveObject
     private readonly SocketServerHost _server;
 
     public ObservableCollection<XRClient> Clients { get; }
+    public ClientsTableViewModel ClientsTableViewModel { get; }
 
     public ReactiveCommand<Unit, Unit> QuitAppCommand { get; }
     public ReactiveCommand<Unit, Unit> QuitAllClientsCommand { get; }
@@ -32,6 +33,7 @@ public class MainViewModel : ReactiveObject
     {
         _server = server;
         Clients = new ObservableCollection<XRClient>();
+        ClientsTableViewModel = new ClientsTableViewModel(Clients);
 
         // --- keep HasClients in sync (and make sure the observable is UI-scheduled)
         this.WhenAnyValue(x => x.Clients.Count)
@@ -43,23 +45,37 @@ public class MainViewModel : ReactiveObject
         // --- update list on connect/disconnect
         _server.ClientConnected += conn =>
         {
+            Console.WriteLine($"Client connected: {conn.RemoteEndPoint}");
             var model = new XRClient(conn);
-
-            // avoid duplicates (in case of reconnects)
             if (!Clients.Any(x => x.Id == model.Id))
-                Clients.Add(model);
+            {
+                // 🔥 UI-Thread verwenden!
+                Dispatcher.UIThread.Post(() =>
+                {
+                    Clients.Add(model);
+                });
+            }
         };
 
         _server.ClientDisconnected += conn =>
         {
+            Console.WriteLine($"Client disconnected: {conn.RemoteEndPoint}");
             var item = Clients.FirstOrDefault(x => x.Id == conn.Id);
             if (item != null)
-                Clients.Remove(item);
+            {
+                // 🔥 UI-Thread verwenden!
+                Dispatcher.UIThread.Post(() =>
+                {
+                    Clients.Remove(item);
+                });
+            }
         };
+
 
         // --- Command: quit app
         QuitAppCommand = ReactiveCommand.Create(() =>
         {
+            Console.WriteLine("Quitting app...");
             if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
                 desktop.Shutdown();
         },

@@ -13,6 +13,6 @@ public partial class ClientsTableView : UserControl
     public ClientsTableView(ClientsTableViewModel vm)
     {
         InitializeComponent();
-        DataContext = vm; // 🔥 DAS FEHLTE
+        DataContext = vm; 
     }
 }

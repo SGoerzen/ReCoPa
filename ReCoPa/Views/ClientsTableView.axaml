@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ReCoPa.ViewModels"
+             xmlns:models="clr-namespace:ReCoPa.Models"
+             x:Class="ReCoPa.Views.ClientsTableView"
+             x:DataType="vm:ClientsTableViewModel">
+
+    <DataGrid x:Name="ClientsGrid"
+              ItemsSource="{Binding Clients}"
+              AutoGenerateColumns="False"
+              IsReadOnly="True">
+
+        <DataGrid.Columns>
+
+            <DataGridTextColumn Header="Id" Binding="{Binding Id}" />
+            <DataGridTextColumn Header="Remote" Binding="{Binding RemoteEndPoint}" />
+            <DataGridTextColumn Header="Type" Binding="{Binding ClientType}" />
+            <DataGridTextColumn Header="Version" Binding="{Binding Version}" />
+
+            <DataGridTemplateColumn Header="Action">
+                <DataGridTemplateColumn.CellTemplate>
+                    <!-- 🔑 Compiled Bindings hier explizit AUS -->
+                    <DataTemplate x:CompileBindings="False">
+                        <Button Content="Quit"
+                                Command="{Binding DataContext.QuitClientCommand,
+                                                  ElementName=ClientsGrid}"
+                                CommandParameter="{Binding .}" />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            </DataGridTemplateColumn>
+
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>

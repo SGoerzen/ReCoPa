@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <OutputPath>..\Plugins\</OutputPath>
+        <AssemblyName>ReCoPa.xAPI</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ReCoPa.Plugins\ReCoPa.Plugins.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
@@ -28,5 +28,9 @@
         <PackageReference Include="ReactiveUI.Avalonia" />
         <PackageReference Include="ReactiveUI.Fody" />
         <PackageReference Include="SukiUI" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ReCoPa.Plugins\ReCoPa.Plugins.csproj" />
     </ItemGroup>
 </Project>

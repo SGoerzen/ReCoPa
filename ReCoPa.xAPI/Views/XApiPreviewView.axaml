@@ -3,6 +3,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="ReCoPa.xAPI.Views.xApiView">
-    xAPI Preview Here
+             x:Class="ReCoPa.xAPI.Views.XApiPreviewView">
+    <StackPanel Margin="16" Spacing="8">
+        <TextBlock Text="xAPI Statements"
+                   FontSize="18"
+                   FontWeight="Bold"/>
+
+        <TextBlock Text="Here will be xAPI data visualized"/>
+    </StackPanel>
 </UserControl>

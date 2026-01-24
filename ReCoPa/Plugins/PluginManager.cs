@@ -7,13 +7,15 @@ namespace ReCoPa.Plugins;
 
 public sealed class PluginManager
 {
-    private readonly List<IPlugin> _plugins = new();
+    private readonly List<IPluginPackage> _plugins = new();
+    private readonly List<IPluginComponent> _components = new();
 
-    public IReadOnlyList<IPlugin> Plugins => _plugins;
+    public IReadOnlyList<IPluginPackage> Plugins => _plugins;
+    public IReadOnlyList<IPluginComponent> Components => _components;
 
-    public IEnumerable<IEndpoint> Endpoints => _plugins.OfType<IEndpoint>();
+    public IEnumerable<IEndpoint> Endpoints => _components.OfType<IEndpoint>();
 
-    public IEnumerable<IVisualization> VisualizationPlugins => _plugins.OfType<IVisualization>();
+    public IEnumerable<IVisualization> Visualizations => _components.OfType<IVisualization>();
 
     private string? _pluginDirectory;
 
@@ -27,7 +29,10 @@ public sealed class PluginManager
         if (!string.IsNullOrWhiteSpace(path)) SetPath(path);
         Console.WriteLine($"Loading plugins from {GetPath()}...");
         var pluginLoader = new PluginLoader(_pluginDirectory!);
-        _plugins.AddRange(pluginLoader.LoadPlugins());
-        Console.WriteLine($"Loaded {_plugins.Count} plugins.");
+        var plugins = pluginLoader.LoadPlugins();
+        _plugins.AddRange(plugins);
+        foreach (var p in plugins)
+            _components.AddRange(p.Components);
+        Console.WriteLine($"Loaded {_plugins.Count} plugins with {_components.Count} components.");
     }
 }

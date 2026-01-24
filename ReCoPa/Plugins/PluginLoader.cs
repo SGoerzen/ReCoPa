@@ -17,11 +17,11 @@ public class PluginLoader
         Directory.CreateDirectory(_pluginDir);
     }
 
-    public IReadOnlyList<IPlugin> LoadPlugins()
+    public IReadOnlyList<IPluginPackage> LoadPlugins()
     {
-        var result = new List<IPlugin>()
+        var result = new List<IPluginPackage>()
         {
-            new CorePlugin()
+            new CorePluginPackage()
         };
 
         foreach (var dll in Directory.GetFiles(_pluginDir, "*.dll"))
@@ -32,10 +32,10 @@ public class PluginLoader
 
                 var plugins = asm.GetTypes()
                     .Where(t =>
-                        typeof(IPlugin).IsAssignableFrom(t) &&
+                        typeof(IPluginPackage).IsAssignableFrom(t) &&
                         !t.IsAbstract &&
                         t.GetConstructor(Type.EmptyTypes) != null)
-                    .Select(t => (IPlugin)Activator.CreateInstance(t)!);
+                    .Select(t => (IPluginPackage)Activator.CreateInstance(t)!);
 
                 result.AddRange(plugins);
             }

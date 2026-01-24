@@ -7,9 +7,9 @@ public class PluginItemViewModel
     public string Name { get; }
     public string Version { get; }
 
-    public PluginItemViewModel(IPlugin plugin)
+    public PluginItemViewModel(IPluginPackage pluginPackage)
     {
-        Name = plugin.Name;
-        Version = plugin.GetType().Assembly.GetName().Version?.ToString() ?? "0.0.0";
+        Name = pluginPackage.Name;
+        Version = pluginPackage.GetType().Assembly.GetName().Version?.ToString() ?? "0.0.0";
     }
 }

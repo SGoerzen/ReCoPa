@@ -19,6 +19,8 @@
 
                 <!-- Clients table -->
                 <views:ClientsTableView DataContext="{Binding ClientsTableViewModel}" />
+                
+                <views:VisualizationContainerView />
 
                 <!-- Plugin Manager Button -->
                 <Button Content="Manage Plugins" Click="OpenPlugins"/>

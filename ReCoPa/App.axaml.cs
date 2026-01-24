@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
+using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Avalonia.ReactiveUI;
@@ -19,7 +20,7 @@ public partial class App : Application
 {
     private SocketServerHost? _server;
     private int _disposed; // 0/1 guard
-
+    
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -55,6 +56,7 @@ public partial class App : Application
             window.Closing += async (_, __) => await DisposeServerOnceAsync();
 
             desktop.MainWindow = window;
+            desktop.MainWindow.AttachDevTools(new KeyGesture(Key.F12));
 
             // Normal app exit
             desktop.Exit += async (_, __) => await DisposeServerOnceAsync();

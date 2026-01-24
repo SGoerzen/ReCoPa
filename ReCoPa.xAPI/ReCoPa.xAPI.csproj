@@ -5,11 +5,33 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AssemblyName>ReCoPa.xAPI</AssemblyName>
+        <Authors>Sergej Görzen</Authors>
+        <AssemblyVersion>1.0.0</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\ReCoPa.Plugins\ReCoPa.Plugins.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" />
+        <PackageReference Include="Avalonia.ReactiveUI" />
+        <PackageReference Include="Avalonia.Themes.Fluent" />
+        <PackageReference Include="Avalonia.Fonts.Inter" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Include="Avalonia.Diagnostics">
+            <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+            <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="CommunityToolkit.Mvvm" />
+        <PackageReference Include="Newtonsoft.Json" />
+        <PackageReference Include="ReactiveUI" />
+        <PackageReference Include="ReactiveUI.Avalonia" />
+        <PackageReference Include="ReactiveUI.Fody" />
+        <PackageReference Include="SukiUI" />
+    </ItemGroup>
+
 
     <Target Name="CopyPluginToHostOutput"
             AfterTargets="Build"

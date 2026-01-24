@@ -21,8 +21,7 @@ public class PluginLoader
     {
         var result = new List<IPlugin>()
         {
-            new JsonlFileEndpoint(),
-            new CsvFileEndpoint()
+            new CorePlugin()
         };
 
         foreach (var dll in Directory.GetFiles(_pluginDir, "*.dll"))

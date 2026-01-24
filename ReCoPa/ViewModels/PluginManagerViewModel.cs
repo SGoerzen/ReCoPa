@@ -1,19 +1,15 @@
-using System;
 using System.Collections.ObjectModel;
-using ReCoPa.PluginHost;
 
 namespace ReCoPa.ViewModels;
 
-public class PluginManagerViewModel
+public class PluginManagerViewModel : ViewModelBase
 {
     public ObservableCollection<PluginItemViewModel> Plugins { get; } = new();
 
     public PluginManagerViewModel()
     {
-        var loader = new PluginLoader("Plugins");
-        Console.WriteLine("Loading plugins...");
-        var plugins = loader.LoadPlugins();
-        Console.WriteLine($"Loaded {plugins.Count} plugins.");
+        App.PluginManager!.Load();
+        var plugins = App.PluginManager.Plugins;
         foreach (var plugin in plugins)
             Plugins.Add(new PluginItemViewModel(plugin));
     }

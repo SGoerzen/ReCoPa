@@ -14,17 +14,16 @@
             <StackPanel Spacing="16">
 
                 <!-- Title -->
-                <TextBlock Text="Connected Clients"
-                           FontSize="22"
-                           FontWeight="Bold"/>
+                <TextBlock Text="Connected Clients" FontSize="22" FontWeight="Bold"/>
 
                 <!-- Clients table -->
                 <views:ClientsTableView DataContext="{Binding ClientsTableViewModel}" />
 
+                <!-- Plugin Manager Button -->
+                <Button Content="Manage Plugins" Click="OpenPlugins"/>
+                
                 <!-- Quit app -->
-                <Button Content="Quit App"
-                        HorizontalAlignment="Left"
-                        Command="{Binding QuitAppCommand}" />
+                <Button Content="Quit App" HorizontalAlignment="Left" Command="{Binding QuitAppCommand}" />
 
             </StackPanel>
         </Border>

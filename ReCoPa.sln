@@ -18,6 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCoPa.Plugins", "ReCoPa.Plugins\ReCoPa.Plugins.csproj", "{24772780-CF3C-450F-958F-E74A8BBD6BF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReCoPa.xAPI", "ReCoPa.xAPI\ReCoPa.xAPI.csproj", "{4F8CB737-8A61-40BB-AC24-604747454686}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +48,14 @@ Global
 		{7AD1DAC8-7FBE-49D5-8614-7321233DB82E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AD1DAC8-7FBE-49D5-8614-7321233DB82E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AD1DAC8-7FBE-49D5-8614-7321233DB82E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24772780-CF3C-450F-958F-E74A8BBD6BF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24772780-CF3C-450F-958F-E74A8BBD6BF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24772780-CF3C-450F-958F-E74A8BBD6BF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24772780-CF3C-450F-958F-E74A8BBD6BF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F8CB737-8A61-40BB-AC24-604747454686}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F8CB737-8A61-40BB-AC24-604747454686}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F8CB737-8A61-40BB-AC24-604747454686}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F8CB737-8A61-40BB-AC24-604747454686}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

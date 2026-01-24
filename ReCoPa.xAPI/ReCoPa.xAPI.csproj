@@ -4,12 +4,31 @@
         <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <OutputPath>..\Plugins\</OutputPath>
         <AssemblyName>ReCoPa.xAPI</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\ReCoPa.Plugins\ReCoPa.Plugins.csproj" />
     </ItemGroup>
+
+    <Target Name="CopyPluginToHostOutput"
+            AfterTargets="Build"
+            Condition="'$(IsPlugin)'=='true'">
+
+        <PropertyGroup>
+            <HostOutputDir>
+                $(SolutionDir)ReCoPa.Desktop/bin/$(Configuration)/$(TargetFramework)/Plugins
+            </HostOutputDir>
+        </PropertyGroup>
+
+        <MakeDir Directories="$(HostOutputDir)" />
+
+        <Copy
+                SourceFiles="$(TargetDir)$(AssemblyName).dll"
+                DestinationFolder="$(HostOutputDir)"
+                SkipUnchangedFiles="false" />
+
+    </Target>
+
 
 </Project>

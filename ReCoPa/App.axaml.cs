@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ using Avalonia.Threading;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
 using ReCoPa.Network;
+using ReCoPa.Plugins;
 using ReCoPa.ViewModels;
 using ReCoPa.Views;
 
@@ -18,12 +20,26 @@ namespace ReCoPa;
 
 public partial class App : Application
 {
+    public static PluginManager PluginManager { get; } = new();
+
     private SocketServerHost? _server;
     private int _disposed; // 0/1 guard
     
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        LoadPlugins();
+    }
+
+    public void LoadPlugins()
+    {
+        var pluginDir = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "ReCoPa",
+            "Plugins");
+        
+        Directory.CreateDirectory(pluginDir);
+        PluginManager.Load(pluginDir);
     }
 
     public override void OnFrameworkInitializationCompleted()

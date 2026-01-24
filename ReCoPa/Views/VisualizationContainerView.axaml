@@ -1,0 +1,36 @@
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="clr-namespace:ReCoPa.ViewModels"
+    xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls"
+    x:Class="ReCoPa.Views.VisualizationContainerView"
+    x:DataType="vm:VisualizationContainerViewModel">
+
+    <ScrollViewer>
+        <ItemsControl ItemsSource="{Binding Views}">
+            
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="controls:Control">
+                    <Border
+                        Width="360"
+                        Margin="8"
+                        Padding="8"
+                        BorderThickness="1"
+                        BorderBrush="#444"
+                        CornerRadius="6">
+
+                        <ContentPresenter Content="{Binding}" />
+
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+        </ItemsControl>
+    </ScrollViewer>
+</UserControl>

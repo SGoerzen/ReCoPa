@@ -8,4 +8,17 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
     }
+    
+    private void OpenPlugins(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    {
+        var window = new Window
+        {
+            Title = "Plugins",
+            Width = 500,
+            Height = 400,
+            Content = new PluginManagerView()
+        };
+
+        window.Show();
+    }
 }

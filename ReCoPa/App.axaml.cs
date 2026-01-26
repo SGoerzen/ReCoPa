@@ -10,11 +10,15 @@ using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Avalonia.ReactiveUI;
+using Avalonia.Styling;
 using ReactiveUI;
 using ReCoPa.Network;
 using ReCoPa.Plugins;
 using ReCoPa.ViewModels;
 using ReCoPa.Views;
+using SukiUI;
+using SukiUI.Models;
+using Avalonia.Media;
 
 namespace ReCoPa;
 
@@ -77,8 +81,26 @@ public partial class App : Application
             // Normal app exit
             desktop.Exit += async (_, __) => await DisposeServerOnceAsync();
         }
+        
+        InitTheme();
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void InitTheme()
+    {
+        var theme = SukiTheme.GetInstance();
+
+        theme.ChangeBaseTheme(ThemeVariant.Light);
+
+        // Logo-Farben
+        var primary = Color.FromRgb(0, 80, 152);   // #005098
+        var secondary = Color.FromRgb(0, 55, 105); // #003769
+
+        var recoPaTheme = new SukiColorTheme("ReCoPa", primary, secondary);
+        theme.AddColorTheme(recoPaTheme);
+        theme.ChangeColorTheme(recoPaTheme);
+
     }
 
     private void HookShutdownHandlers()

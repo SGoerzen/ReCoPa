@@ -3,6 +3,7 @@
              xmlns:local="using:ReCoPa"
              x:Class="ReCoPa.App"
              xmlns:sukiUi="clr-namespace:SukiUI;assembly=SukiUI"
+             xmlns:conv="clr-namespace:ReCoPa.Converters"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
@@ -19,6 +20,8 @@
                  <ResourceInclude Source="avares://ReCoPa/Styles/Colors.axaml"/>
              </ResourceDictionary.MergedDictionaries>
          </ResourceDictionary>
+         
+         <conv:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
      </Application.Resources>
 
      <!-- ===================== -->
@@ -28,6 +31,6 @@
          <!--<FluentTheme />
          <StyleInclude Source="avares://ReCoPa/Styles/Controls.axaml"/>-->
          <!-- https://kikipoulet.github.io/SukiUI/documentation/getting-started -->
-         <sukiUi:SukiTheme ThemeColor="Blue"  />
+         <sukiUi:SukiTheme />
      </Application.Styles>
 </Application>

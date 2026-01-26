@@ -1,0 +1,11 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:ReCoPa.Views"
+             x:Class="ReCoPa.Views.TabView">
+    <Button
+        Content="{Binding Header, RelativeSource={RelativeSource AncestorType=views:TabView}}"
+        Background="{Binding IsActive, RelativeSource={RelativeSource AncestorType=views:TabView},
+                           Converter={StaticResource BoolToBrushConverter}}"
+        Padding="10,5"
+        CornerRadius="4"/>
+</UserControl>

@@ -1,0 +1,26 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ReCoPa.ViewModels"
+             x:Class="ReCoPa.Views.SidebarView"
+             x:DataType="vm:SidebarViewModel">
+    <StackPanel Spacing="10" Margin="10">
+        <TextBlock Text="{Binding ClientName}" FontSize="16" FontWeight="Bold"/>
+        <StackPanel Orientation="Horizontal" Spacing="5">
+            <Ellipse Fill="Green" Width="10" Height="10"/>
+            <TextBlock Text="Connected" VerticalAlignment="Center"/>
+        </StackPanel>
+        <TextBlock Text="Active" FontSize="14"/>
+        <StackPanel Spacing="5">
+            <TextBlock Text="📊 xAPI Statements"/>
+            <TextBlock Text="125 Sent" FontSize="12"/>
+        </StackPanel>
+        <StackPanel Spacing="5">
+            <TextBlock Text="🎮 Game Objects"/>
+            <TextBlock Text="10 Objects" FontSize="12"/>
+        </StackPanel>
+        <Button Content="Overview" Command="{Binding NavigateToOverviewCommand}"/>
+        <Button Content="Actor" Command="{Binding NavigateToActorCommand}"/>
+        <Button Content="xAPI Statements" Command="{Binding NavigateToXapiCommand}"/>
+        <Button Content="Settings" Command="{Binding NavigateToSettingsCommand}"/>
+    </StackPanel>
+</UserControl>

@@ -12,24 +12,27 @@
                    BackgroundStyle="Gradient">
 
     <ScrollViewer>
-        <Border Padding="20" Classes="card">
+        
+         <DockPanel>
+            <!-- Header -->
+            <Border DockPanel.Dock="Top" Padding="10">
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Image Source="avares://ReCoPa/Assets/app-icon.png" Width="32" Height="32"/>
+                    <TextBlock Text="ReCoPa Dashboard" FontSize="16" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+            
+            <views:DashboardView />
+        </DockPanel>
+        
+        <!--<Border Padding="20" Classes="card">
             <StackPanel Spacing="16">
-
-                <!-- Title -->
                 <TextBlock Text="Connected Clients" FontSize="22" FontWeight="Bold"/>
-
-                <!-- Clients table -->
                 <views:ClientsTableView DataContext="{Binding ClientsTableViewModel}" />
-                
                 <views:VisualizationContainerView />
-
-                <!-- Plugin Manager Button -->
                 <Button Content="Manage Plugins" Click="OpenPlugins"/>
-                
-                <!-- Quit app -->
                 <Button Content="Quit App" HorizontalAlignment="Left" Command="{Binding QuitAppCommand}" />
-
             </StackPanel>
-        </Border>
+        </Border>-->
     </ScrollViewer>
 </sukiUi:SukiWindow>

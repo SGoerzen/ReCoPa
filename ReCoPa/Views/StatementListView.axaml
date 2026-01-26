@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ReCoPa.ViewModels"
+             xmlns:models="clr-namespace:ReCoPa.Models"
+             x:Class="ReCoPa.Views.StatementListView"
+             x:DataType="vm:StatementListViewModel">
+    <DockPanel>
+        <!-- xAPI Statements -->
+        <Border DockPanel.Dock="Top" Margin="10" Padding="10" BorderBrush="#ddd" BorderThickness="1">
+            <StackPanel Spacing="10">
+                <TextBlock Text="xAPI Statements" FontSize="16" FontWeight="Bold"/>
+                <ComboBox ItemsSource="{Binding FilterOptions}" SelectedItem="{Binding SelectedFilter}"/>
+                <Button Content="Export CSV" Command="{Binding ExportCsvCommand}" HorizontalAlignment="Right"/>
+                <ItemsControl ItemsSource="{Binding Statements}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="models:IStatement">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="{Binding Content}"/>
+                                <TextBlock Text="{Binding Timestamp}" FontSize="12" Foreground="#666"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+        <!-- Actions -->
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" Spacing="10">
+            <Button Content="Start Eye Calibration" Command="{Binding StartCalibrationCommand}"/>
+            <Button Content="Shutdown Unity App" Background="Red" Foreground="White" Command="{Binding ShutdownAppCommand}"/>
+        </StackPanel>
+    </DockPanel>
+</UserControl>

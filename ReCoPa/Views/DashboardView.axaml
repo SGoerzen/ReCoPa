@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ReCoPa.ViewModels"
+             xmlns:views="clr-namespace:ReCoPa.Views"
+             x:Class="ReCoPa.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+
+    <DockPanel>
+        <!-- Client Tabs -->
+        <Border DockPanel.Dock="Top" Background="#f8f8f8" Padding="10">
+            <DockPanel LastChildFill="False">
+                <ItemsControl DockPanel.Dock="Left"
+                              ItemsSource="{Binding ClientTabs}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <views:TabView Header="{Binding Header}"
+                                           IsActive="{Binding IsActive}"
+                                           Margin="0,0,10,0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Button DockPanel.Dock="Right"
+                        Content="+ New Client"
+                        Command="{Binding AddClientCommand}"
+                        Margin="10,0,0,0"/>
+            </DockPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Sidebar -->
+            <views:SidebarView Grid.Column="0"
+                               ClientName="{Binding SelectedClientName}" />
+
+            <!-- Main Content Area -->
+            <views:StatementListView Grid.Column="1" />
+        </Grid>
+    </DockPanel>
+   
+</UserControl>

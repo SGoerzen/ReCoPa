@@ -26,8 +26,8 @@ public partial class App : Application
 {
     public static PluginManager PluginManager { get; } = new();
 
-    private SocketServerHost? _server;
-    private int _disposed; // 0/1 guard
+    public static SocketServerHost? Socket { get; private set; }
+    private int _disposed; 
     
     public override void Initialize()
     {
@@ -52,13 +52,13 @@ public partial class App : Application
         RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
 
         // ✅ Create server with Avalonia UI dispatcher
-        _server = new SocketServerHost(
+        Socket = new SocketServerHost(
             options: null,
             uiPost: a => Dispatcher.UIThread.Post(a)
         );
 
         // start server (fire-and-forget)
-        _ = _server.StartAsync(4567);
+        _ = Socket.StartAsync(4567);
 
         // ✅ cover unexpected exits/crashes too
         HookShutdownHandlers();
@@ -69,7 +69,7 @@ public partial class App : Application
 
             var window = new MainWindow
             {
-                DataContext = new MainViewModel(_server)
+                DataContext = new MainViewModel(Socket)
             };
 
             // User closes the window (X)
@@ -126,8 +126,8 @@ public partial class App : Application
     {
         if (Interlocked.Exchange(ref _disposed, 1) == 1) return;
 
-        var s = _server;
-        _server = null;
+        var s = Socket;
+        Socket = null;
         if (s == null) return;
 
         try
@@ -146,8 +146,8 @@ public partial class App : Application
     {
         if (Interlocked.Exchange(ref _disposed, 1) == 1) return;
 
-        var s = _server;
-        _server = null;
+        var s = Socket;
+        Socket = null;
         if (s == null) return;
 
         try

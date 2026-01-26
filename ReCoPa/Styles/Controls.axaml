@@ -1,5 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:views="clr-namespace:ReCoPa.Views">
 
     <!-- ========================================================= -->
     <!-- WINDOW                                                    -->
@@ -39,6 +40,9 @@
         <Setter Property="Padding" Value="12,6"/>
         <Setter Property="CornerRadius" Value="6"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
+        <!-- small polish -->
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AppPrimaryColorPressed}"/>
     </Style>
 
     <Style Selector="Button:pointerover">
@@ -52,6 +56,7 @@
     <Style Selector="Button:disabled">
         <Setter Property="Background" Value="{DynamicResource SurfaceBorder}"/>
         <Setter Property="Foreground" Value="{DynamicResource TextDisabled}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorderStrong}"/>
     </Style>
 
     <!-- Secondary button -->
@@ -64,12 +69,15 @@
 
     <Style Selector="Button.secondary:pointerover">
         <Setter Property="Background" Value="{DynamicResource SurfaceHover}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AppPrimaryColor}"/>
     </Style>
 
     <!-- Danger button -->
     <Style Selector="Button.danger">
         <Setter Property="Background" Value="{DynamicResource AppDangerColor}"/>
         <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AppDangerColor}"/>
+        <Setter Property="BorderThickness" Value="1"/>
     </Style>
 
     <!-- ========================================================= -->
@@ -84,8 +92,13 @@
         <Setter Property="Padding" Value="8,5"/>
     </Style>
 
+    <Style Selector="TextBox:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorderStrong}"/>
+    </Style>
+
     <Style Selector="TextBox:focus">
         <Setter Property="BorderBrush" Value="{DynamicResource AppPrimaryColor}"/>
+        <Setter Property="BorderThickness" Value="2"/>
     </Style>
 
     <!-- ========================================================= -->
@@ -102,6 +115,27 @@
 
     <Style Selector="ScrollViewer">
         <Setter Property="Background" Value="{DynamicResource SurfaceBackground}"/>
+    </Style>
+
+    <!-- ========================================================= -->
+    <!-- COMBOBOX (needed for your filter dropdown)                -->
+    <!-- ========================================================= -->
+
+    <Style Selector="ComboBox">
+        <Setter Property="Background" Value="{DynamicResource SurfaceCard}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="8,5"/>
+    </Style>
+
+    <Style Selector="ComboBox:pointerover">
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorderStrong}"/>
+    </Style>
+
+    <Style Selector="ComboBox:focus">
+        <Setter Property="BorderBrush" Value="{DynamicResource AppPrimaryColor}"/>
+        <Setter Property="BorderThickness" Value="2"/>
     </Style>
 
     <!-- ========================================================= -->
@@ -135,6 +169,7 @@
     </Style>
 
     <Style Selector="DataGridRow:selected">
+        <!-- logo-ish selection (soft blue) -->
         <Setter Property="Background" Value="{DynamicResource SurfaceSelected}"/>
     </Style>
 
@@ -149,9 +184,47 @@
 
     <Style Selector="Border.card">
         <Setter Property="Background" Value="{DynamicResource SurfaceCard}"/>
-        <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="Padding" Value="12"/>
+        <Setter Property="CornerRadius" Value="10"/>
+        <Setter Property="Padding" Value="14"/>
         <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorder}"/>
         <Setter Property="BorderThickness" Value="1"/>
     </Style>
+
+    <!-- ========================================================= -->
+    <!-- TABVIEW (Selection look)                                  -->
+    <!-- Requires TabView.axaml Button to have: Classes.active="{Binding IsActive ...}" -->
+    <!-- ========================================================= -->
+
+    <Style Selector="views|TabView Button">
+        <Setter Property="Background" Value="{DynamicResource TabInactiveBackground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TabInactiveForeground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="6"/>
+        <Setter Property="Padding" Value="12,8"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style Selector="views|TabView Button:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SurfaceHover}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorderStrong}"/>
+    </Style>
+
+    <Style Selector="views|TabView Button.active">
+        <Setter Property="Background" Value="{DynamicResource TabActiveBackground}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TabActiveForeground}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AppPrimaryColor}"/>
+    </Style>
+
+    <Style Selector="views|TabView Button.active:pressed">
+        <Setter Property="Background" Value="{DynamicResource SurfaceSelected}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AppPrimaryColorPressed}"/>
+    </Style>
+    
+    <Style Selector="Button.nav">
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="Padding" Value="10,8"/>
+        <Setter Property="CornerRadius" Value="10"/>
+    </Style>
+
 </Styles>

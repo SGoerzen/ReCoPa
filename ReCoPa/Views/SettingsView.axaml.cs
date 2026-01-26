@@ -1,15 +1,14 @@
+// Views/SettingsView.axaml.cs
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
-using ReCoPa.ViewModels;
 
 namespace ReCoPa.Views;
 
-public partial class DashboardView : UserControl
+public partial class SettingsView : UserControl
 {
-    public DashboardView()
+    public SettingsView()
     {
         InitializeComponent();
-        DataContext = new DashboardViewModel();
     }
 
     private void InitializeComponent() => AvaloniaXamlLoader.Load(this);

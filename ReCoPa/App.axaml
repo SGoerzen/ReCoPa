@@ -3,6 +3,7 @@
              xmlns:local="using:ReCoPa"
              x:Class="ReCoPa.App"
              xmlns:sukiUi="clr-namespace:SukiUI;assembly=SukiUI"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:conv="clr-namespace:ReCoPa.Converters"
              RequestedThemeVariant="Default">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
@@ -28,9 +29,8 @@
      <!-- STYLES / THEMES       -->
      <!-- ===================== -->
      <Application.Styles>
-         <!--<FluentTheme />
-         <StyleInclude Source="avares://ReCoPa/Styles/Controls.axaml"/>-->
          <!-- https://kikipoulet.github.io/SukiUI/documentation/getting-started -->
          <sukiUi:SukiTheme />
+         <avalonia:MaterialIconStyles />
      </Application.Styles>
 </Application>

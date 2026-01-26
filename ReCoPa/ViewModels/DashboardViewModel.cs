@@ -1,33 +1,102 @@
-
-
+using System;
 using System.Collections.ObjectModel;
-using System.Reactive;
-using ReactiveUI;
+using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ReCoPa.ViewModels;
 
-public class DashboardViewModel : ReactiveObject
+public partial class DashboardViewModel : ObservableObject
 {
-    public ObservableCollection<TabViewModel> ClientTabs { get; } = [];
-    public ReactiveCommand<Unit, Unit> AddClientCommand { get; }
+    public ObservableCollection<TabViewModel> ClientTabs { get; } = new();
 
-    private string _selectedClientName = "VR Experience - PC2";
-    public string SelectedClientName
-    {
-        get => _selectedClientName;
-        set => this.RaiseAndSetIfChanged(ref _selectedClientName, value);
-    }
+    // ---- Selected client summary for Sidebar ----
+    [ObservableProperty] private string? selectedClientName;
+    [ObservableProperty] private bool isSelectedClientConnected;
 
+    [ObservableProperty] private int selectedClientXapiStatementsCount;
+    [ObservableProperty] private int selectedClientGameObjectsCount;
+
+    [ObservableProperty] private double selectedClientFps;
+    [ObservableProperty] private int selectedClientHeartRate;
+
+    // Optional: which view is currently shown in the main area
+    [ObservableProperty] private string currentView = "Visualizations"; // or "Settings"
+
+    public bool IsSelectedClientDisconnected => !IsSelectedClientConnected;
+    
     public DashboardViewModel()
     {
-        // Beispiel-Tabs hinzufügen
+        // Demo data (replace with real clients later)
         ClientTabs.Add(new TabViewModel { Header = "VR Training - PC1", IsActive = true });
         ClientTabs.Add(new TabViewModel { Header = "Cognitive Test - Lab-PC", IsActive = false });
-        ClientTabs.Add(new TabViewModel { Header = "VR Experience - PC2", IsActive = true });
+        ClientTabs.Add(new TabViewModel { Header = "VR Experience - PC2", IsActive = false });
 
-        AddClientCommand = ReactiveCommand.Create(() =>
-        {
-            ClientTabs.Add(new TabViewModel { Header = "New Client", IsActive = false });
-        });
+        ApplySelectedFromActiveTab();
+
+        // Demo numbers
+        SelectedClientXapiStatementsCount = 125;
+        SelectedClientGameObjectsCount = 10;
+        SelectedClientFps = 72.4;
+        SelectedClientHeartRate = 98;
+        IsSelectedClientConnected = true;
+    }
+
+    private void ApplySelectedFromActiveTab()
+    {
+        var active = ClientTabs.FirstOrDefault(t => t.IsActive) ?? ClientTabs.FirstOrDefault();
+        SelectedClientName = active?.Header ?? "No Client";
+    }
+
+    // ---- Commands ----
+
+    [RelayCommand]
+    private void AddClient()
+    {
+        var idx = ClientTabs.Count + 1;
+        ClientTabs.Add(new TabViewModel { Header = $"New Client {idx}", IsActive = false });
+    }
+
+    [RelayCommand]
+    private void NavigateVisualizations() => CurrentView = "Visualizations";
+
+    [RelayCommand]
+    private void NavigateSettings() => CurrentView = "Settings";
+
+    [RelayCommand]
+    private void StartCalibration()
+    {
+        // TODO: call your calibration logic
+        // For now just bump a value to prove it works:
+        SelectedClientFps = Math.Max(0, SelectedClientFps - 0.5);
+    }
+
+    [RelayCommand]
+    private void PauseTracking()
+    {
+        // TODO
+    }
+
+    [RelayCommand]
+    private void StopTracking()
+    {
+        // TODO
+    }
+
+    [RelayCommand]
+    private void ShutdownApp()
+    {
+        // TODO: send shutdown to Unity client
+        IsSelectedClientConnected = false;
+    }
+
+    // Optional: if you want clicking a tab to select it (wire up later)
+    public void ActivateTab(TabViewModel tab)
+    {
+        foreach (var t in ClientTabs) t.IsActive = false;
+        tab.IsActive = true;
+
+        SelectedClientName = tab.Header;
+        // TODO: load counts/fps/heartrate from this tab's client model
     }
 }

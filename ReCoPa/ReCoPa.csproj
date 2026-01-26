@@ -23,6 +23,7 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" />
+        <PackageReference Include="Material.Icons.Avalonia" />
         <PackageReference Include="Newtonsoft.Json" />
         <PackageReference Include="ReactiveUI" />
         <PackageReference Include="ReactiveUI.Avalonia" />

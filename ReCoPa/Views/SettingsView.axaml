@@ -1,0 +1,144 @@
+<!-- Views/SettingsView.axaml -->
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ReCoPa.ViewModels"
+             xmlns:views="clr-namespace:ReCoPa.Views"
+             x:Class="ReCoPa.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel"
+             x:Name="Root">
+
+  <ScrollViewer>
+    <StackPanel Margin="16" Spacing="12">
+
+      <TextBlock Text="Settings" FontSize="20" FontWeight="Bold"/>
+
+      <!-- ===================== -->
+      <!-- Endpoints             -->
+      <!-- ===================== -->
+      <Border Classes="card">
+        <StackPanel Spacing="10">
+
+          <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+            <TextBlock Text="Endpoints" FontWeight="SemiBold"/>
+            <Button Grid.Column="1"
+                    Content="+ Add Endpoint"
+                    Classes="secondary"
+                    Command="{Binding AddEndpointCommand}"/>
+          </Grid>
+
+          <ItemsControl ItemsSource="{Binding Endpoints}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:EndpointViewModel">
+                <Border Background="{DynamicResource SurfaceHover}"
+                        CornerRadius="10"
+                        Padding="10"
+                        Margin="0,0,0,8">
+
+                  <Grid ColumnDefinitions="*,Auto"
+                        RowDefinitions="Auto,Auto,Auto"
+                        ColumnSpacing="10"
+                        RowSpacing="6">
+
+                    <StackPanel Grid.Column="0" Grid.Row="0"
+                                Orientation="Horizontal"
+                                Spacing="10">
+                      <CheckBox IsChecked="{Binding IsEnabled}" VerticalAlignment="Center"/>
+                      <TextBlock Text="{Binding Name}" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                      <TextBlock Text="{Binding Type}" Classes="secondary" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <Button Grid.Column="1" Grid.Row="0"
+                            Classes="secondary"
+                            Content="Remove"
+                            x:CompileBindings="False"
+                            Command="{Binding DataContext.RemoveEndpointCommand, ElementName=Root}"
+                            CommandParameter="{Binding}" />
+
+                    <TextBlock Grid.Column="0" Grid.Row="1"
+                               Text="Target"
+                               Classes="secondary"/>
+
+                    <TextBox Grid.Column="0" Grid.Row="2"
+                             Text="{Binding Target}"
+                             Watermark="e.g. https://lrs.example.org/xapi or file path"/>
+                  </Grid>
+
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+        </StackPanel>
+      </Border>
+
+      <!-- ===================== -->
+      <!-- Tracking              -->
+      <!-- ===================== -->
+      <Border Classes="card">
+        <StackPanel Spacing="10">
+          <TextBlock Text="Tracking" FontWeight="SemiBold"/>
+
+          <ItemsControl ItemsSource="{Binding TrackingToggles}">
+            <ItemsControl.ItemsPanel>
+              <ItemsPanelTemplate>
+                <WrapPanel/>
+              </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:ToggleChipViewModel">
+                <Border Background="{DynamicResource SurfaceHover}"
+                        CornerRadius="999"
+                        Padding="10,6"
+                        Margin="0,0,10,10">
+                  <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="{Binding Title}" VerticalAlignment="Center"/>
+                    <ToggleSwitch IsChecked="{Binding IsOn}" VerticalAlignment="Center"/>
+                  </StackPanel>
+                </Border>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+
+        </StackPanel>
+      </Border>
+
+      <!-- ===================== -->
+      <!-- Filters               -->
+      <!-- ===================== -->
+      <Border Classes="card">
+        <StackPanel Spacing="10">
+          <TextBlock Text="Tracking Filters" FontWeight="SemiBold"/>
+
+          <TextBox Watermark="Search (optional)"
+                   Text="{Binding FilterSearchText}"/>
+
+          <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+
+            <StackPanel Spacing="6">
+              <TextBlock Text="Exclude GameObjects" FontWeight="SemiBold"/>
+              <ListBox ItemsSource="{Binding ExcludeGameObjects}" Height="160"/>
+            </StackPanel>
+
+            <StackPanel Spacing="6">
+              <TextBlock Text="Exclude Components" FontWeight="SemiBold"/>
+              <ListBox ItemsSource="{Binding ExcludeComponents}" Height="160"/>
+            </StackPanel>
+
+            <StackPanel Spacing="6">
+              <TextBlock Text="Exclude Gestures" FontWeight="SemiBold"/>
+              <ListBox ItemsSource="{Binding ExcludeGestures}" Height="160"/>
+            </StackPanel>
+
+          </Grid>
+
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+            <Button Content="Apply" Command="{Binding ApplySettingsCommand}"/>
+          </StackPanel>
+
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

@@ -7,21 +7,17 @@
                    xmlns:sukiUi="clr-namespace:SukiUI.Controls;assembly=SukiUI"
                    Width="1000"
                    Height="700"
-                   Title="ReCoPa V2"
+                   Title="ReCoPa - Researcher Companion Panel"
                    Icon="/Assets/app-icon.png"
                    BackgroundStyle="Gradient">
+    
+    <sukiUi:SukiWindow.LogoContent>
+        <Image Source="avares://ReCoPa/Assets/app-icon.png" Width="32" Height="32"/>        <!-- Logo -->
+    </sukiUi:SukiWindow.LogoContent>
 
     <ScrollViewer>
         
          <DockPanel>
-            <!-- Header -->
-            <Border DockPanel.Dock="Top" Padding="10">
-                <StackPanel Orientation="Horizontal" Spacing="10">
-                    <Image Source="avares://ReCoPa/Assets/app-icon.png" Width="32" Height="32"/>
-                    <TextBlock Text="ReCoPa Dashboard" FontSize="16" VerticalAlignment="Center"/>
-                </StackPanel>
-            </Border>
-            
             <views:DashboardView />
         </DockPanel>
         

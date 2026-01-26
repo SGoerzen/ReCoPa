@@ -3,9 +3,9 @@
              xmlns:views="clr-namespace:ReCoPa.Views"
              x:Class="ReCoPa.Views.TabView">
     <Button
+        Classes.active="{Binding IsActive, RelativeSource={RelativeSource AncestorType=views:TabView}}"
         Content="{Binding Header, RelativeSource={RelativeSource AncestorType=views:TabView}}"
-        Background="{Binding IsActive, RelativeSource={RelativeSource AncestorType=views:TabView},
-                           Converter={StaticResource BoolToBrushConverter}}"
-        Padding="10,5"
-        CornerRadius="4"/>
+        Padding="10,20"
+        Margin="0, 0"
+        CornerRadius="6"/>
 </UserControl>

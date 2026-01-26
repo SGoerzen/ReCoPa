@@ -8,7 +8,7 @@
         <!-- xAPI Statements -->
         <Border DockPanel.Dock="Top" Margin="10" Padding="10" BorderBrush="#ddd" BorderThickness="1">
             <StackPanel Spacing="10">
-                <TextBlock Text="xAPI Statements" FontSize="16" FontWeight="Bold"/>
+                <TextBlock Text="Data Statements" FontSize="16" FontWeight="Bold"/>
                 <ComboBox ItemsSource="{Binding FilterOptions}" SelectedItem="{Binding SelectedFilter}"/>
                 <Button Content="Export CSV" Command="{Binding ExportCsvCommand}" HorizontalAlignment="Right"/>
                 <ItemsControl ItemsSource="{Binding Statements}">

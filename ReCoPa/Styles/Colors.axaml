@@ -1,43 +1,34 @@
-<ResourceDictionary
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- ========================================================= -->
-    <!-- BRAND / CI COLORS                                         -->
-    <!-- ========================================================= -->
+    <!-- Brand (Logo) -->
+    <SolidColorBrush x:Key="AppPrimaryColor"        Color="#005098"/>
+    <SolidColorBrush x:Key="AppPrimaryColorHover"   Color="#0B5AA8"/>
+    <SolidColorBrush x:Key="AppPrimaryColorPressed" Color="#003769"/>
+    
+    <!-- Tab selection -->
+    <SolidColorBrush x:Key="TabActiveBackground"   Color="#D6E7F7"/>  
+    <SolidColorBrush x:Key="TabInactiveBackground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="TabActiveForeground"   Color="#0F172A"/>
+    <SolidColorBrush x:Key="TabInactiveForeground" Color="#0F172A"/>
 
-    <Color x:Key="AppPrimaryColor">#3B82F6</Color>
-    <Color x:Key="AppPrimaryColorHover">#2563EB</Color>
-    <Color x:Key="AppPrimaryColorPressed">#1D4ED8</Color>
+    <!-- Surfaces -->
+    <SolidColorBrush x:Key="SurfaceBackground" Color="#F5F7FA"/>
+    <SolidColorBrush x:Key="SurfaceElevated"   Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SurfaceCard"       Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="SurfaceHover"      Color="#EEF3F8"/>
+    <SolidColorBrush x:Key="SurfaceSelected"   Color="#D6E7F7"/>
 
-    <Color x:Key="AppSecondaryColor">#22C55E</Color>
-    <Color x:Key="AppSecondaryColorHover">#16A34A</Color>
+    <!-- Borders -->
+    <SolidColorBrush x:Key="SurfaceBorder"       Color="#D9E1EA"/>
+    <SolidColorBrush x:Key="SurfaceBorderStrong" Color="#BFCAD6"/>
 
-    <Color x:Key="AppDangerColor">#EF4444</Color>
-    <Color x:Key="AppWarningColor">#F59E0B</Color>
-    <Color x:Key="AppSuccessColor">#10B981</Color>
+    <!-- Text -->
+    <SolidColorBrush x:Key="TextPrimary"   Color="#0F172A"/>
+    <SolidColorBrush x:Key="TextSecondary" Color="#64748B"/>
+    <SolidColorBrush x:Key="TextDisabled"  Color="#9AA6B2"/>
+    <SolidColorBrush x:Key="TextOnPrimary" Color="#FFFFFF"/>
 
-    <!-- ========================================================= -->
-    <!-- SURFACES / BACKGROUNDS                                    -->
-    <!-- ========================================================= -->
-
-    <Color x:Key="SurfaceBackground">#FFFFFF</Color>
-    <Color x:Key="SurfaceCard">#F9FAFB</Color>
-    <Color x:Key="SurfaceElevated">#F3F4F6</Color>
-
-    <Color x:Key="SurfaceBorder">#E5E7EB</Color>
-    <Color x:Key="SurfaceBorderStrong">#D1D5DB</Color>
-
-    <Color x:Key="SurfaceHover">#F1F5F9</Color>
-    <Color x:Key="SurfaceSelected">#DBEAFE</Color>
-
-    <!-- ========================================================= -->
-    <!-- TEXT COLORS                                               -->
-    <!-- ========================================================= -->
-
-    <Color x:Key="TextPrimary">#111827</Color>
-    <Color x:Key="TextSecondary">#6B7280</Color>
-    <Color x:Key="TextDisabled">#9CA3AF</Color>
-    <Color x:Key="TextOnPrimary">#FFFFFF</Color>
-
+    <!-- Danger -->
+    <SolidColorBrush x:Key="AppDangerColor" Color="#D64545"/>
 </ResourceDictionary>

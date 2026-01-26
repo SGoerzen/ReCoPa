@@ -6,11 +6,13 @@
              x:DataType="vm:DashboardViewModel">
 
     <DockPanel>
-        <!-- Client Tabs -->
-        <Border DockPanel.Dock="Top" Background="#f8f8f8" Padding="10">
-            <DockPanel LastChildFill="False">
-                <ItemsControl DockPanel.Dock="Left"
-                              ItemsSource="{Binding ClientTabs}">
+
+        <!-- TOP BAR: Logo + Tabs + New Client (alles eine Zeile) -->
+        <Border DockPanel.Dock="Top" Background="{DynamicResource SurfaceElevated}" Padding="12" BorderBrush="{DynamicResource SurfaceBorder}" BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                
+                <!-- Middle: Client Tabs -->
+                <ItemsControl Grid.Column="0" ItemsSource="{Binding ClientTabs}" Margin="16,0">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel />
@@ -19,34 +21,46 @@
 
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <views:TabView Header="{Binding Header}"
-                                           IsActive="{Binding IsActive}"
-                                           Margin="0,0,10,0"/>
+                            <views:TabView
+                                Header="{Binding Header}"
+                                IsActive="{Binding IsActive}"
+                                Margin="0,0,10,0" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <Button DockPanel.Dock="Right"
-                        Content="+ New Client"
+                <!-- Right: Add Client -->
+                <Button Grid.Column="1"
+                        Content="+ New Session"
                         Command="{Binding AddClientCommand}"
-                        Margin="10,0,0,0"/>
-            </DockPanel>
+                        Classes="secondary"
+                        Padding="12,8"
+                        CornerRadius="10"/>
+            </Grid>
         </Border>
 
-        <!-- Main Content -->
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="250"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
+        <!-- MAIN -->
+        <Grid ColumnDefinitions="320,*">
             <!-- Sidebar -->
             <views:SidebarView Grid.Column="0"
-                               ClientName="{Binding SelectedClientName}" />
+                              ClientName="{Binding SelectedClientName}"
+                              IsConnected="{Binding IsSelectedClientConnected}"
+                              IsDisconnected="{Binding IsSelectedClientDisconnected}"
+                              XapiStatementsCount="{Binding SelectedClientXapiStatementsCount}"
+                              GameObjectsCount="{Binding SelectedClientGameObjectsCount}"
+                              Fps="{Binding SelectedClientFps}"
+                              HeartRate="{Binding SelectedClientHeartRate}"
+                              NavigateVisualizationsCommand="{Binding NavigateVisualizationsCommand}"
+                              NavigateSettingsCommand="{Binding NavigateSettingsCommand}"
+                              StartEyeCalibrationCommand="{Binding StartCalibrationCommand}"
+                              PauseTrackingCommand="{Binding PauseTrackingCommand}"
+                              StopTrackingCommand="{Binding StopTrackingCommand}"
+                              ShutdownUnityAppCommand="{Binding ShutdownAppCommand}"
+                              />
 
-            <!-- Main Content Area -->
+            <!-- Content (bei dir erstmal wie gehabt) -->
             <views:StatementListView Grid.Column="1" />
         </Grid>
+
     </DockPanel>
-   
 </UserControl>

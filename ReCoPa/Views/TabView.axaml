@@ -7,34 +7,31 @@
 
         <!-- Default: white -->
         <Style Selector="Button#TabButton">
+            <Setter Property="CornerRadius" Value="10,10,0,0"/>
             <Setter Property="Background" Value="White"/>
             <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorder}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="CornerRadius" Value="10"/>
             <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Focusable" Value="True"/>
+            <Setter Property="IsHitTestVisible" Value="True"/>
         </Style>
 
-        <!-- Hover only matters when NOT active (active is disabled anyway) -->
+        <!-- Hover -->
         <Style Selector="Button#TabButton:pointerover">
             <Setter Property="Background" Value="{DynamicResource SurfaceHover}"/>
         </Style>
 
         <!-- Selected/Active -->
         <Style Selector="views|TabView[IsActive=True] Button#TabButton">
-            <Setter Property="CornerRadius" Value="10,10,0,0"/>
-            <Setter Property="Margin" Value="0,0,10,-1"/>
+            <Setter Property="Margin" Value="0,0,0,-1"/>
             <Setter Property="Background" Value="{DynamicResource TabActiveBackground}"/>
             <Setter Property="Foreground" Value="{DynamicResource TabActiveForeground}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource TabActiveBorder}"/>
-        </Style>
 
-        <!-- Active tab is disabled -> keep same look (no grey/opacity) -->
-        <Style Selector="views|TabView[IsActive=True] Button#TabButton:disabled">
-            <Setter Property="Opacity" Value="1"/>
-            <Setter Property="Background" Value="{DynamicResource TabActiveBackground}"/>
-            <Setter Property="Foreground" Value="{DynamicResource TabActiveForeground}"/>
-            <Setter Property="BorderBrush" Value="{DynamicResource TabActiveBorder}"/>
+            <!-- IMPORTANT: make it not clickable + no hover/focus -->
+            <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Focusable" Value="False"/>
         </Style>
 
     </UserControl.Styles>
@@ -42,9 +39,6 @@
     <Button x:Name="TabButton"
             ZIndex="100"
             Content="{Binding Header, RelativeSource={RelativeSource AncestorType=views:TabView}}"
-            IsEnabled="{Binding IsActive, RelativeSource={RelativeSource AncestorType=views:TabView},
-                                Converter={StaticResource BoolInvertConverter}}"
             Command="{Binding SelectCommand, RelativeSource={RelativeSource AncestorType=views:TabView}}"
             CommandParameter="{Binding SelectCommandParameter, RelativeSource={RelativeSource AncestorType=views:TabView}}"/>
-
 </UserControl>

@@ -1,0 +1,72 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:views="clr-namespace:ReCoPa.Views"
+             x:Class="ReCoPa.Views.TabsHeaderView">
+
+    <Border Background="{DynamicResource SurfaceElevated}"
+            Padding="5,12,5,0"
+            BorderBrush="{DynamicResource SurfaceBorder}"
+            BorderThickness="0,0,0,1">
+
+        <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8" VerticalAlignment="Center">
+
+            <Button Grid.Column="0" Classes="secondary" 
+                    Margin="0,-5, 0, 5"
+                    Padding="10,8" 
+                    CornerRadius="10"
+                    IsEnabled="{Binding CanScrollLeft, RelativeSource={RelativeSource AncestorType=views:TabsHeaderView}}"
+                    Click="ScrollTabsLeft">
+                <TextBlock Text="◀" />
+            </Button>
+
+            <ScrollViewer Grid.Column="1"
+                          Name="TabsScroll"
+                          HorizontalScrollBarVisibility="Hidden"
+                          VerticalScrollBarVisibility="Disabled"
+                          ClipToBounds="True"
+                          PointerPressed="TabsScroll_PointerPressed"
+                          PointerMoved="TabsScroll_PointerMoved"
+                          PointerReleased="TabsScroll_PointerReleased"
+                          PointerCaptureLost="TabsScroll_PointerCaptureLost">
+                <!-- IMPORTANT: don't let ItemsControl size itself infinitely -->
+                <ItemsControl ItemsSource="{Binding Items, RelativeSource={RelativeSource AncestorType=views:TabsHeaderView}}"
+                              HorizontalAlignment="Left">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <views:TabView x:CompileBindings="False"
+                                           Header="{Binding Header}"
+                                           IsActive="{Binding IsActive}"
+                                           SelectCommand="{Binding SelectTabCommand, RelativeSource={RelativeSource AncestorType=views:TabsHeaderView}}"
+                                           SelectCommandParameter="{Binding}"
+                                           Margin="0,0,10,0"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <Button Grid.Column="2" 
+                    Classes="secondary"
+                    Margin="0,-5, 0, 5"
+                    Padding="10,8" CornerRadius="10"
+                    IsEnabled="{Binding CanScrollRight, RelativeSource={RelativeSource AncestorType=views:TabsHeaderView}}"
+                    Click="ScrollTabsRight">
+                <TextBlock Text="▶" />
+            </Button>
+
+            <Button Grid.Column="3"
+                    Content="+ New Session"
+                    Command="{Binding AddClientCommand, RelativeSource={RelativeSource AncestorType=views:TabsHeaderView}}"
+                    Classes="secondary"
+                    Padding="12,8"
+                    Margin="0,-5, 0, 5"
+                    CornerRadius="10" />
+        </Grid>
+
+    </Border>
+</UserControl>

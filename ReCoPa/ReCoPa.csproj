@@ -39,6 +39,11 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Watch Include="**\*.axaml" />
+        <Watch Include="**\*.xaml" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Compile Update="Views\VisualizationContainerView.axaml.cs">
         <DependentUpon>VisualizationContainerView.axaml</DependentUpon>
         <SubType>Code</SubType>

@@ -2,10 +2,36 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:views="clr-namespace:ReCoPa.Views"
              x:Class="ReCoPa.Views.TabView">
-    <Button
-        Classes.active="{Binding IsActive, RelativeSource={RelativeSource AncestorType=views:TabView}}"
-        Content="{Binding Header, RelativeSource={RelativeSource AncestorType=views:TabView}}"
-        Padding="10,20"
-        Margin="0, 0"
-        CornerRadius="6"/>
+
+    <UserControl.Styles>
+
+        <!-- Default: white -->
+        <Style Selector="Button#TabButton">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="10,6"/>
+        </Style>
+
+        <!-- Hover (optional) -->
+        <Style Selector="Button#TabButton:pointerover">
+            <Setter Property="Background" Value="{DynamicResource SurfaceHover}"/>
+        </Style>
+
+        <!-- Selected: TabActiveBackground -->
+        <Style Selector="views|TabView[IsActive=True] Button#TabButton">
+            <Setter Property="CornerRadius" Value="10,10,0,0"/>
+            <Setter Property="Margin" Value="0,0,10,-1"/>
+            <Setter Property="Background" Value="{DynamicResource TabActiveBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TabActiveForeground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource TabActiveBorder}"/>
+        </Style>
+
+    </UserControl.Styles>
+
+    <Button x:Name="TabButton"
+            ZIndex="100"
+            Content="{Binding Header, RelativeSource={RelativeSource AncestorType=views:TabView}}"/>
 </UserControl>

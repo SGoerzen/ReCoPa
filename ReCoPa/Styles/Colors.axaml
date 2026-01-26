@@ -7,7 +7,7 @@
     <SolidColorBrush x:Key="AppPrimaryColorPressed" Color="#003769"/>
     
     <!-- Tab selection -->
-    <SolidColorBrush x:Key="TabActiveBackground"   Color="#D6E7F7"/>  
+    <SolidColorBrush x:Key="TabActiveBackground"   Color="#F1F1F1"/>  
     <SolidColorBrush x:Key="TabInactiveBackground" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="TabActiveForeground"   Color="#0F172A"/>
     <SolidColorBrush x:Key="TabInactiveForeground" Color="#0F172A"/>

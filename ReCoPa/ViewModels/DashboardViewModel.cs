@@ -45,7 +45,7 @@ public partial class DashboardViewModel : ObservableObject
     private void ApplySelectedFromActiveTab()
     {
         var active = ClientTabs.FirstOrDefault(t => t.IsActive) ?? ClientTabs.FirstOrDefault();
-        SelectedClientName = active?.Header ?? "No Client";
+        SelectedClientName = active?.Header ?? "No Session";
     }
 
     // ---- Commands ----
@@ -54,7 +54,7 @@ public partial class DashboardViewModel : ObservableObject
     private void AddClient()
     {
         var idx = ClientTabs.Count + 1;
-        ClientTabs.Add(new TabViewModel { Header = $"New Client {idx}", IsActive = false });
+        ClientTabs.Add(new TabViewModel { Header = $"Session {idx}", IsActive = false });
     }
 
     [RelayCommand]

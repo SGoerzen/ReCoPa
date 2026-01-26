@@ -227,4 +227,23 @@
         <Setter Property="CornerRadius" Value="10"/>
     </Style>
 
+    <!-- Tab button default -->
+    <Style Selector="Button.tab">
+        <Setter Property="Background" Value="{DynamicResource SurfaceHover}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorder}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
+    <Style Selector="Button.tab:pointerover">
+        <Setter Property="Background" Value="{DynamicResource SurfaceSelected}"/>
+    </Style>
+
+    <!-- Selected/Active tab -->
+    <Style Selector="views|TabView[IsActive=True] Button.tab">
+        <Setter Property="Background" Value="{DynamicResource AppPrimaryColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextOnPrimary}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource AppPrimaryColor}"/>
+    </Style>
+    
 </Styles>

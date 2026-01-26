@@ -7,35 +7,65 @@
 
     <DockPanel>
 
-        <!-- TOP BAR: Logo + Tabs + New Client (alles eine Zeile) -->
-        <Border DockPanel.Dock="Top" Background="{DynamicResource SurfaceElevated}" Padding="12" BorderBrush="{DynamicResource SurfaceBorder}" BorderThickness="0,0,0,1">
-            <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
-                
-                <!-- Middle: Client Tabs -->
-                <ItemsControl Grid.Column="0" ItemsSource="{Binding ClientTabs}" Margin="16,0">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+        <!-- TOP BAR: Tabs (scrollbar) + Pfeile + New Session -->
+        <Border DockPanel.Dock="Top"
+                Background="{DynamicResource SurfaceElevated}"
+                Padding="0,12,0,0"
+                BorderBrush="{DynamicResource SurfaceBorder}"
+                BorderThickness="0,0,0,1">
 
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <views:TabView
-                                Header="{Binding Header}"
-                                IsActive="{Binding IsActive}"
-                                Margin="0,0,10,0" />
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto" ColumnSpacing="8" VerticalAlignment="Center">
 
-                <!-- Right: Add Client -->
-                <Button Grid.Column="1"
+                <!-- Left Arrow -->
+                <Button Grid.Column="0"
+                        Classes="secondary"
+                        Padding="10,8"
+                        CornerRadius="10"
+                        Click="ScrollTabsLeft">
+                    <TextBlock Text="◀" />
+                    <!-- oder mit MaterialIcon -->
+                    <!-- <material:MaterialIcon Kind="ChevronLeft" Width="18" Height="18"/> -->
+                </Button>
+
+                <!-- Scrollable Tabs -->
+                <ScrollViewer Grid.Column="1"
+                              Name="TabsScroll"
+                              HorizontalScrollBarVisibility="Hidden"
+                              VerticalScrollBarVisibility="Disabled">
+                    <ItemsControl ItemsSource="{Binding ClientTabs}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <views:TabView Header="{Binding Header}"
+                                               IsActive="{Binding IsActive}"
+                                               Margin="0,0,10,0" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- Right Arrow -->
+                <Button Grid.Column="2"
+                        Classes="secondary"
+                        Padding="10,8"
+                        CornerRadius="10"
+                        Click="ScrollTabsRight">
+                    <TextBlock Text="▶" />
+                    <!-- <material:MaterialIcon Kind="ChevronRight" Width="18" Height="18"/> -->
+                </Button>
+
+                <!-- New Session -->
+                <Button Grid.Column="3"
                         Content="+ New Session"
                         Command="{Binding AddClientCommand}"
                         Classes="secondary"
                         Padding="12,8"
-                        CornerRadius="10"/>
+                        CornerRadius="10" />
             </Grid>
         </Border>
 
@@ -43,20 +73,19 @@
         <Grid ColumnDefinitions="320,*">
             <!-- Sidebar -->
             <views:SidebarView Grid.Column="0"
-                              ClientName="{Binding SelectedClientName}"
-                              IsConnected="{Binding IsSelectedClientConnected}"
-                              IsDisconnected="{Binding IsSelectedClientDisconnected}"
-                              XapiStatementsCount="{Binding SelectedClientXapiStatementsCount}"
-                              GameObjectsCount="{Binding SelectedClientGameObjectsCount}"
-                              Fps="{Binding SelectedClientFps}"
-                              HeartRate="{Binding SelectedClientHeartRate}"
-                              NavigateVisualizationsCommand="{Binding NavigateVisualizationsCommand}"
-                              NavigateSettingsCommand="{Binding NavigateSettingsCommand}"
-                              StartEyeCalibrationCommand="{Binding StartCalibrationCommand}"
-                              PauseTrackingCommand="{Binding PauseTrackingCommand}"
-                              StopTrackingCommand="{Binding StopTrackingCommand}"
-                              ShutdownUnityAppCommand="{Binding ShutdownAppCommand}"
-                              />
+                               ClientName="{Binding SelectedClientName}"
+                               IsConnected="{Binding IsSelectedClientConnected}"
+                               IsDisconnected="{Binding IsSelectedClientDisconnected}"
+                               XapiStatementsCount="{Binding SelectedClientXapiStatementsCount}"
+                               GameObjectsCount="{Binding SelectedClientGameObjectsCount}"
+                               Fps="{Binding SelectedClientFps}"
+                               HeartRate="{Binding SelectedClientHeartRate}"
+                               NavigateVisualizationsCommand="{Binding NavigateVisualizationsCommand}"
+                               NavigateSettingsCommand="{Binding NavigateSettingsCommand}"
+                               StartEyeCalibrationCommand="{Binding StartCalibrationCommand}"
+                               PauseTrackingCommand="{Binding PauseTrackingCommand}"
+                               StopTrackingCommand="{Binding StopTrackingCommand}"
+                               ShutdownUnityAppCommand="{Binding ShutdownAppCommand}" />
 
             <!-- Content (bei dir erstmal wie gehabt) -->
             <views:StatementListView Grid.Column="1" />

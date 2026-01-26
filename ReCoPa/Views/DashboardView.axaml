@@ -41,8 +41,11 @@
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <views:TabView Header="{Binding Header}"
+                                <views:TabView x:CompileBindings="False"
+                                               Header="{Binding Header}"
                                                IsActive="{Binding IsActive}"
+                                               SelectCommand="{Binding $parent[views:DashboardView].DataContext.SelectTabCommand}"
+                                               SelectCommandParameter="{Binding}"
                                                Margin="0,0,10,0" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

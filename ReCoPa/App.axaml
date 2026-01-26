@@ -23,6 +23,7 @@
          </ResourceDictionary>
          
          <conv:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
+         <conv:BoolInvertConverter x:Key="BoolInvertConverter"/>
      </Application.Resources>
 
      <!-- ===================== -->

@@ -15,15 +15,23 @@
             <Setter Property="Padding" Value="10,6"/>
         </Style>
 
-        <!-- Hover (optional) -->
+        <!-- Hover only matters when NOT active (active is disabled anyway) -->
         <Style Selector="Button#TabButton:pointerover">
             <Setter Property="Background" Value="{DynamicResource SurfaceHover}"/>
         </Style>
 
-        <!-- Selected: TabActiveBackground -->
+        <!-- Selected/Active -->
         <Style Selector="views|TabView[IsActive=True] Button#TabButton">
             <Setter Property="CornerRadius" Value="10,10,0,0"/>
             <Setter Property="Margin" Value="0,0,10,-1"/>
+            <Setter Property="Background" Value="{DynamicResource TabActiveBackground}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TabActiveForeground}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource TabActiveBorder}"/>
+        </Style>
+
+        <!-- Active tab is disabled -> keep same look (no grey/opacity) -->
+        <Style Selector="views|TabView[IsActive=True] Button#TabButton:disabled">
+            <Setter Property="Opacity" Value="1"/>
             <Setter Property="Background" Value="{DynamicResource TabActiveBackground}"/>
             <Setter Property="Foreground" Value="{DynamicResource TabActiveForeground}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource TabActiveBorder}"/>
@@ -33,5 +41,10 @@
 
     <Button x:Name="TabButton"
             ZIndex="100"
-            Content="{Binding Header, RelativeSource={RelativeSource AncestorType=views:TabView}}"/>
+            Content="{Binding Header, RelativeSource={RelativeSource AncestorType=views:TabView}}"
+            IsEnabled="{Binding IsActive, RelativeSource={RelativeSource AncestorType=views:TabView},
+                                Converter={StaticResource BoolInvertConverter}}"
+            Command="{Binding SelectCommand, RelativeSource={RelativeSource AncestorType=views:TabView}}"
+            CommandParameter="{Binding SelectCommandParameter, RelativeSource={RelativeSource AncestorType=views:TabView}}"/>
+
 </UserControl>

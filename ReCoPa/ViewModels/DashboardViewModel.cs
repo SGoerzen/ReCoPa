@@ -99,4 +99,18 @@ public partial class DashboardViewModel : ObservableObject
         SelectedClientName = tab.Header;
         // TODO: load counts/fps/heartrate from this tab's client model
     }
+    
+    [RelayCommand]
+    private void SelectTab(TabViewModel? tab)
+    {
+        if (tab is null) return;
+
+        foreach (var t in ClientTabs)
+            t.IsActive = false;
+
+        tab.IsActive = true;
+
+        // optional: hier deine SelectedClient* Felder updaten
+        SelectedClientName = tab.Header;
+    }
 }

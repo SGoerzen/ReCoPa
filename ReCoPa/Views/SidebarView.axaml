@@ -49,6 +49,7 @@
     <!-- Menu middle -->
     <Border DockPanel.Dock="Bottom" Classes="card">
       <StackPanel Spacing="8">
+        
         <TextBlock Text="Menu" FontWeight="SemiBold"/>
 
         <Button Classes="nav secondary"

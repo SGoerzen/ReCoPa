@@ -6,7 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ReCoPa.ViewModels;
 
-public partial class DashboardViewModel : ObservableObject
+public partial class DashboardViewModel : ViewModelBase
 {
     public ObservableCollection<TabViewModel> ClientTabs { get; } = new();
 

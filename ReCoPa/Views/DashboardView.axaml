@@ -13,7 +13,7 @@
                               AddClientCommand="{Binding AddClientCommand}"/>
 
         <!-- MAIN -->
-        <Grid ColumnDefinitions="320,*">
+        <Grid ColumnDefinitions="250,*">
             <!-- Sidebar -->
             <views:SidebarView Grid.Column="0"
                                ClientName="{Binding SelectedClientName}"
@@ -31,7 +31,7 @@
                                ShutdownUnityAppCommand="{Binding ShutdownAppCommand}" />
 
             <!-- Content (bei dir erstmal wie gehabt) -->
-            <views:StatementListView Grid.Column="1" />
+            <views:VisualizationContainerView Grid.Column="1" />
         </Grid>
 
     </DockPanel>

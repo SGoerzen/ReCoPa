@@ -1,50 +1,61 @@
-using System;
-using System.Reactive;
-using ReactiveUI;
+using System.Windows.Input;
+using CommunityToolkit.Mvvm.Input;
+using Material.Icons;
+using ReCoPa.ViewModels;
 
-namespace ReCoPa.ViewModels;
-
-public class SidebarViewModel : ReactiveObject
+public class SidebarViewModel : ViewModelBase
 {
-    private string _clientName = string.Empty;
+    private bool _isTrackingRunning;
+    private bool _isTrackingPaused;
 
-    public string ClientName
+    public bool IsTrackingRunning
     {
-        get => _clientName;
-        set => this.RaiseAndSetIfChanged(ref _clientName, value);
+        get => _isTrackingRunning;
+        set => SetProperty(ref _isTrackingRunning, value);
     }
 
-    // Navigations-Commands
-    public ReactiveCommand<Unit, Unit> NavigateToOverviewCommand { get; }
-    public ReactiveCommand<Unit, Unit> NavigateToActorCommand { get; }
-    public ReactiveCommand<Unit, Unit> NavigateToXapiCommand { get; }
-    public ReactiveCommand<Unit, Unit> NavigateToSettingsCommand { get; }
-
-    public SidebarViewModel()
+    public bool IsTrackingPaused
     {
-        // Initialisiere die Commands mit leeren Aktionen (können später gefüllt werden)
-        NavigateToOverviewCommand = ReactiveCommand.Create(() =>
-        {
-            Console.WriteLine("Navigate to Overview");
-            // Hier Logik für die Navigation einfügen
-        });
+        get => _isTrackingPaused;
+        set => SetProperty(ref _isTrackingPaused, value);
+    }
 
-        NavigateToActorCommand = ReactiveCommand.Create(() =>
-        {
-            Console.WriteLine("Navigate to Actor");
-            // Hier Logik für die Navigation einfügen
-        });
+    public bool IsEyeTrackingEnabled { get; set; } = false;
 
-        NavigateToXapiCommand = ReactiveCommand.Create(() =>
-        {
-            Console.WriteLine("Navigate to xAPI Statements");
-            // Hier Logik für die Navigation einfügen
-        });
+    // === Pause / Resume ===
+    public string PauseResumeText =>
+        IsTrackingPaused ? "Resume Tracking" : "Pause Tracking";
 
-        NavigateToSettingsCommand = ReactiveCommand.Create(() =>
-        {
-            Console.WriteLine("Navigate to Settings");
-            // Hier Logik für die Navigation einfügen
-        });
+    public MaterialIconKind PauseResumeIcon =>
+        IsTrackingPaused ? MaterialIconKind.Play : MaterialIconKind.Pause;
+
+    // === Start / Stop ===
+    public string StartStopText =>
+        IsTrackingRunning ? "Stop Tracking" : "Start Tracking";
+
+    public MaterialIconKind StartStopIcon =>
+        IsTrackingRunning ? MaterialIconKind.Stop : MaterialIconKind.PlayCircle;
+
+    public ICommand TogglePauseCommand => new RelayCommand(() =>
+    {
+        if (!IsTrackingRunning) return;
+
+        IsTrackingPaused = !IsTrackingPaused;
+        RaiseTrackingUi();
+    });
+
+    public ICommand ToggleStartStopCommand => new RelayCommand(() =>
+    {
+        IsTrackingRunning = !IsTrackingRunning;
+        IsTrackingPaused = false;
+        RaiseTrackingUi();
+    });
+
+    private void RaiseTrackingUi()
+    {
+        OnPropertyChanged(nameof(PauseResumeText));
+        OnPropertyChanged(nameof(PauseResumeIcon));
+        OnPropertyChanged(nameof(StartStopText));
+        OnPropertyChanged(nameof(StartStopIcon));
     }
 }

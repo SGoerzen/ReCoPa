@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace ReCoPa.ViewModels;
 
-public partial class SettingsViewModel : ObservableObject
+public partial class SettingsViewModel : ViewModelBase
 {
     public ObservableCollection<EndpointViewModel> Endpoints { get; } = new();
     public ObservableCollection<ToggleChipViewModel> TrackingToggles { get; } = new();

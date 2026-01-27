@@ -3,16 +3,18 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Threading;
+using CommunityToolkit.Mvvm.Input;
 using ReactiveUI;
 using ReCoPa.Models;
 using ReCoPa.Network;
 
 namespace ReCoPa.ViewModels;
 
-public class MainViewModel : ReactiveObject
+public class MainViewModel : ViewModelBase
 {
     private readonly SocketServerHost _server;
 
@@ -22,18 +24,36 @@ public class MainViewModel : ReactiveObject
     public ReactiveCommand<Unit, Unit> QuitAppCommand { get; }
     public ReactiveCommand<Unit, Unit> QuitAllClientsCommand { get; }
 
-    private bool _hasClients;
-    public bool HasClients
+    public ViewModelBase CurrentViewModel
     {
-        get => _hasClients;
-        private set => this.RaiseAndSetIfChanged(ref _hasClients, value);
+        get;
+        set => SetProperty(ref field, value);
     }
+
+    public DashboardViewModel Dashboard { get; }
+    public SettingsViewModel Settings { get; }
+
+    public ICommand NavigateDashboardCommand { get; }
+    public ICommand NavigateSettingsCommand { get; }
+
+    public bool HasClients { get; private set; }
 
     public MainViewModel(SocketServerHost server)
     {
         _server = server;
         Clients = new ObservableCollection<XRClient>();
         ClientsTableViewModel = new ClientsTableViewModel(Clients);
+        
+        Dashboard = new DashboardViewModel();
+        Settings = new SettingsViewModel();
+        
+        CurrentViewModel = Dashboard;
+
+        NavigateDashboardCommand = new RelayCommand(() =>
+            CurrentViewModel = Dashboard);
+
+        NavigateSettingsCommand = new RelayCommand(() =>
+            CurrentViewModel = Settings);
 
         // --- keep HasClients in sync (and make sure the observable is UI-scheduled)
         this.WhenAnyValue(x => x.Clients.Count)
@@ -53,6 +73,7 @@ public class MainViewModel : ReactiveObject
                 Dispatcher.UIThread.Post(() =>
                 {
                     Clients.Add(model);
+                    HasClients = Clients.Count > 0;
                 });
             }
         };
@@ -67,6 +88,7 @@ public class MainViewModel : ReactiveObject
                 Dispatcher.UIThread.Post(() =>
                 {
                     Clients.Remove(item);
+                    HasClients = Clients.Count > 0;
                 });
             }
         };

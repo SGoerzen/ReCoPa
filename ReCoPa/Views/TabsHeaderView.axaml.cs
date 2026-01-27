@@ -14,16 +14,12 @@ namespace ReCoPa.Views;
 public partial class TabsHeaderView : UserControl, INotifyPropertyChanged
 {
     private ScrollViewer? _tabsScroll;
-    
-    private bool _canScrollLeft;
-    private bool _canScrollRight;
-    
+
     private bool _panActivated;
 
     
     private bool _isPanning;
     private Point _lastPoint;
-    private double _startOffsetX;
 
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -57,14 +53,28 @@ public partial class TabsHeaderView : UserControl, INotifyPropertyChanged
 
     public bool CanScrollLeft
     {
-        get => _canScrollLeft;
-        private set { if (_canScrollLeft != value) { _canScrollLeft = value; OnPropertyChanged(); } }
+        get;
+        private set
+        {
+            if (field != value)
+            {
+                field = value;
+                OnPropertyChanged();
+            }
+        }
     }
 
     public bool CanScrollRight
     {
-        get => _canScrollRight;
-        private set { if (_canScrollRight != value) { _canScrollRight = value; OnPropertyChanged(); } }
+        get;
+        private set
+        {
+            if (field != value)
+            {
+                field = value;
+                OnPropertyChanged();
+            }
+        }
     }
 
     public TabsHeaderView()

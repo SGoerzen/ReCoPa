@@ -23,10 +23,5 @@
                 </ItemsControl>
             </StackPanel>
         </Border>
-        <!-- Actions -->
-        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10" Spacing="10">
-            <Button Content="Start Eye Calibration" Command="{Binding StartCalibrationCommand}"/>
-            <Button Content="Shutdown Unity App" Background="Red" Foreground="White" Command="{Binding ShutdownAppCommand}"/>
-        </StackPanel>
     </DockPanel>
 </UserControl>

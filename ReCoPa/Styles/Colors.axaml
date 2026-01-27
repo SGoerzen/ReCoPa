@@ -30,5 +30,14 @@
     <SolidColorBrush x:Key="TextOnPrimary" Color="#FFFFFF"/>
 
     <!-- Danger -->
-    <SolidColorBrush x:Key="AppDangerColor" Color="#D64545"/>
+    <SolidColorBrush x:Key="AppDangerBackground" Color="#f24a46"/>
+    <SolidColorBrush x:Key="AppDangerForeground" Color="#ffffff"/>
+    
+    <!-- Warning -->
+    <SolidColorBrush x:Key="AppWarningBackground" Color="#f5a726"/>
+    <SolidColorBrush x:Key="AppWarningForeground" Color="#ffffff"/>
+    
+    <!-- Success -->
+    <SolidColorBrush x:Key="AppSuccessBackground" Color="#71c184"/>
+    <SolidColorBrush x:Key="AppSuccessForeground" Color="#ffffff"/>
 </ResourceDictionary>

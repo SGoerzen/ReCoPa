@@ -5,6 +5,7 @@
                    x:Class="ReCoPa.Views.MainWindow"
                    x:DataType="vm:MainViewModel"
                    xmlns:sukiUi="clr-namespace:SukiUI.Controls;assembly=SukiUI"
+                   xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
                    Width="1000"
                    Height="700"
                    Title="ReCoPa - Researcher Companion Panel"
@@ -14,6 +15,24 @@
     <sukiUi:SukiWindow.LogoContent>
         <Image Source="avares://ReCoPa/Assets/app-icon.png" Width="32" Height="32"/>        <!-- Logo -->
     </sukiUi:SukiWindow.LogoContent>
+    
+    <sukiUi:SukiWindow.RightWindowTitleBarControls>
+        <Button
+            Classes="icon"
+            ToolTip.Tip="Plugins"
+            Command="{Binding NavigateSettingsCommand}"
+            Background="Transparent"
+            BorderThickness="0"
+            Padding="8">
+
+            <avalonia:MaterialIcon
+                Kind="ToyBrick"
+                Width="20"
+                Height="20"
+                Foreground="{DynamicResource AccentBrush}" />
+
+        </Button>
+    </sukiUi:SukiWindow.RightWindowTitleBarControls>
 
     <ScrollViewer>
         

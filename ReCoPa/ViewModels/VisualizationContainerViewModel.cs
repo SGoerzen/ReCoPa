@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using Avalonia.Controls;
 
@@ -11,6 +12,7 @@ public class VisualizationContainerViewModel
     {
         foreach (var visualization in App.PluginManager.Visualizations)
         {
+            Console.WriteLine("Loading Visualization: " + visualization.Name);
             try
             {
                 var view = (Control)visualization.CreateView();

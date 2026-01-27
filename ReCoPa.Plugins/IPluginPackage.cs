@@ -7,4 +7,7 @@ public interface IPluginPackage
     Contributor[] Contributors { get; }
     string Description { get; }
     IPluginComponent[] Components { get; }
+
+    public string GetVersion() => GetType().Assembly.GetName().Version?.ToString() ?? "0.0.0";
+    public string GetFilePath() => GetType().Assembly.Location;
 }

@@ -1,37 +1,135 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:ReCoPa.ViewModels"
-             mc:Ignorable="d"
-             d:DesignWidth="800"
-             d:DesignHeight="450"
+             xmlns:plugins="clr-namespace:ReCoPa.Plugins"
+             xmlns:plugins1="clr-namespace:ReCoPa.Plugins;assembly=ReCoPa.Plugins"
+             xmlns:converters="clr-namespace:ReCoPa.Converters"
              x:Class="ReCoPa.Views.PluginManagerView"
              x:DataType="vm:PluginManagerViewModel">
 
-    <StackPanel Margin="16" Spacing="12">
+  <StackPanel Margin="16" Spacing="12">
 
-        <TextBlock Text="Installed Plugins"
-                   FontSize="20"
-                   FontWeight="Bold"/>
+    <!-- Header row -->
+    <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="10">
+      <TextBlock Text="Plugins"
+                 FontSize="20"
+                 FontWeight="Bold"
+                 VerticalAlignment="Center"/>
 
-        <ListBox ItemsSource="{Binding Plugins}">
-            <ListBox.ItemTemplate>
-                <DataTemplate x:DataType="vm:PluginItemViewModel">
-                    <Border Padding="8"
-                            BorderBrush="#444"
-                            BorderThickness="1">
-                        <StackPanel>
-                            <TextBlock Text="{Binding Name}"
-                                       FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding Version}"
-                                       FontSize="12"
-                                       Opacity="0.7"/>
+      <Button Grid.Column="1"
+              Classes="secondary"
+              Content="Refresh"
+              Command="{Binding RefreshPluginsCommand}"/>
+
+      <Button Grid.Column="2"
+              Classes="secondary"
+              Content="Add Plugin..."
+              Command="{Binding AddPluginCommand}"/>
+      
+      <Button Grid.Column="3" Classes="secondary" Content="Open Folder" Click="Button_OpenFolder" />
+    </Grid>
+
+    <ItemsControl ItemsSource="{Binding Plugins}">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="vm:PluginItemViewModel">
+          <Border Classes="card" Padding="12">
+
+            <StackPanel Spacing="8">
+
+              <!-- Top line: Name + Version + Enabled toggle -->
+              <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10" RowDefinitions="Auto,Auto">
+
+                <!-- Expand click area (name/desc) -->
+                <StackPanel Grid.Column="0" Grid.Row="0" Spacing="2">
+                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="16"/>
+
+                  <TextBlock Text="{Binding Description}"
+                             Classes="secondary"
+                             TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                           Text="{Binding Version}"
+                           Classes="secondary"
+                           VerticalAlignment="Center"/>
+
+                <!-- Enabled toggle button -->
+                <Button Grid.Column="2" Grid.Row="0"
+                        Classes="secondary"
+                        Content="{Binding EnabledLabel}"
+                        IsEnabled="{Binding CanToggleEnabled}"
+                        Command="{Binding ToggleEnabledCommand}"/>
+
+                <!-- Expand / Remove row -->
+                <StackPanel Grid.Column="0" Grid.Row="1"
+                            Orientation="Horizontal" Spacing="10">
+
+                  <Button Classes="secondary"
+                          Content="{Binding IsExpanded, Converter={x:Static converters:BoolToExpandTextConverter.Instance}}"
+                          Command="{Binding ToggleExpandCommand}"/>
+
+                  <Button Classes="danger"
+                          Content="Remove"
+                          IsEnabled="{Binding CanRemove}"
+                          Command="{Binding RemoveCommand}"/>
+
+                  <TextBlock Text="{Binding FilePath}"
+                             Classes="secondary"
+                             VerticalAlignment="Center"
+                             TextTrimming="CharacterEllipsis"/>
+                </StackPanel>
+
+              </Grid>
+
+              <!-- Summary line always visible -->
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding ComponentSummary}" Classes="secondary"/>
+                <TextBlock Text="{Binding ContributorSummary}" Classes="secondary"/>
+              </StackPanel>
+
+              <!-- Expanded details -->
+              <StackPanel Spacing="8" IsVisible="{Binding IsExpanded}">
+
+                <Border Height="1" Background="{DynamicResource SurfaceBorder}" />
+
+                <StackPanel Spacing="4" IsVisible="{Binding HasComponents}">
+                  <TextBlock Text="Components" FontWeight="SemiBold"/>
+                  <ItemsControl ItemsSource="{Binding Components}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <TextBlock Text="• {Binding}" Classes="secondary"/>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
+
+                <StackPanel Spacing="4" IsVisible="{Binding HasContributors}">
+                  <TextBlock Text="Contributors" FontWeight="SemiBold"/>
+                  <ItemsControl ItemsSource="{Binding Contributors}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="plugins1:Contributor">
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                          <TextBlock Text="{Binding Name}"
+                                     Cursor="Hand"
+                                     Foreground="{DynamicResource AccentBrush}"
+                                     TextDecorations="Underline"
+                                     PointerPressed="OnContributorClicked"/>
+
+                          <TextBlock Text="{Binding Email}" Classes="secondary"/>
                         </StackPanel>
-                    </Border>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                </StackPanel>
 
-    </StackPanel>
+              </StackPanel>
+
+            </StackPanel>
+
+          </Border>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+
+  </StackPanel>
 </UserControl>

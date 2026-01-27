@@ -1,16 +1,140 @@
+using System;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Platform.Storage;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ReCoPa.ViewModels;
 
-public class PluginManagerViewModel : ViewModelBase
+public sealed class PluginManagerViewModel : ViewModelBase
 {
+    // PASSE DAS an deinen echten Core-Plugin Id-String an:
+    // (z.B. in CorePluginPackage: public string Id => "recopa.core";)
+    private const string CorePluginId = "recopa.core";
+
     public ObservableCollection<PluginItemViewModel> Plugins { get; } = new();
+
+    public ICommand RefreshPluginsCommand { get; }
+    public ICommand AddPluginCommand { get; }
+
+    private readonly PluginStateStore _state;
 
     public PluginManagerViewModel()
     {
-        App.PluginManager!.Load();
-        var plugins = App.PluginManager.Plugins;
-        foreach (var plugin in plugins)
-            Plugins.Add(new PluginItemViewModel(plugin));
+        var pluginDir = GetPluginDirectory();
+        _state = new PluginStateStore(pluginDir);
+
+        RefreshPluginsCommand = new RelayCommand(LoadPlugins);
+        AddPluginCommand = new AsyncRelayCommand(AddPluginAsync);
+
+        LoadPlugins();
+    }
+
+    public bool IsCorePluginId(string id)
+        => string.Equals(id, CorePluginId, StringComparison.OrdinalIgnoreCase);
+
+    public void SetEnabled(PluginItemViewModel plugin, bool enabled)
+    {
+        if (plugin.IsCorePlugin) enabled = false; // enforce
+        _state.SetEnabled(plugin.Id, enabled);
+        // Optional: hier könntest du App.PluginManager neu laden / filter anwenden
+    }
+
+    public void RemovePlugin(PluginItemViewModel plugin)
+    {
+        if (plugin.IsCorePlugin) return;
+
+        try
+        {
+            var path = plugin.FilePath;
+            if (!string.IsNullOrWhiteSpace(path) && File.Exists(path))
+                File.Delete(path);
+        }
+        catch { /* ignore */ }
+
+        LoadPlugins();
+    }
+
+    private void LoadPlugins()
+    {
+        Plugins.Clear();
+
+        App.PluginManager!.Load(); // lädt aus Plugin-Dir (SetPath muss vorher passieren)
+        foreach (var plugin in App.PluginManager.Plugins)
+        {
+            var enabledDefault = true;
+
+            // core: disabled by default
+            if (IsCorePluginId(plugin.Id))
+                enabledDefault = false;
+
+            var enabled = _state.GetEnabled(plugin.Id, enabledDefault);
+            Plugins.Add(new PluginItemViewModel(this, plugin, enabled));
+        }
+    }
+
+    private async Task AddPluginAsync()
+    {
+        var lifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+        var window = lifetime?.MainWindow;
+        if (window is null) return;
+
+        var storage = window.StorageProvider;
+
+        var options = new FilePickerOpenOptions
+        {
+            Title = "Select Plugin DLL",
+            AllowMultiple = false
+        };
+
+        // Avalonia: Collection initializer auf FileTypeFilter klappt nicht immer -> explizit List setzen
+        options.FileTypeFilter = new[]
+        {
+            new FilePickerFileType("Plugin DLL")
+            {
+                Patterns = new[] { "*.dll" }
+            }
+        };
+
+        var result = await storage.OpenFilePickerAsync(options);
+        var file = result.FirstOrDefault();
+        if (file is null) return;
+
+        var targetDir = GetPluginDirectory();
+        Directory.CreateDirectory(targetDir);
+
+        var targetPath = Path.Combine(targetDir, Path.GetFileName(file.Path.LocalPath));
+
+        await using var source = await file.OpenReadAsync();
+        await using var dest = File.Create(targetPath);
+        await source.CopyToAsync(dest);
+
+        LoadPlugins();
+    }
+
+    public static string GetPluginDirectory()
+    {
+        var basePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+        if (OperatingSystem.IsMacOS())
+        {
+            basePath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+                "Library", "Application Support");
+        }
+
+        if (OperatingSystem.IsLinux())
+        {
+            basePath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+                ".local", "share");
+        }
+
+        return Path.Combine(basePath, "ReCoPa", "Plugins");
     }
 }

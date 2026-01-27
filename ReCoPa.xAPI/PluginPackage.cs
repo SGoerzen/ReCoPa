@@ -13,5 +13,5 @@ public class PluginPackage : IPluginPackage
             { Name = "Sergej Görzen", Github = "https://github.com/SGoerzen", Email = "goerzen@cs.rwth-aachen.de" }
     ];
     public string Description => "Plugin enabling xAPI and LRS.";
-    public IPluginComponent[] Components => [new IXApiPreview()];
+    public IPluginComponent[] Components => [new xApiPreview()];
 }

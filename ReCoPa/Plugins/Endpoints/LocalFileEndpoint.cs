@@ -1,4 +1,4 @@
-namespace ReCoPa.Plugins;
+namespace ReCoPa.Plugins.Endpoints;
 
 public class LocalFileEndpoint : IEndpoint
 {

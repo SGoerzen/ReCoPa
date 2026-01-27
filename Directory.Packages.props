@@ -19,6 +19,7 @@
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageVersion Include="HotAvalonia" Version="3.0.2" />
     <PackageVersion Include="Live.Avalonia" Version="1.4.1" />
+    <PackageVersion Include="LiveChartsCore.SkiaSharpView.Avalonia" Version="2.0.0-rc6.1" />
     <PackageVersion Include="Material.Icons.Avalonia" Version="2.4.1" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageVersion Include="ReactiveUI" Version="22.3.1" />

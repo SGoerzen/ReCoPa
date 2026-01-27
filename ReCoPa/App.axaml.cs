@@ -25,7 +25,8 @@ namespace ReCoPa;
 public partial class App : Application
 {
     public static PluginManager PluginManager { get; } = new();
-
+    public static PluginStateStore PluginStateStore { get; private set; }
+    
     public static SocketServerHost? Socket { get; private set; }
     private int _disposed; 
     
@@ -41,6 +42,8 @@ public partial class App : Application
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "ReCoPa",
             "Plugins");
+        
+        PluginStateStore = new PluginStateStore(pluginDir);
         
         Directory.CreateDirectory(pluginDir);
         PluginManager.Load(pluginDir);

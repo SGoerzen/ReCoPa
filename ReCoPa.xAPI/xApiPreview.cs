@@ -3,7 +3,7 @@ using ReCoPa.xAPI.Views;
 
 namespace ReCoPa.xAPI;
 
-public class IXApiPreview : IVisualization
+public sealed class xApiPreview : IVisualization
 {
     public string Name => "xAPI Preview";
     public object CreateView()

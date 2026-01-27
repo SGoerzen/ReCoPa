@@ -12,6 +12,10 @@
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
+    <PropertyGroup>
+        <LangVersion>preview</LangVersion>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Avalonia" />
         <PackageReference Include="Avalonia.Controls.DataGrid" />
@@ -24,6 +28,7 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm" />
+        <PackageReference Include="LiveChartsCore.SkiaSharpView.Avalonia" />
         <PackageReference Include="Material.Icons.Avalonia" />
         <PackageReference Include="Newtonsoft.Json" />
         <PackageReference Include="ReactiveUI" />
@@ -50,5 +55,9 @@
         <DependentUpon>VisualizationContainerView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Views\Visualizations\PulseMonitorView.axaml" />
     </ItemGroup>
 </Project>

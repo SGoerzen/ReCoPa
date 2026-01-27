@@ -1,8 +1,8 @@
 namespace ReCoPa.Plugins;
 
-public struct Contributor
+public sealed class Contributor
 {
-    public string Name;
-    public string Github;
-    public string Email;
+    public string Name { get; init; } = "";
+    public string Github { get; init; } = "";
+    public string Email { get; init; } = "";
 }

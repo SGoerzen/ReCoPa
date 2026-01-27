@@ -23,7 +23,8 @@
             Command="{Binding NavigateSettingsCommand}"
             Background="Transparent"
             BorderThickness="0"
-            Padding="8">
+            Padding="8"
+            Click="OpenPlugins">
 
             <avalonia:MaterialIcon
                 Kind="ToyBrick"
@@ -39,15 +40,5 @@
          <DockPanel>
             <views:DashboardView />
         </DockPanel>
-        
-        <!--<Border Padding="20" Classes="card">
-            <StackPanel Spacing="16">
-                <TextBlock Text="Connected Clients" FontSize="22" FontWeight="Bold"/>
-                <views:ClientsTableView DataContext="{Binding ClientsTableViewModel}" />
-                <views:VisualizationContainerView />
-                <Button Content="Manage Plugins" Click="OpenPlugins"/>
-                <Button Content="Quit App" HorizontalAlignment="Left" Command="{Binding QuitAppCommand}" />
-            </StackPanel>
-        </Border>-->
     </ScrollViewer>
 </sukiUi:SukiWindow>

@@ -5,7 +5,7 @@
 
     <UserControl.Styles>
 
-        <!-- Default: white -->
+        <!-- Default tab -->
         <Style Selector="Button#TabButton">
             <Setter Property="CornerRadius" Value="10,10,0,0"/>
             <Setter Property="Background" Value="White"/>
@@ -13,8 +13,6 @@
             <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorder}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="10,6"/>
-            <Setter Property="Focusable" Value="True"/>
-            <Setter Property="IsHitTestVisible" Value="True"/>
         </Style>
 
         <!-- Hover -->
@@ -22,23 +20,48 @@
             <Setter Property="Background" Value="{DynamicResource SurfaceHover}"/>
         </Style>
 
-        <!-- Selected/Active -->
+        <!-- Active tab -->
         <Style Selector="views|TabView[IsActive=True] Button#TabButton">
             <Setter Property="Margin" Value="0,0,0,-1"/>
             <Setter Property="Background" Value="{DynamicResource TabActiveBackground}"/>
             <Setter Property="Foreground" Value="{DynamicResource TabActiveForeground}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource TabActiveBorder}"/>
-
-            <!-- IMPORTANT: make it not clickable + no hover/focus -->
             <Setter Property="IsHitTestVisible" Value="False"/>
             <Setter Property="Focusable" Value="False"/>
+        </Style>
+
+        <!-- Status dot default (disconnected) -->
+        <Style Selector="Ellipse#StatusDot">
+            <Setter Property="Fill" Value="#9CA3AF"/> <!-- gray -->
+        </Style>
+
+        <!-- Status dot connected -->
+        <Style Selector="views|TabView[IsConnected=True] Ellipse#StatusDot">
+            <Setter Property="Fill" Value="#22C55E"/> <!-- green -->
         </Style>
 
     </UserControl.Styles>
 
     <Button x:Name="TabButton"
             ZIndex="100"
-            Content="{Binding Header, RelativeSource={RelativeSource AncestorType=views:TabView}}"
             Command="{Binding SelectCommand, RelativeSource={RelativeSource AncestorType=views:TabView}}"
-            CommandParameter="{Binding SelectCommandParameter, RelativeSource={RelativeSource AncestorType=views:TabView}}"/>
+            CommandParameter="{Binding SelectCommandParameter, RelativeSource={RelativeSource AncestorType=views:TabView}}">
+
+        <StackPanel Orientation="Horizontal"
+                    Spacing="8"
+                    VerticalAlignment="Center">
+
+            <!-- Status dot -->
+            <Ellipse x:Name="StatusDot"
+                     Width="8"
+                     Height="8"
+                     VerticalAlignment="Center"/>
+
+            <!-- Header -->
+            <TextBlock Text="{Binding Header,
+                              RelativeSource={RelativeSource AncestorType=views:TabView}}"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+    </Button>
 </UserControl>

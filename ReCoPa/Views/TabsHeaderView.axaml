@@ -42,6 +42,7 @@
                             <views:TabView x:CompileBindings="False"
                                            Header="{Binding Header}"
                                            IsActive="{Binding IsActive}"
+                                           IsConnected="{Binding IsConnected}" 
                                            SelectCommand="{Binding SelectTabCommand, RelativeSource={RelativeSource AncestorType=views:TabsHeaderView}}"
                                            SelectCommandParameter="{Binding}"
                                            Margin="0,0,10,0"/>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using ReCoPa.PluginHost;
 
@@ -34,5 +35,40 @@ public sealed class PluginManager
         foreach (var p in plugins)
             _components.AddRange(p.Components);
         Console.WriteLine($"Loaded {_plugins.Count} plugins with {_components.Count} components.");
+    }
+    
+    public void OpenFolderExplorer()
+    {
+        var folderPath = GetPath();
+        if (string.IsNullOrWhiteSpace(folderPath))
+            return;
+
+        if (OperatingSystem.IsWindows())
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "explorer.exe",
+                Arguments = $"\"{folderPath}\"",
+                UseShellExecute = true
+            });
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "open",
+                Arguments = $"\"{folderPath}\"",
+                UseShellExecute = false
+            });
+        }
+        else // Linux / BSD etc.
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "xdg-open",
+                Arguments = $"\"{folderPath}\"",
+                UseShellExecute = false
+            });
+        }
     }
 }

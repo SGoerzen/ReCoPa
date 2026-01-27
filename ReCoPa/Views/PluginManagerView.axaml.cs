@@ -30,6 +30,6 @@ public partial class PluginManagerView : UserControl
 
     private void Button_OpenFolder(object? sender, RoutedEventArgs e)
     {
-        throw new NotImplementedException();
+        App.PluginManager.OpenFolderExplorer();
     }
 }

@@ -1,75 +1,123 @@
 using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
+using LiveChartsCore;
 using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
+using SkiaSharp;
 
 namespace ReCoPa.ViewModels.Visualizations;
 
-public partial class PulseMonitorViewModel : ObservableObject
+public sealed class PulseMonitorViewModel : ObservableObject, IDisposable
 {
-    public PulseMonitorViewModel()
+    private readonly DispatcherTimer _timer;
+    private readonly Random _random = new();
+
+    public ObservableCollection<DateTimePoint> Values { get; } = new();
+
+    public ISeries[] Series { get; }
+    public Axis[] XAxes { get; }
+    public Axis[] YAxes { get; }
+
+    private bool _isReading = true;
+    public bool IsReading
     {
-        _ = ReadData();
-    }
-
-    [ObservableProperty]
-    public partial double[] Separators { get; set; } = [];
-
-    public ObservableCollection<DateTimePoint> Values { get; set; } = [];
-
-    public Func<DateTime, string> LabelsFormatter { get; } = Formatter;
-
-    public object Sync { get; } = new object();
-
-    public bool IsReading { get; set; } = true;
-
-    private async Task ReadData()
-    {
-        var random = new Random();
-
-        // to keep this sample simple, we run the next infinite loop 
-        // in a real application you should stop the loop/task when the view is disposed 
-
-        while (IsReading)
+        get => _isReading;
+        set
         {
-            await Task.Delay(100);
-
-            // Because we are updating the chart from a different thread 
-            // we need to use a lock to access the chart data. 
-            // this is not necessary if your changes are made on the UI thread. 
-            lock (Sync)
+            if (SetProperty(ref _isReading, value))
             {
-                Values.Add(new DateTimePoint(DateTime.Now, random.Next(0, 10)));
-                if (Values.Count > 250) Values.RemoveAt(0);
-
-                // we need to update the separators every time we add a new point 
-                Separators = GetSeparators();
+                if (_isReading) _timer.Start();
+                else _timer.Stop();
             }
         }
+    }
+
+    public PulseMonitorViewModel()
+    {
+        // Series
+        Series = new ISeries[]
+        {
+            new LineSeries<DateTimePoint>
+            {
+                Values = Values,
+                Fill = null,
+                GeometrySize = 0,
+                Stroke = new SolidColorPaint(SKColors.DeepSkyBlue, 4)
+            }
+        };
+
+        // Axes
+        var x = new Axis
+        {
+            LabelsPaint = new SolidColorPaint(SKColors.LightGray),
+            SeparatorsPaint = new SolidColorPaint(SKColors.Gray, 1),
+            TextSize = 12,
+            UnitWidth = TimeSpan.FromSeconds(1).Ticks,
+            Labeler = v => FormatTime((long)v),
+
+            // !!! hier NICHT über XAML binden – wir setzen CustomSeparators in Tick()
+            CustomSeparators = GetSeparators()
+        };
+
+        var y = new Axis
+        {
+            LabelsPaint = new SolidColorPaint(SKColors.LightGray),
+            SeparatorsPaint = new SolidColorPaint(SKColors.Gray, 1),
+            TextSize = 12,
+            MinLimit = 0,
+            MaxLimit = 10
+        };
+
+        XAxes = new[] { x };
+        YAxes = new[] { y };
+
+        // UI-thread timer (kein lock nötig)
+        _timer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(100)
+        };
+        _timer.Tick += (_, _) => Tick();
+        _timer.Start();
+    }
+
+    private void Tick()
+    {
+        if (!IsReading) return;
+
+        Values.Add(new DateTimePoint(DateTime.Now, _random.Next(0, 10)));
+        if (Values.Count > 250) Values.RemoveAt(0);
+
+        // !!! critical fix: CustomSeparators per Code setzen
+        XAxes[0].CustomSeparators = GetSeparators();
     }
 
     private static double[] GetSeparators()
     {
         var now = DateTime.Now;
-
-        return
-        [
+        return new double[]
+        {
             now.AddSeconds(-25).Ticks,
             now.AddSeconds(-20).Ticks,
             now.AddSeconds(-15).Ticks,
             now.AddSeconds(-10).Ticks,
             now.AddSeconds(-5).Ticks,
             now.Ticks
-        ];
+        };
     }
 
-    private static string Formatter(DateTime date)
+    private static string FormatTime(long ticks)
     {
+        var date = new DateTime(ticks);
         var secsAgo = (DateTime.Now - date).TotalSeconds;
+        return secsAgo < 1 ? "now" : $"{secsAgo:N0}s ago";
+    }
 
-        return secsAgo < 1
-            ? "now"
-            : $"{secsAgo:N0}s ago";
+    public void Dispose()
+    {
+        _timer.Stop();
+        _timer.Tick -= (_, _) => Tick();
     }
 }

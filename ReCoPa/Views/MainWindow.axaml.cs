@@ -8,6 +8,7 @@ public partial class MainWindow : SukiWindow
     public MainWindow()
     {
         InitializeComponent();
+        Title = Title + " v" + (Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown");
     }
     
     private void OpenPlugins(object? sender, Avalonia.Interactivity.RoutedEventArgs e)

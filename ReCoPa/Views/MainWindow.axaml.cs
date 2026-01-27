@@ -1,3 +1,4 @@
+using System.Reflection;
 using Avalonia.Controls;
 using SukiUI.Controls;
 

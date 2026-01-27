@@ -21,8 +21,7 @@ public partial class TabsHeaderView : UserControl, INotifyPropertyChanged
     private bool _isPanning;
     private Point _lastPoint;
 
-
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public new event PropertyChangedEventHandler? PropertyChanged;
 
     public static readonly StyledProperty<IEnumerable?> ItemsProperty =
         AvaloniaProperty.Register<TabsHeaderView, IEnumerable?>(nameof(Items));

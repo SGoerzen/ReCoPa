@@ -10,8 +10,9 @@
 
     <lvc:CartesianChart
         Margin="20"
-        Background="#333333"
-        ZoomMode="Both"
+        Background="#eee"
+        Foreground="black"
+        ZoomMode="None"
         TooltipPosition="Hidden"
         Series="{Binding Series}"
         XAxes="{Binding XAxes}"

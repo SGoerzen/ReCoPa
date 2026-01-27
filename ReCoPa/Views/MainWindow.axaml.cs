@@ -17,7 +17,9 @@ public partial class MainWindow : SukiWindow
         var window = new Window
         {
             Title = "Plugins",
-            Width = 500,
+            MinWidth = 800,
+            Width = 800,
+            MinHeight = 400,
             Height = 400,
             Content = new PluginManagerView()
         };

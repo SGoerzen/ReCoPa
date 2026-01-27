@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -21,6 +22,8 @@ public sealed class PulseMonitorViewModel : ObservableObject, IDisposable
     public Axis[] XAxes { get; }
     public Axis[] YAxes { get; }
 
+    private DateTime _startTime;
+
     private bool _isReading = true;
     public bool IsReading
     {
@@ -37,6 +40,7 @@ public sealed class PulseMonitorViewModel : ObservableObject, IDisposable
 
     public PulseMonitorViewModel()
     {
+        _startTime = DateTime.Now;
         // Series
         Series = new ISeries[]
         {
@@ -52,7 +56,7 @@ public sealed class PulseMonitorViewModel : ObservableObject, IDisposable
         // Axes
         var x = new Axis
         {
-            LabelsPaint = new SolidColorPaint(SKColors.LightGray),
+            LabelsPaint = new SolidColorPaint(SKColors.Black),
             SeparatorsPaint = new SolidColorPaint(SKColors.Gray, 1),
             TextSize = 12,
             UnitWidth = TimeSpan.FromSeconds(1).Ticks,
@@ -64,7 +68,7 @@ public sealed class PulseMonitorViewModel : ObservableObject, IDisposable
 
         var y = new Axis
         {
-            LabelsPaint = new SolidColorPaint(SKColors.LightGray),
+            LabelsPaint = new SolidColorPaint(SKColors.Black),
             SeparatorsPaint = new SolidColorPaint(SKColors.Gray, 1),
             TextSize = 12,
             MinLimit = 0,
@@ -93,6 +97,7 @@ public sealed class PulseMonitorViewModel : ObservableObject, IDisposable
         // !!! critical fix: CustomSeparators per Code setzen
         XAxes[0].CustomSeparators = GetSeparators();
     }
+    
 
     private static double[] GetSeparators()
     {

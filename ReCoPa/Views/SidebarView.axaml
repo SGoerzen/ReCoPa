@@ -124,10 +124,9 @@
                       ColumnSpacing="12"
                       RowSpacing="10">
 
-                    <!-- xAPI Statements -->
                     <material:MaterialIcon Grid.Row="0" Grid.Column="0"
                                            Kind="ChartBar"
-                                           Width="18" Height="18"
+                                           Width="24" Height="24"
                                            Foreground="{DynamicResource AccentBrush}" />
 
                     <StackPanel Grid.Row="0" Grid.Column="1" Spacing="2">
@@ -141,7 +140,7 @@
                     <!-- Game Objects -->
                     <material:MaterialIcon Grid.Row="1" Grid.Column="0"
                                            Kind="GamepadVariant"
-                                           Width="18" Height="18"
+                                           Width="24" Height="24"
                                            Foreground="{DynamicResource AccentBrush}" />
 
                     <StackPanel Grid.Row="1" Grid.Column="1" Spacing="2">
@@ -155,7 +154,7 @@
                     <!-- FPS -->
                     <material:MaterialIcon Grid.Row="2" Grid.Column="0"
                                            Kind="Speedometer"
-                                           Width="18" Height="18"
+                                           Width="24" Height="24"
                                            Foreground="{DynamicResource AccentBrush}" />
 
                     <StackPanel Grid.Row="2" Grid.Column="1" Spacing="2">
@@ -170,7 +169,7 @@
                     <!-- Heart Rate -->
                     <material:MaterialIcon Grid.Row="3" Grid.Column="0"
                                            Kind="HeartPulse"
-                                           Width="18" Height="18"
+                                           Width="24" Height="24"
                                            Foreground="#EF4444" />
 
                     <StackPanel Grid.Row="3" Grid.Column="1" Spacing="2">

@@ -2,35 +2,167 @@
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:vm="clr-namespace:ReCoPa.ViewModels"
-    xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls"
+    xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
     x:Class="ReCoPa.Views.VisualizationContainerView"
+    x:Name="Root"
     x:DataType="vm:VisualizationContainerViewModel">
 
-    <ScrollViewer>
-        <ItemsControl ItemsSource="{Binding Views}">
-            
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+    <UserControl.Styles>
 
-            <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="controls:Control">
-                    <Border
-                        Width="360"
-                        Margin="8"
-                        Padding="8"
-                        BorderThickness="2"
-                        BorderBrush="#444"
-                        CornerRadius="6">
+        <!-- Hover-Bar ein-/ausblenden -->
+        <Style Selector="Border.visTile Border#HoverBar">
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="IsHitTestVisible" Value="False"/>
+        </Style>
 
-                        <ContentPresenter Content="{Binding}" />
+        <Style Selector="Border.visTile:pointerover Border#HoverBar">
+            <Setter Property="Opacity" Value="1"/>
+            <Setter Property="IsHitTestVisible" Value="True"/>
+        </Style>
 
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
+    </UserControl.Styles>
 
-        </ItemsControl>
-    </ScrollViewer>
+    <DockPanel>
+
+        <!-- Top bar: Add / Layout -->
+        <Border DockPanel.Dock="Top" Classes="card" Padding="0,10,10,10">
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+
+                <ComboBox Grid.Column="0"
+                          ItemsSource="{Binding AvailableVisualizations}"
+                          SelectedItem="{Binding SelectedToAdd}"
+                          MinWidth="260">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <ComboBox Grid.Column="1"
+                          ItemsSource="{Binding LayoutOptions}"
+                          SelectedItem="{Binding SelectedLayout}"
+                          MinWidth="90" />
+
+                <Button Grid.Column="2"
+                        Classes="secondary"
+                        Command="{Binding AddVisualizationCommand}">
+                    <TextBlock Text="Add" />
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Grid area -->
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                      Padding="5,0,0,0"
+                      VerticalScrollBarVisibility="Auto">
+
+            <ItemsControl ItemsSource="{Binding Views}">
+
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid x:CompileBindings="False"
+                                     Columns="{Binding DataContext.GridColumns, ElementName=Root}"
+                                     Rows="{Binding DataContext.GridRows, ElementName=Root}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:VisualizationHostItem" x:CompileBindings="False">
+
+                        <!-- Tile -->
+                        <Border Classes="card visTile"
+                                Margin="10"
+                                ClipToBounds="True">
+
+                            <Grid>
+
+                                <!-- content -->
+                                <ContentPresenter Content="{Binding View}" />
+
+                                <!-- Hover header -->
+                                <Border Name="HoverBar"
+                                        VerticalAlignment="Top"
+                                        Background="#AA000000"
+                                        Padding="8">
+                                    <Border.Transitions>
+                                        <Transitions>
+                                            <DoubleTransition Property="Opacity" Duration="0:0:0.12"/>
+                                        </Transitions>
+                                    </Border.Transitions>
+
+                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                        <TextBlock Text="{Binding Title}"
+                                                   Foreground="White"
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center"/>
+
+                                        <!-- Settings (nur wenn SettingsView existiert) -->
+                                        <Button Grid.Column="1"
+                                                Classes="secondary"
+                                                Padding="6"
+                                                IsVisible="{Binding HasSettingsView}"
+                                                Command="{Binding #Root.DataContext.ToggleSettingsCommand}"
+                                                CommandParameter="{Binding}">
+                                            <material:MaterialIcon Kind="Cog" Width="16" Height="16"/>
+                                        </Button>
+
+                                        <!-- Remove -->
+                                        <Button Grid.Column="2"
+                                                Classes="secondary"
+                                                Padding="6"
+                                                Command="{Binding #Root.DataContext.RemoveVisualizationCommand}"
+                                                CommandParameter="{Binding}">
+                                            <material:MaterialIcon Kind="Close" Width="16" Height="16"/>
+                                        </Button>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Settings overlay -->
+                                <Border Background="#99000000"
+                                        IsVisible="{Binding IsSettingsOpen}"
+                                        Padding="12">
+
+                                    <Border Classes="card" Padding="12" MaxWidth="520">
+                                        <Grid RowDefinitions="Auto,*" RowSpacing="10">
+
+                                            <Grid ColumnDefinitions="*,Auto">
+                                                <TextBlock Text="{Binding Title}"
+                                                           FontSize="14"
+                                                           FontWeight="SemiBold"/>
+
+                                                <Button Grid.Column="1"
+                                                        Classes="secondary"
+                                                        Padding="6"
+                                                        Command="{Binding #Root.DataContext.ToggleSettingsCommand}"
+                                                        CommandParameter="{Binding}">
+                                                    <material:MaterialIcon Kind="Close" Width="16" Height="16"/>
+                                                </Button>
+                                            </Grid>
+
+                                            <!-- Wenn SettingsView null: placeholder -->
+                                            <Grid Grid.Row="1">
+                                                <ContentPresenter Content="{Binding SettingsView}"
+                                                                  IsVisible="{Binding HasSettingsView}" />
+
+                                                <TextBlock Text="No settings available."
+                                                           Opacity="0.8"
+                                                           IsVisible="{Binding !HasSettingsView}" />
+                                            </Grid>
+
+                                        </Grid>
+                                    </Border>
+
+                                </Border>
+
+                            </Grid>
+                        </Border>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+
+            </ItemsControl>
+        </ScrollViewer>
+
+    </DockPanel>
 </UserControl>

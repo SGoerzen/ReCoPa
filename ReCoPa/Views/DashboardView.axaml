@@ -33,7 +33,6 @@
 
             <!-- Content (bei dir erstmal wie gehabt) -->
             <views:VisualizationContainerView Grid.Column="1" />
-            <visualizations:PulseMonitorView Grid.Column="1"></visualizations:PulseMonitorView>
         </Grid>
 
     </DockPanel>

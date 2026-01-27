@@ -24,6 +24,11 @@ public sealed class PluginManagerViewModel : ViewModelBase
 
     private readonly PluginStateStore _state;
 
+    // Falls dein Plugin-UI irgendein Grid/Layout braucht:
+    // (damit der PluginItemViewModel-Konstruktor satisfied ist)
+    public int GridColumns { get; set; } = 2;
+    public int GridRows { get; set; } = 2;
+
     public PluginManagerViewModel()
     {
         var pluginDir = GetPluginDirectory();
@@ -42,7 +47,9 @@ public sealed class PluginManagerViewModel : ViewModelBase
     {
         if (plugin.IsCorePlugin) enabled = false; // enforce
         _state.SetEnabled(plugin.Id, enabled);
-        // Optional: hier könntest du App.PluginManager neu laden / filter anwenden
+
+        // Optional: falls Enabled/Disabled Einfluss auf das Laden haben soll:
+        // LoadPlugins();
     }
 
     public void RemovePlugin(PluginItemViewModel plugin)
@@ -55,7 +62,10 @@ public sealed class PluginManagerViewModel : ViewModelBase
             if (!string.IsNullOrWhiteSpace(path) && File.Exists(path))
                 File.Delete(path);
         }
-        catch { /* ignore */ }
+        catch
+        {
+            // ignore
+        }
 
         LoadPlugins();
     }
@@ -64,7 +74,12 @@ public sealed class PluginManagerViewModel : ViewModelBase
     {
         Plugins.Clear();
 
-        App.PluginManager!.Load(); // lädt aus Plugin-Dir (SetPath muss vorher passieren)
+        // Wichtig: sicherstellen, dass PluginManager den Path kennt.
+        // Wenn du SetPath woanders machst, ist ok. Sonst:
+        // App.PluginManager!.SetPath(GetPluginDirectory());
+
+        App.PluginManager!.Load();
+
         foreach (var plugin in App.PluginManager.Plugins)
         {
             var enabledDefault = true;
@@ -74,7 +89,14 @@ public sealed class PluginManagerViewModel : ViewModelBase
                 enabledDefault = false;
 
             var enabled = _state.GetEnabled(plugin.Id, enabledDefault);
-            Plugins.Add(new PluginItemViewModel(this, plugin, enabled));
+
+            // ✅ FIX: fehlende Parameter gridColumns / gridRows mitgeben
+            Plugins.Add(new PluginItemViewModel(
+                this,
+                plugin,
+                enabled,
+                gridColumns: GridColumns,
+                gridRows: GridRows));
         }
     }
 
@@ -89,15 +111,13 @@ public sealed class PluginManagerViewModel : ViewModelBase
         var options = new FilePickerOpenOptions
         {
             Title = "Select Plugin DLL",
-            AllowMultiple = false
-        };
-
-        // Avalonia: Collection initializer auf FileTypeFilter klappt nicht immer -> explizit List setzen
-        options.FileTypeFilter = new[]
-        {
-            new FilePickerFileType("Plugin DLL")
+            AllowMultiple = false,
+            FileTypeFilter = new[]
             {
-                Patterns = new[] { "*.dll" }
+                new FilePickerFileType("Plugin DLL")
+                {
+                    Patterns = new[] { "*.dll" }
+                }
             }
         };
 

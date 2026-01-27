@@ -1,9 +1,8 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:ReCoPa.ViewModels"
-             xmlns:plugins="clr-namespace:ReCoPa.Plugins"
              xmlns:plugins1="clr-namespace:ReCoPa.Plugins;assembly=ReCoPa.Plugins"
-             xmlns:converters="clr-namespace:ReCoPa.Converters"
+             xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="ReCoPa.Views.PluginManagerView"
              x:DataType="vm:PluginManagerViewModel">
 
@@ -23,86 +22,129 @@
 
       <Button Grid.Column="2"
               Classes="secondary"
-              Content="Add Plugin..."
-              Command="{Binding AddPluginCommand}"/>
-      
-      <Button Grid.Column="3" Classes="secondary" Content="Open Folder" Click="Button_OpenFolder" />
+              Content="Install Plugin"
+              Command="{Binding AddPluginCommand}"
+              Click="Button_InstallPlugin"/>
+
+      <Button Grid.Column="3"
+              Classes="secondary"
+              Content="Open Folder"
+              Click="Button_OpenFolder"/>
     </Grid>
 
+    <!-- Plugins list -->
     <ItemsControl ItemsSource="{Binding Plugins}">
       <ItemsControl.ItemTemplate>
         <DataTemplate x:DataType="vm:PluginItemViewModel">
+
           <Border Classes="card" Padding="12">
+            <StackPanel Spacing="10">
 
-            <StackPanel Spacing="8">
+              <!-- Top area -->
+              <Grid ColumnDefinitions="Auto,*,Auto"
+                    ColumnSpacing="12"
+                    RowDefinitions="Auto,Auto">
 
-              <!-- Top line: Name + Version + Enabled toggle -->
-              <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10" RowDefinitions="Auto,Auto">
+                <!-- LEFT: Toggle always shown, but disabled for Core -->
+                <ToggleSwitch Grid.Column="0"
+                              Grid.Row="0"
+                              Grid.RowSpan="2"
+                              IsEnabled="{Binding CanToggleEnabled}"
+                              IsChecked="{Binding IsEnabled, Mode=TwoWay}"
+                              OffContent=""
+                              OnContent=""
+                              ToolTip.Tip="{Binding EnabledToolTip}" />
 
-                <!-- Expand click area (name/desc) -->
-                <StackPanel Grid.Column="0" Grid.Row="0" Spacing="2">
+                <!-- CENTER: name + description -->
+                <StackPanel Grid.Column="1" Grid.Row="0" Spacing="2">
                   <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="16"/>
-
                   <TextBlock Text="{Binding Description}"
                              Classes="secondary"
                              TextWrapping="Wrap"/>
                 </StackPanel>
 
-                <TextBlock Grid.Column="1" Grid.Row="0"
+                <!-- RIGHT: actions -->
+                <StackPanel Grid.Column="2"
+                            Grid.Row="0"
+                            Orientation="Horizontal"
+                            Spacing="8"
+                            HorizontalAlignment="Right">
+
+                  <!-- Details (always enabled) -->
+                  <Button Classes="secondary"
+                          Command="{Binding ToggleExpandCommand}"
+                          ToolTip.Tip="Details">
+                    <mi:MaterialIcon Width="20" Height="20" Kind="{Binding DetailsIconKind}" />
+                  </Button>
+
+                  <!-- Remove always shown, but disabled for Core -->
+                  <Button Classes="danger"
+                          IsEnabled="{Binding CanRemove}"
+                          Command="{Binding RemoveCommand}"
+                          ToolTip.Tip="Remove">
+                    <mi:MaterialIcon Width="20" Height="20" Kind="DeleteOutline" />
+                  </Button>
+                </StackPanel>
+
+                <!-- Version -->
+                <TextBlock Grid.Column="1"
+                           Grid.Row="1"
                            Text="{Binding Version}"
                            Classes="secondary"
                            VerticalAlignment="Center"/>
-
-                <!-- Enabled toggle button -->
-                <Button Grid.Column="2" Grid.Row="0"
-                        Classes="secondary"
-                        Content="{Binding EnabledLabel}"
-                        IsEnabled="{Binding CanToggleEnabled}"
-                        Command="{Binding ToggleEnabledCommand}"/>
-
-                <!-- Expand / Remove row -->
-                <StackPanel Grid.Column="0" Grid.Row="1"
-                            Orientation="Horizontal" Spacing="10">
-
-                  <Button Classes="secondary"
-                          Content="{Binding IsExpanded, Converter={x:Static converters:BoolToExpandTextConverter.Instance}}"
-                          Command="{Binding ToggleExpandCommand}"/>
-
-                  <Button Classes="danger"
-                          Content="Remove"
-                          IsEnabled="{Binding CanRemove}"
-                          Command="{Binding RemoveCommand}"/>
-
-                  <TextBlock Text="{Binding FilePath}"
-                             Classes="secondary"
-                             VerticalAlignment="Center"
-                             TextTrimming="CharacterEllipsis"/>
-                </StackPanel>
-
               </Grid>
 
-              <!-- Summary line always visible -->
+              <!-- Summary -->
               <StackPanel Spacing="2">
                 <TextBlock Text="{Binding ComponentSummary}" Classes="secondary"/>
                 <TextBlock Text="{Binding ContributorSummary}" Classes="secondary"/>
               </StackPanel>
 
               <!-- Expanded details -->
-              <StackPanel Spacing="8" IsVisible="{Binding IsExpanded}">
+              <StackPanel Spacing="10"
+                          IsVisible="{Binding IsExpanded}">
 
                 <Border Height="1" Background="{DynamicResource SurfaceBorder}" />
 
-                <StackPanel Spacing="4" IsVisible="{Binding HasComponents}">
-                  <TextBlock Text="Components" FontWeight="SemiBold"/>
-                  <ItemsControl ItemsSource="{Binding Components}">
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate>
-                        <TextBlock Text="• {Binding}" Classes="secondary"/>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
+                <!-- Components grouped -->
+                <StackPanel Spacing="10">
+
+                  <StackPanel Spacing="4" IsVisible="{Binding HasVisualizations}">
+                    <TextBlock Text="Visualizations" FontWeight="SemiBold"/>
+                    <ItemsControl ItemsSource="{Binding Visualizations}">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                          <TextBlock Text="• {Binding}" Classes="secondary"/>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </StackPanel>
+
+                  <StackPanel Spacing="4" IsVisible="{Binding HasFilters}">
+                    <TextBlock Text="Filters" FontWeight="SemiBold"/>
+                    <ItemsControl ItemsSource="{Binding Filters}">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                          <TextBlock Text="• {Binding}" Classes="secondary"/>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </StackPanel>
+
+                  <StackPanel Spacing="4" IsVisible="{Binding HasEndpoints}">
+                    <TextBlock Text="Endpoints" FontWeight="SemiBold"/>
+                    <ItemsControl ItemsSource="{Binding Endpoints}">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                          <TextBlock Text="• {Binding}" Classes="secondary"/>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </StackPanel>
+
                 </StackPanel>
 
+                <!-- Contributors -->
                 <StackPanel Spacing="4" IsVisible="{Binding HasContributors}">
                   <TextBlock Text="Contributors" FontWeight="SemiBold"/>
                   <ItemsControl ItemsSource="{Binding Contributors}">
@@ -114,7 +156,6 @@
                                      Foreground="{DynamicResource AccentBrush}"
                                      TextDecorations="Underline"
                                      PointerPressed="OnContributorClicked"/>
-
                           <TextBlock Text="{Binding Email}" Classes="secondary"/>
                         </StackPanel>
                       </DataTemplate>
@@ -125,8 +166,8 @@
               </StackPanel>
 
             </StackPanel>
-
           </Border>
+
         </DataTemplate>
       </ItemsControl.ItemTemplate>
     </ItemsControl>

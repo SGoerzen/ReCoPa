@@ -14,7 +14,7 @@ public partial class DashboardViewModel : ViewModelBase
     [ObservableProperty] private string? selectedClientName;
     [ObservableProperty] private bool isSelectedClientConnected;
 
-    [ObservableProperty] private int selectedClientXapiStatementsCount;
+    [ObservableProperty] private int _selectedClientStatementsCount;
     [ObservableProperty] private int selectedClientGameObjectsCount;
 
     [ObservableProperty] private double selectedClientFps;
@@ -35,7 +35,7 @@ public partial class DashboardViewModel : ViewModelBase
         ApplySelectedFromActiveTab();
 
         // Demo numbers
-        SelectedClientXapiStatementsCount = 125;
+        SelectedClientStatementsCount = 12541;
         SelectedClientGameObjectsCount = 10;
         SelectedClientFps = 72.4;
         SelectedClientHeartRate = 98;

@@ -4,14 +4,18 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using ReCoPa.ViewModels;
+using SukiUI.Toasts;
 
 namespace ReCoPa.Views;
 
 public partial class PluginManagerView : UserControl
 {
+    public static ISukiToastManager ToastManager = new SukiToastManager();
+    
     public PluginManagerView()
     {
         InitializeComponent();
+        ToastHost.Manager = ToastManager;
 
         // Ensure bindings work (otherwise Commands are null -> buttons disabled)
         if (DataContext is null)

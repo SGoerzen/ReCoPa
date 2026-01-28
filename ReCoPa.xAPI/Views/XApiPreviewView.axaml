@@ -2,13 +2,118 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="ReCoPa.xAPI.Views.XApiPreviewView">
-    <StackPanel Margin="16" Spacing="8">
-        <TextBlock Text="xAPI Statements"
-                   FontSize="18"
-                   FontWeight="Bold"/>
+             xmlns:vm="clr-namespace:ReCoPa.xAPI.ViewModels"
+             mc:Ignorable="d"
+             d:DesignWidth="900"
+             d:DesignHeight="600"
+             x:Class="ReCoPa.xAPI.Views.XApiPreviewView"
+             x:DataType="vm:XApiPreviewViewModel">
 
-        <TextBlock Text="Here will be xAPI data visualized"/>
-    </StackPanel>
+    <!-- optional: für Designer -->
+    <Design.DataContext>
+        <vm:XApiPreviewViewModel/>
+    </Design.DataContext>
+
+    <DockPanel Margin="16">
+
+        <!-- Header -->
+        <StackPanel DockPanel.Dock="Top" Spacing="10">
+            <TextBlock Text="xAPI Statements"
+                       FontSize="18"
+                       FontWeight="Bold"/>
+
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <ComboBox Grid.Column="0"
+                          ItemsSource="{Binding Filters}"
+                          SelectedItem="{Binding SelectedFilter}"
+                          MinWidth="240"
+                          HorizontalAlignment="Left"/>
+
+                <Button Grid.Column="1"
+                        Content="Export CSV"
+                        Classes="secondary"
+                        Padding="14,8"
+                        Command="{Binding ExportCsvCommand}"/>
+            </Grid>
+
+            <Border Height="1" Background="{DynamicResource SurfaceBorder}" />
+        </StackPanel>
+
+        <!-- List -->
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Statements}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:XApiStatementItemViewModel">
+
+                        <Border Margin="0,0,0,10"
+                                Padding="0"
+                                BorderThickness="1"
+                                BorderBrush="{DynamicResource SurfaceBorder}"
+                                CornerRadius="8">
+
+                            <Expander>
+
+                                <!-- HEADER (collapsed view) -->
+                                <Expander.Header>
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <TextBlock Text="{Binding Summary}"
+                                                   FontWeight="SemiBold"
+                                                   TextTrimming="CharacterEllipsis"/>
+
+                                        <TextBlock Grid.Column="1"
+                                                   Text="{Binding TimeAgo}"
+                                                   Opacity="0.7"
+                                                   VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Expander.Header>
+
+                                <!-- DETAILS (expanded view) -->
+                                <Border Padding="12"
+                                        Background="{DynamicResource SurfaceElevated}">
+
+                                    <StackPanel Spacing="10">
+
+                                        <Grid ColumnDefinitions="110,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="6" ColumnSpacing="10">
+                                            <TextBlock Text="Actor" Opacity="0.7"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding Actor}"/>
+
+                                            <TextBlock Grid.Row="1" Text="Verb" Opacity="0.7"/>
+                                            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Verb}"/>
+
+                                            <TextBlock Grid.Row="2" Text="Object" Opacity="0.7"/>
+                                            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Object}"/>
+
+                                            <TextBlock Grid.Row="3" Text="Timestamp" Opacity="0.7"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding TimestampText}"/>
+                                        </Grid>
+
+                                        <!-- Raw JSON -->
+                                        <StackPanel Spacing="6">
+                                            <TextBlock Text="Raw xAPI JSON" Opacity="0.7"/>
+
+                                            <TextBox Text="{Binding RawJson}"
+                                                     IsReadOnly="True"
+                                                     AcceptsReturn="True"
+                                                     TextWrapping="Wrap"
+                                                     FontFamily="Consolas, Menlo, monospace"
+                                                     MinHeight="120"/>
+
+                                            <Button Content="Copy JSON"
+                                                    HorizontalAlignment="Left"
+                                                    Classes="secondary"
+                                                    Command="{Binding CopyJsonCommand}"/>
+                                        </StackPanel>
+
+                                    </StackPanel>
+                                </Border>
+
+                            </Expander>
+                        </Border>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+    </DockPanel>
 </UserControl>

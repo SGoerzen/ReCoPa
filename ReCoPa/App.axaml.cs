@@ -19,6 +19,7 @@ using ReCoPa.Views;
 using SukiUI;
 using SukiUI.Models;
 using Avalonia.Media;
+using SukiUI.Toasts;
 
 namespace ReCoPa;
 
@@ -38,15 +39,19 @@ public partial class App : Application
 
     public void LoadPlugins()
     {
-        var pluginDir = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "ReCoPa",
-            "Plugins");
+        try
+        {
+            var pluginDir = PluginManager.GetPluginDirectory();
         
-        PluginStateStore = new PluginStateStore(pluginDir);
+            PluginStateStore = new PluginStateStore(pluginDir);
         
-        Directory.CreateDirectory(pluginDir);
-        PluginManager.Load(pluginDir);
+            Directory.CreateDirectory(pluginDir);
+            PluginManager.Load(pluginDir);
+        }
+        catch (Exception ex)
+        {
+            MainWindow.ToastManager.CreateToast().WithTitle("Cannot load plugins.").WithContent(ex.Message).Queue();
+        }
     }
 
     public override void OnFrameworkInitializationCompleted()

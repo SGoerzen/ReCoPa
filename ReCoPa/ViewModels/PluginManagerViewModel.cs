@@ -6,17 +6,18 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Controls.Notifications;
 using Avalonia.Platform.Storage;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ReCoPa.Plugins;
+using ReCoPa.Views;
+using SukiUI.Toasts;
 
 namespace ReCoPa.ViewModels;
 
-public sealed class PluginManagerViewModel : ViewModelBase
+public sealed partial class PluginManagerViewModel : ViewModelBase
 {
-    // PASSE DAS an deinen echten Core-Plugin Id-String an:
-    // (z.B. in CorePluginPackage: public string Id => "recopa.core";)
-    private const string CorePluginId = "recopa.core";
-
     public ObservableCollection<PluginItemViewModel> Plugins { get; } = new();
 
     public ICommand RefreshPluginsCommand { get; }
@@ -31,7 +32,7 @@ public sealed class PluginManagerViewModel : ViewModelBase
 
     public PluginManagerViewModel()
     {
-        var pluginDir = GetPluginDirectory();
+        var pluginDir = PluginManager.GetPluginDirectory();
         _state = new PluginStateStore(pluginDir);
 
         RefreshPluginsCommand = new RelayCommand(LoadPlugins);
@@ -40,12 +41,8 @@ public sealed class PluginManagerViewModel : ViewModelBase
         LoadPlugins();
     }
 
-    public bool IsCorePluginId(string id)
-        => string.Equals(id, CorePluginId, StringComparison.OrdinalIgnoreCase);
-
     public void SetEnabled(PluginItemViewModel plugin, bool enabled)
     {
-        if (plugin.IsCorePlugin) enabled = false; // enforce
         _state.SetEnabled(plugin.Id, enabled);
 
         // Optional: falls Enabled/Disabled Einfluss auf das Laden haben soll:
@@ -54,8 +51,6 @@ public sealed class PluginManagerViewModel : ViewModelBase
 
     public void RemovePlugin(PluginItemViewModel plugin)
     {
-        if (plugin.IsCorePlugin) return;
-
         try
         {
             var path = plugin.FilePath;
@@ -72,31 +67,33 @@ public sealed class PluginManagerViewModel : ViewModelBase
 
     private void LoadPlugins()
     {
-        Plugins.Clear();
-
-        // Wichtig: sicherstellen, dass PluginManager den Path kennt.
-        // Wenn du SetPath woanders machst, ist ok. Sonst:
-        // App.PluginManager!.SetPath(GetPluginDirectory());
-
-        App.PluginManager!.Load();
-
-        foreach (var plugin in App.PluginManager.Plugins)
+        try
         {
-            var enabledDefault = true;
+            Plugins.Clear();
 
-            // core: disabled by default
-            if (IsCorePluginId(plugin.Id))
-                enabledDefault = false;
+            App.PluginManager!.Load();
 
-            var enabled = _state.GetEnabled(plugin.Id, enabledDefault);
+            foreach (var plugin in App.PluginManager.Plugins)
+            {
+                var enabled = _state.GetEnabled(plugin.Id, true);
 
-            // ✅ FIX: fehlende Parameter gridColumns / gridRows mitgeben
-            Plugins.Add(new PluginItemViewModel(
-                this,
-                plugin,
-                enabled,
-                gridColumns: GridColumns,
-                gridRows: GridRows));
+                Plugins.Add(new PluginItemViewModel(
+                    this,
+                    plugin,
+                    enabled,
+                    gridColumns: GridColumns,
+                    gridRows: GridRows));
+            }
+        }
+        catch (Exception ex)
+        {
+            var toast = MainWindow.ToastManager.CreateToast()
+                .OfType(NotificationType.Error)
+                .WithTitle("Cannot load plugins.")
+                .WithContent(ex.Message);
+            
+            toast.SetCanDismissByClicking(true);
+            toast.Queue();
         }
     }
 
@@ -125,36 +122,37 @@ public sealed class PluginManagerViewModel : ViewModelBase
         var file = result.FirstOrDefault();
         if (file is null) return;
 
-        var targetDir = GetPluginDirectory();
+        var targetDir = PluginManager.GetPluginDirectory();
         Directory.CreateDirectory(targetDir);
 
-        var targetPath = Path.Combine(targetDir, Path.GetFileName(file.Path.LocalPath));
+        var targetPath = Path.Combine(
+            targetDir,
+            Path.GetFileName(file.Name) // <- use Name, not LocalPath
+        );
 
-        await using var source = await file.OpenReadAsync();
-        await using var dest = File.Create(targetPath);
-        await source.CopyToAsync(dest);
+        Console.WriteLine($"Copying '{file.Name}' -> '{targetPath}'");
 
+        try
+        {
+            await using var src = await file.OpenReadAsync();
+            await using var dst = File.Create(targetPath);
+            await src.CopyToAsync(dst);
+            await dst.FlushAsync();
+
+            Console.WriteLine("Copy OK.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Copy FAILED: {ex}");
+        }
+        
         LoadPlugins();
-    }
-
-    public static string GetPluginDirectory()
-    {
-        var basePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-
-        if (OperatingSystem.IsMacOS())
-        {
-            basePath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-                "Library", "Application Support");
-        }
-
-        if (OperatingSystem.IsLinux())
-        {
-            basePath = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.Personal),
-                ".local", "share");
-        }
-
-        return Path.Combine(basePath, "ReCoPa", "Plugins");
+        
+        var toast = MainWindow.ToastManager.CreateToast()
+            .OfType(NotificationType.Success)
+            .WithTitle("Install Plugin")
+            .WithContent($"Installed plugin {Path.GetFileName(targetPath)}, successfully.");
+        toast.SetCanDismissByClicking(true);
+        toast.Queue();
     }
 }

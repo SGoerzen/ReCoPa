@@ -16,9 +16,14 @@ public sealed class PluginItemViewModel : ViewModelBase
 
     public IPluginPackage Plugin { get; }
 
+    public bool IsMandatory => Plugin is ICorePlugin;
+    
     public string Id => Plugin.Id;
     public string Name => Plugin.Name;
     public string Description => Plugin.Description ?? "";
+    public string Website => Plugin.Website;
+    public string Repository => Plugin.Repository;
+    public string ChangelogUrl => Plugin.ChangelogUrl;
     public string Version => Plugin.GetVersion();
     public string FilePath => Plugin.GetFilePath();
     
@@ -26,9 +31,9 @@ public sealed class PluginItemViewModel : ViewModelBase
     public int GridRows { get; set; }
 
     // --- grouped components
-    public ObservableCollection<string> Visualizations { get; }
-    public ObservableCollection<string> Filters { get; }
-    public ObservableCollection<string> Endpoints { get; }
+    public ObservableCollection<IVisualization> Visualizations { get; }
+    public ObservableCollection<IFilter> Filters { get; }
+    public ObservableCollection<IEndpoint> Endpoints { get; }
 
     public bool HasVisualizations => Visualizations.Count > 0;
     public bool HasFilters => Filters.Count > 0;
@@ -72,17 +77,6 @@ public sealed class PluginItemViewModel : ViewModelBase
         get => _isEnabled;
         set
         {
-            // Core: cannot change, always false
-            if (IsCorePlugin)
-            {
-                if (_isEnabled != false)
-                {
-                    _isEnabled = false;
-                    OnPropertyChanged();
-                }
-                return;
-            }
-
             if (SetProperty(ref _isEnabled, value))
             {
                 _owner.SetEnabled(this, value);
@@ -95,22 +89,11 @@ public sealed class PluginItemViewModel : ViewModelBase
 
     public string EnabledLabel => IsEnabled ? "Enabled" : "Disabled";
 
-    // --- Core plugin rules
-    public bool IsCorePlugin => _owner.IsCorePluginId(Id);
-
-    // For UI visibility (mandatory requirement: Core shows ONLY Details)
-    public bool ShowToggle => !IsCorePlugin;
-    public bool ShowRemove => !IsCorePlugin;
-
     // --- Icon helpers (Material.Icons.Avalonia uses this enum)
     public MaterialIconKind EnabledIconKind => IsEnabled ? MaterialIconKind.ToggleSwitch : MaterialIconKind.ToggleSwitchOffOutline;
     public string EnabledToolTip => IsEnabled ? "Disable plugin" : "Enable plugin";
 
     public MaterialIconKind DetailsIconKind => IsExpanded ? MaterialIconKind.ChevronUp : MaterialIconKind.ChevronDown;
-
-    // Old flags still usable if you prefer IsEnabled binding
-    public bool CanToggleEnabled => !IsCorePlugin;
-    public bool CanRemove => !IsCorePlugin;
 
     public ICommand ToggleExpandCommand { get; }
     public ICommand ToggleEnabledCommand { get; }
@@ -133,35 +116,33 @@ public sealed class PluginItemViewModel : ViewModelBase
             .Distinct()
             .ToArray();
 
-        Visualizations = new ObservableCollection<string>(
+        Visualizations = new ObservableCollection<IVisualization>(
             types.Where(t => typeof(IVisualization).IsAssignableFrom(t))
-                 .Select(t => t.Name)
-                 .OrderBy(x => x));
+                 .Select(t => (IVisualization)Activator.CreateInstance(t)!)
+                 .OrderBy(x => x.Name));
 
-        Filters = new ObservableCollection<string>(
+        Filters = new ObservableCollection<IFilter>(
             types.Where(t => typeof(IFilter).IsAssignableFrom(t))
-                 .Select(t => t.Name)
-                 .OrderBy(x => x));
+                .Select(t => (IFilter)Activator.CreateInstance(t)!)
+                 .OrderBy(x => x.Name));
 
-        Endpoints = new ObservableCollection<string>(
+        Endpoints = new ObservableCollection<IEndpoint>(
             types.Where(t => typeof(IEndpoint).IsAssignableFrom(t))
-                 .Select(t => t.Name)
-                 .OrderBy(x => x));
+                .Select(t => (IEndpoint)Activator.CreateInstance(t)!)
+                 .OrderBy(x => x.Name));
 
         // Core: disabled by default AND cannot be changed
-        _isEnabled = IsCorePlugin ? false : initialEnabled;
+        _isEnabled = initialEnabled;
 
         ToggleExpandCommand = new RelayCommand(() => IsExpanded = !IsExpanded);
 
         ToggleEnabledCommand = new RelayCommand(() =>
         {
-            if (!CanToggleEnabled) return;
             IsEnabled = !IsEnabled; // setter triggers store + icon updates
         });
 
         RemoveCommand = new RelayCommand(() =>
         {
-            if (!CanRemove) return;
             _owner.RemovePlugin(this);
         });
     }

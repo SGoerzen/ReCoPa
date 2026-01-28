@@ -72,7 +72,6 @@
 
                         <!-- Tile -->
                         <Border Classes="card visTile"
-                                Margin="10"
                                 ClipToBounds="True">
 
                             <Grid>
@@ -101,19 +100,21 @@
                                         <Button Grid.Column="1"
                                                 Classes="secondary"
                                                 Padding="6"
+                                                Foreground="White"
                                                 IsVisible="{Binding HasSettingsView}"
                                                 Command="{Binding #Root.DataContext.ToggleSettingsCommand}"
                                                 CommandParameter="{Binding}">
-                                            <material:MaterialIcon Kind="Cog" Width="16" Height="16"/>
+                                            <material:MaterialIcon Kind="Cog" Width="16" Height="16" Foreground="White"/>
                                         </Button>
 
                                         <!-- Remove -->
                                         <Button Grid.Column="2"
                                                 Classes="secondary"
                                                 Padding="6"
+                                                Foreground="White"
                                                 Command="{Binding #Root.DataContext.RemoveVisualizationCommand}"
                                                 CommandParameter="{Binding}">
-                                            <material:MaterialIcon Kind="Close" Width="16" Height="16"/>
+                                            <material:MaterialIcon Kind="Trash" Width="16" Height="16" Foreground="White"/>
                                         </Button>
                                     </Grid>
                                 </Border>
@@ -123,7 +124,7 @@
                                         IsVisible="{Binding IsSettingsOpen}"
                                         Padding="12">
 
-                                    <Border Classes="card" Padding="12" MaxWidth="520">
+                                    <Border Classes="card" Padding="12" MaxWidth="520" Background="White">
                                         <Grid RowDefinitions="Auto,*" RowSpacing="10">
 
                                             <Grid ColumnDefinitions="*,Auto">

@@ -20,7 +20,7 @@
                                ClientName="{Binding SelectedClientName}"
                                IsConnected="{Binding IsSelectedClientConnected}"
                                IsDisconnected="{Binding IsSelectedClientDisconnected}"
-                               XapiStatementsCount="{Binding SelectedClientXapiStatementsCount}"
+                               XapiStatementsCount="{Binding SelectedClientStatementsCount}"
                                GameObjectsCount="{Binding SelectedClientGameObjectsCount}"
                                Fps="{Binding SelectedClientFps}"
                                HeartRate="{Binding SelectedClientHeartRate}"

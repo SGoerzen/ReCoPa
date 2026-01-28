@@ -11,12 +11,16 @@
                    MinHeight="700"
                    Height="700"
                    Title="ReCoPa - Researcher Companion Panel"
-                   Icon="/Assets/app-icon.png"
+                   Icon="avares://ReCoPa/assets/app-icon.ico"
                    BackgroundStyle="Gradient">
     
     <sukiUi:SukiWindow.LogoContent>
         <Image Source="avares://ReCoPa/Assets/app-icon.png" Width="32" Height="32"/>        <!-- Logo -->
     </sukiUi:SukiWindow.LogoContent>
+    
+    <sukiUi:SukiWindow.Hosts>
+        <sukiUi:SukiToastHost  Name="ToastHost" />
+    </sukiUi:SukiWindow.Hosts>
     
     <sukiUi:SukiWindow.RightWindowTitleBarControls>
         <Button

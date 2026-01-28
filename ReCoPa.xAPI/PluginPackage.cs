@@ -14,4 +14,7 @@ public class PluginPackage : IPluginPackage
     ];
     public string Description => "Plugin enabling xAPI and LRS.";
     public IPluginComponent[] Components => [new xApiPreview()];
+    public string Website => "https://omilaxr.dev/recopa";
+    public string Repository => "https://github.com/SGoerzen/ReCoPa.xAPI";
+    public string ChangelogUrl => "https://github.com/SGoerzen/ReCoPa.xAPI/blob/main/CHANGELOG.md";
 }

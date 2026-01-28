@@ -11,11 +11,13 @@ using CommunityToolkit.Mvvm.Input;
 using ReactiveUI;
 using ReCoPa.Models;
 using ReCoPa.Network;
+using SukiUI.Toasts;
 
 namespace ReCoPa.ViewModels;
 
 public class MainViewModel : ViewModelBase
 {
+
     private readonly SocketServerHost _server;
 
     public ObservableCollection<XRClient> Clients { get; }

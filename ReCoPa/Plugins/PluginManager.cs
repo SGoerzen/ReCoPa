@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using ReCoPa.PluginHost;
 
@@ -24,8 +25,30 @@ public sealed class PluginManager
 
     public void SetPath(string path) => _pluginDirectory = path;
     
+    public static string GetPluginDirectory()
+    {
+        var basePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+
+        if (OperatingSystem.IsMacOS())
+        {
+            basePath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+                "Library", "Application Support");
+        }
+
+        if (OperatingSystem.IsLinux())
+        {
+            basePath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+                ".local", "share");
+        }
+
+        return Path.Combine(basePath, "ReCoPa", "Plugins");
+    }
+    
     public void Load(string path = "")
     {
+        _components.Clear();
         _plugins.Clear();
         if (!string.IsNullOrWhiteSpace(path)) SetPath(path);
         Console.WriteLine($"Loading plugins from {GetPath()}...");

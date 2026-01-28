@@ -12,6 +12,11 @@
         <AvaloniaResource Include="Assets\**" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="assets\app-icon.ico" CopyToOutputDirectory="PreserveNewest" />
+        <None Include="assets\app-icon.icns" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+    
     <PropertyGroup>
         <LangVersion>preview</LangVersion>
     </PropertyGroup>

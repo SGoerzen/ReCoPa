@@ -3,174 +3,184 @@
              xmlns:vm="clr-namespace:ReCoPa.ViewModels"
              xmlns:plugins1="clr-namespace:ReCoPa.Plugins;assembly=ReCoPa.Plugins"
              xmlns:mi="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
              x:Class="ReCoPa.Views.PluginManagerView"
              x:DataType="vm:PluginManagerViewModel">
+  <ScrollViewer>
+    <suki:SukiWindow.Hosts>
+      <suki:SukiToastHost Name="ToastHost" />
+    </suki:SukiWindow.Hosts>
+    
+    <StackPanel Margin="16" Spacing="12">
+      <!-- Header row -->
+      <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="10">
+        <TextBlock Text="Plugins"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center"/>
 
-  <StackPanel Margin="16" Spacing="12">
+        <Button Grid.Column="1"
+                Classes="secondary"
+                Content="Refresh"
+                Command="{Binding RefreshPluginsCommand}"/>
 
-    <!-- Header row -->
-    <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="10">
-      <TextBlock Text="Plugins"
-                 FontSize="20"
-                 FontWeight="Bold"
-                 VerticalAlignment="Center"/>
+        <Button Grid.Column="2"
+                Classes="secondary"
+                Content="Install Plugin"
+                Command="{Binding AddPluginCommand}"
+                Click="Button_InstallPlugin"/>
 
-      <Button Grid.Column="1"
-              Classes="secondary"
-              Content="Refresh"
-              Command="{Binding RefreshPluginsCommand}"/>
+        <Button Grid.Column="3"
+                Classes="secondary"
+                Content="Open Folder"
+                Click="Button_OpenFolder"/>
+      </Grid>
 
-      <Button Grid.Column="2"
-              Classes="secondary"
-              Content="Install Plugin"
-              Command="{Binding AddPluginCommand}"
-              Click="Button_InstallPlugin"/>
+      <!-- Plugins list -->
+      <ItemsControl ItemsSource="{Binding Plugins}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="vm:PluginItemViewModel">
 
-      <Button Grid.Column="3"
-              Classes="secondary"
-              Content="Open Folder"
-              Click="Button_OpenFolder"/>
-    </Grid>
+            <Border Classes="card" Padding="12">
+              <StackPanel Spacing="10">
 
-    <!-- Plugins list -->
-    <ItemsControl ItemsSource="{Binding Plugins}">
-      <ItemsControl.ItemTemplate>
-        <DataTemplate x:DataType="vm:PluginItemViewModel">
+                <!-- Top area -->
+                <Grid ColumnDefinitions="Auto,*,Auto"
+                      ColumnSpacing="12"
+                      RowDefinitions="Auto,Auto">
 
-          <Border Classes="card" Padding="12">
-            <StackPanel Spacing="10">
+                  <!-- LEFT: Toggle always shown, but disabled for Core -->
+                  <ToggleSwitch Grid.Column="0"
+                                Grid.Row="0"
+                                Grid.RowSpan="2"
+                                IsEnabled="{Binding !IsMandatory}"
+                                IsChecked="{Binding IsEnabled, Mode=TwoWay}"
+                                OffContent=""
+                                OnContent=""
+                                ToolTip.Tip="{Binding EnabledToolTip}" />
 
-              <!-- Top area -->
-              <Grid ColumnDefinitions="Auto,*,Auto"
-                    ColumnSpacing="12"
-                    RowDefinitions="Auto,Auto">
+                  <!-- CENTER: name + description -->
+                  <StackPanel Grid.Column="1" Grid.Row="0" Spacing="2">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="16"/>
+                    <TextBlock Text="{Binding Description}"
+                               Classes="secondary"
+                               TextWrapping="Wrap"/>
+                  </StackPanel>
 
-                <!-- LEFT: Toggle always shown, but disabled for Core -->
-                <ToggleSwitch Grid.Column="0"
+                  <!-- RIGHT: actions -->
+                  <StackPanel Grid.Column="2"
                               Grid.Row="0"
-                              Grid.RowSpan="2"
-                              IsEnabled="{Binding CanToggleEnabled}"
-                              IsChecked="{Binding IsEnabled, Mode=TwoWay}"
-                              OffContent=""
-                              OnContent=""
-                              ToolTip.Tip="{Binding EnabledToolTip}" />
+                              Orientation="Horizontal"
+                              Spacing="8"
+                              HorizontalAlignment="Right">
 
-                <!-- CENTER: name + description -->
-                <StackPanel Grid.Column="1" Grid.Row="0" Spacing="2">
-                  <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="16"/>
-                  <TextBlock Text="{Binding Description}"
+                    <!-- Details (always enabled) -->
+                    <Button Classes="secondary"
+                            Command="{Binding ToggleExpandCommand}"
+                            ToolTip.Tip="Details">
+                      <mi:MaterialIcon Width="20" Height="20" Kind="{Binding DetailsIconKind}" />
+                    </Button>
+
+                    <!-- Remove always shown, but disabled for Core -->
+                    <Button Classes="danger"
+                            IsEnabled="{Binding !IsMandatory}"
+                            Command="{Binding RemoveCommand}"
+                            ToolTip.Tip="Remove">
+                      <mi:MaterialIcon Width="20" Height="20" Kind="DeleteOutline" />
+                    </Button>
+                  </StackPanel>
+
+                  <!-- Version -->
+                  <TextBlock Grid.Column="1"
+                             Grid.Row="1"
+                             Text="{Binding Version}"
                              Classes="secondary"
-                             TextWrapping="Wrap"/>
+                             VerticalAlignment="Center"/>
+                </Grid>
+
+                <!-- Summary -->
+                <StackPanel Spacing="2">
+                  <TextBlock Text="{Binding ComponentSummary}" Classes="secondary"/>
+                  <StackPanel Orientation="Horizontal" Spacing="5">
+                    <TextBlock Text="{Binding ContributorSummary}" Classes="secondary"/>
+                    <HyperlinkButton Content="Repository" NavigateUri="{Binding Repository}"></HyperlinkButton>
+                    <HyperlinkButton Content="Website" NavigateUri="{Binding Website}"></HyperlinkButton>
+                    <HyperlinkButton Content="Changelog" NavigateUri="{Binding ChangelogUrl}"></HyperlinkButton>
+                  </StackPanel>
                 </StackPanel>
 
-                <!-- RIGHT: actions -->
-                <StackPanel Grid.Column="2"
-                            Grid.Row="0"
-                            Orientation="Horizontal"
-                            Spacing="8"
-                            HorizontalAlignment="Right">
+                <!-- Expanded details -->
+                <StackPanel Spacing="10"
+                            IsVisible="{Binding IsExpanded}">
 
-                  <!-- Details (always enabled) -->
-                  <Button Classes="secondary"
-                          Command="{Binding ToggleExpandCommand}"
-                          ToolTip.Tip="Details">
-                    <mi:MaterialIcon Width="20" Height="20" Kind="{Binding DetailsIconKind}" />
-                  </Button>
+                  <Border Height="1" Background="{DynamicResource SurfaceBorder}" />
 
-                  <!-- Remove always shown, but disabled for Core -->
-                  <Button Classes="danger"
-                          IsEnabled="{Binding CanRemove}"
-                          Command="{Binding RemoveCommand}"
-                          ToolTip.Tip="Remove">
-                    <mi:MaterialIcon Width="20" Height="20" Kind="DeleteOutline" />
-                  </Button>
-                </StackPanel>
+                  <!-- Components grouped -->
+                  <StackPanel Spacing="10">
 
-                <!-- Version -->
-                <TextBlock Grid.Column="1"
-                           Grid.Row="1"
-                           Text="{Binding Version}"
-                           Classes="secondary"
-                           VerticalAlignment="Center"/>
-              </Grid>
+                    <StackPanel Spacing="4" IsVisible="{Binding HasVisualizations}">
+                      <TextBlock Text="Visualizations" FontWeight="SemiBold"/>
+                      <ItemsControl ItemsSource="{Binding Visualizations}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate>
+                            <TextBlock Text="{Binding Name}" Classes="secondary"/>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </StackPanel>
 
-              <!-- Summary -->
-              <StackPanel Spacing="2">
-                <TextBlock Text="{Binding ComponentSummary}" Classes="secondary"/>
-                <TextBlock Text="{Binding ContributorSummary}" Classes="secondary"/>
-              </StackPanel>
+                    <StackPanel Spacing="4" IsVisible="{Binding HasFilters}">
+                      <TextBlock Text="Filters" FontWeight="SemiBold"/>
+                      <ItemsControl ItemsSource="{Binding Filters}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate>
+                            <TextBlock Text="{Binding Name}" Classes="secondary"/>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </StackPanel>
 
-              <!-- Expanded details -->
-              <StackPanel Spacing="10"
-                          IsVisible="{Binding IsExpanded}">
+                    <StackPanel Spacing="4" IsVisible="{Binding HasEndpoints}">
+                      <TextBlock Text="Endpoints" FontWeight="SemiBold"/>
+                      <ItemsControl ItemsSource="{Binding Endpoints}">
+                        <ItemsControl.ItemTemplate>
+                          <DataTemplate>
+                            <TextBlock Text="{Binding Name}" Classes="secondary"/>
+                          </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                    </StackPanel>
 
-                <Border Height="1" Background="{DynamicResource SurfaceBorder}" />
+                  </StackPanel>
 
-                <!-- Components grouped -->
-                <StackPanel Spacing="10">
-
-                  <StackPanel Spacing="4" IsVisible="{Binding HasVisualizations}">
-                    <TextBlock Text="Visualizations" FontWeight="SemiBold"/>
-                    <ItemsControl ItemsSource="{Binding Visualizations}">
+                  <!-- Contributors -->
+                  <StackPanel Spacing="4" IsVisible="{Binding HasContributors}">
+                    <TextBlock Text="Contributors" FontWeight="SemiBold"/>
+                    <ItemsControl ItemsSource="{Binding Contributors}">
                       <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                          <TextBlock Text="• {Binding}" Classes="secondary"/>
+                        <DataTemplate x:DataType="plugins1:Contributor">
+                          <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="{Binding Name}"
+                                       Cursor="Hand"
+                                       Foreground="{DynamicResource AccentBrush}"
+                                       TextDecorations="Underline"
+                                       PointerPressed="OnContributorClicked"/>
+                            <TextBlock Text="{Binding Email}" Classes="secondary"/>
+                          </StackPanel>
                         </DataTemplate>
                       </ItemsControl.ItemTemplate>
                     </ItemsControl>
                   </StackPanel>
 
-                  <StackPanel Spacing="4" IsVisible="{Binding HasFilters}">
-                    <TextBlock Text="Filters" FontWeight="SemiBold"/>
-                    <ItemsControl ItemsSource="{Binding Filters}">
-                      <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                          <TextBlock Text="• {Binding}" Classes="secondary"/>
-                        </DataTemplate>
-                      </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                  </StackPanel>
-
-                  <StackPanel Spacing="4" IsVisible="{Binding HasEndpoints}">
-                    <TextBlock Text="Endpoints" FontWeight="SemiBold"/>
-                    <ItemsControl ItemsSource="{Binding Endpoints}">
-                      <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                          <TextBlock Text="• {Binding}" Classes="secondary"/>
-                        </DataTemplate>
-                      </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                  </StackPanel>
-
-                </StackPanel>
-
-                <!-- Contributors -->
-                <StackPanel Spacing="4" IsVisible="{Binding HasContributors}">
-                  <TextBlock Text="Contributors" FontWeight="SemiBold"/>
-                  <ItemsControl ItemsSource="{Binding Contributors}">
-                    <ItemsControl.ItemTemplate>
-                      <DataTemplate x:DataType="plugins1:Contributor">
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                          <TextBlock Text="{Binding Name}"
-                                     Cursor="Hand"
-                                     Foreground="{DynamicResource AccentBrush}"
-                                     TextDecorations="Underline"
-                                     PointerPressed="OnContributorClicked"/>
-                          <TextBlock Text="{Binding Email}" Classes="secondary"/>
-                        </StackPanel>
-                      </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                  </ItemsControl>
                 </StackPanel>
 
               </StackPanel>
+            </Border>
 
-            </StackPanel>
-          </Border>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
 
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
-
-  </StackPanel>
+    </StackPanel>
+  </ScrollViewer>
 </UserControl>

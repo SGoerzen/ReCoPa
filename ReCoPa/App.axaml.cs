@@ -66,6 +66,19 @@ public partial class App : Application
 
         // start server (fire-and-forget)
         _ = Socket.StartAsync(4567);
+        
+        Console.WriteLine("SocketServer started on port 45679.");
+        
+        Socket.ClientDisconnected += c =>
+        {
+            Console.WriteLine($"Client disconnected: {c.RemoteEndPoint}");
+            MainWindow.ToastManager.CreateToast().WithTitle($"Client disconnected: {c.RemoteEndPoint}").Queue();
+        };
+        Socket.ClientConnected += c =>
+        {
+            Console.WriteLine($"Client connected: {c.RemoteEndPoint}");
+            MainWindow.ToastManager.CreateToast().WithTitle($"Client connected: {c.RemoteEndPoint}").Queue();
+        };
 
         // ✅ cover unexpected exits/crashes too
         HookShutdownHandlers();

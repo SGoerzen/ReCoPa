@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
-using Avalonia.Input;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using Avalonia.ReactiveUI;
@@ -20,10 +19,6 @@ using SukiUI;
 using SukiUI.Models;
 using Avalonia.Media;
 using SukiUI.Toasts;
-
-#if DEBUG
-using Avalonia.Diagnostics;
-#endif
 
 namespace ReCoPa;
 
@@ -88,9 +83,6 @@ public partial class App : Application
             window.Closing += async (_, __) => await DisposeServerOnceAsync();
 
             desktop.MainWindow = window;
-            #if DEBUG
-            desktop.MainWindow.AttachDevTools(new KeyGesture(Key.F12));
-            #endif
             // Normal app exit
             desktop.Exit += async (_, __) => await DisposeServerOnceAsync();
         }

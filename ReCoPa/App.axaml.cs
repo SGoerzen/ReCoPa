@@ -21,12 +21,16 @@ using SukiUI.Models;
 using Avalonia.Media;
 using SukiUI.Toasts;
 
+#if DEBUG
+using Avalonia.Diagnostics;
+#endif
+
 namespace ReCoPa;
 
 public partial class App : Application
 {
     public static PluginManager PluginManager { get; } = new();
-    public static PluginStateStore PluginStateStore { get; private set; }
+    public static PluginStateStore? PluginStateStore { get; private set; }
     
     public static SocketServerHost? Socket { get; private set; }
     private int _disposed; 
@@ -84,8 +88,9 @@ public partial class App : Application
             window.Closing += async (_, __) => await DisposeServerOnceAsync();
 
             desktop.MainWindow = window;
+            #if DEBUG
             desktop.MainWindow.AttachDevTools(new KeyGesture(Key.F12));
-
+            #endif
             // Normal app exit
             desktop.Exit += async (_, __) => await DisposeServerOnceAsync();
         }

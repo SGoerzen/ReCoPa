@@ -11,7 +11,7 @@
                    MinHeight="700"
                    Height="700"
                    Title="ReCoPa - Researcher Companion Panel"
-                   Icon="avares://ReCoPa/assets/app-icon.ico"
+                   Icon="avares://ReCoPa/Assets/app-icon.ico"
                    BackgroundStyle="Gradient">
     
     <sukiUi:SukiWindow.LogoContent>

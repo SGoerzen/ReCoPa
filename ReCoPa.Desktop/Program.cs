@@ -1,6 +1,5 @@
 ﻿using System;
 using Avalonia;
-using HotAvalonia;
 
 namespace ReCoPa.Desktop;
 
@@ -18,6 +17,5 @@ sealed class Program
         => AppBuilder.Configure<App>()
             .UsePlatformDetect()
             .WithInterFont()
-            .UseHotReload()
             .LogToTrace();
 }

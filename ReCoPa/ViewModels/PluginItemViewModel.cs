@@ -118,17 +118,17 @@ public sealed class PluginItemViewModel : ViewModelBase
 
         Visualizations = new ObservableCollection<IVisualization>(
             types.Where(t => typeof(IVisualization).IsAssignableFrom(t))
-                 .Select(t => (IVisualization)Activator.CreateInstance(t)!)
+                 .Select(t => (IVisualization)Activator.CreateInstance(t!)!)
                  .OrderBy(x => x.Name));
 
         Filters = new ObservableCollection<IFilter>(
             types.Where(t => typeof(IFilter).IsAssignableFrom(t))
-                .Select(t => (IFilter)Activator.CreateInstance(t)!)
+                .Select(t => (IFilter)Activator.CreateInstance(t!)!)
                  .OrderBy(x => x.Name));
 
         Endpoints = new ObservableCollection<IEndpoint>(
             types.Where(t => typeof(IEndpoint).IsAssignableFrom(t))
-                .Select(t => (IEndpoint)Activator.CreateInstance(t)!)
+                .Select(t => (IEndpoint)Activator.CreateInstance(t!)!)
                  .OrderBy(x => x.Name));
 
         // Core: disabled by default AND cannot be changed

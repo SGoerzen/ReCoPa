@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
@@ -30,8 +31,8 @@ public partial class SidebarView : UserControl
     public static readonly StyledProperty<bool> IsConnectedProperty =
         AvaloniaProperty.Register<SidebarView, bool>(nameof(IsConnected));
 
-    public static readonly StyledProperty<int> XapiStatementsCountProperty =
-        AvaloniaProperty.Register<SidebarView, int>(nameof(XapiStatementsCount));
+    public static readonly StyledProperty<int> StatementsCountProperty =
+        AvaloniaProperty.Register<SidebarView, int>(nameof(StatementsCount));
 
     public static readonly StyledProperty<int> GameObjectsCountProperty =
         AvaloniaProperty.Register<SidebarView, int>(nameof(GameObjectsCount));
@@ -44,6 +45,9 @@ public partial class SidebarView : UserControl
 
     public static readonly StyledProperty<bool> IsSessionSelectedProperty =
         AvaloniaProperty.Register<SidebarView, bool>(nameof(IsSessionSelected));
+    
+    public static readonly StyledProperty<TimeSpan> ElapsedTimeProperty =
+        AvaloniaProperty.Register<SidebarView, TimeSpan>(nameof(ElapsedTime));
 
     public static readonly StyledProperty<ICommand?> NavigateVisualizationsCommandProperty =
         AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(NavigateVisualizationsCommand));
@@ -65,12 +69,13 @@ public partial class SidebarView : UserControl
 
     public string? ClientName { get => GetValue(ClientNameProperty); set => SetValue(ClientNameProperty, value); }
     public bool IsConnected { get => GetValue(IsConnectedProperty); set => SetValue(IsConnectedProperty, value); }
-    public int XapiStatementsCount { get => GetValue(XapiStatementsCountProperty); set => SetValue(XapiStatementsCountProperty, value); }
+    public int StatementsCount { get => GetValue(StatementsCountProperty); set => SetValue(StatementsCountProperty, value); }
     public int GameObjectsCount { get => GetValue(GameObjectsCountProperty); set => SetValue(GameObjectsCountProperty, value); }
     public double Fps { get => GetValue(FpsProperty); set => SetValue(FpsProperty, value); }
     public int HeartRate { get => GetValue(HeartRateProperty); set => SetValue(HeartRateProperty, value); }
     public bool IsSessionSelected { get => GetValue(IsSessionSelectedProperty); set => SetValue(IsSessionSelectedProperty, value); }
-
+    public TimeSpan ElapsedTime { get => GetValue(ElapsedTimeProperty); set => SetValue(ElapsedTimeProperty, value); }
+    
     public ICommand? NavigateVisualizationsCommand { get => GetValue(NavigateVisualizationsCommandProperty); set => SetValue(NavigateVisualizationsCommandProperty, value); }
     public ICommand? NavigateSettingsCommand { get => GetValue(NavigateSettingsCommandProperty); set => SetValue(NavigateSettingsCommandProperty, value); }
 

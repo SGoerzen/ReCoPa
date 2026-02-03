@@ -2,20 +2,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:views="clr-namespace:ReCoPa.Views"
              xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             xmlns:vm="clr-namespace:ReCoPa.ViewModels"
              xmlns:global="clr-namespace:"
              x:Class="ReCoPa.Views.SidebarView"
              x:DataType="global:SidebarViewModel">
 
-    <DockPanel Margin="12" LastChildFill="True">
+    <DockPanel LastChildFill="True">
 
         <!-- Actions bottom -->
-        <Border DockPanel.Dock="Bottom" Classes="card" Margin="0,12,0,0"
+        <Border DockPanel.Dock="Bottom" 
+                Classes="card" 
+                Margin="0,5,0,0"
                 IsEnabled="{Binding IsSessionSelected, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
             <StackPanel Spacing="10">
                 <TextBlock Text="Session Actions" FontWeight="SemiBold" />
 
-                <Button
+                <Button Classes="secondary"
                     IsEnabled="{Binding IsEyeTrackingEnabled}"
                     ToolTip.Tip="Eye tracking not available on this device"
                     Command="{Binding StartEyeCalibrationCommand, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
@@ -56,14 +57,11 @@
         </Border>
 
         <!-- Menu middle -->
-        <Border DockPanel.Dock="Bottom" Classes="card"
+        <Border DockPanel.Dock="Bottom" 
+                Classes="card"
+                Margin="0,5,0,0"
                 IsEnabled="{Binding IsSessionSelected, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
             <StackPanel Spacing="8">
-
-                <Border Height="1"
-                        Margin="0,12"
-                        Background="{DynamicResource SurfaceBorder}" />
-
                 <Button Classes="nav secondary"
                         Command="{Binding NavigateVisualizationsCommand, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
                     <StackPanel Orientation="Horizontal" Spacing="10">
@@ -121,34 +119,34 @@
 
                 <Border BorderBrush="{DynamicResource SurfaceBorder}" BorderThickness="0,1,0,0" />
 
-                <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
                       ColumnDefinitions="Auto,*"
                       ColumnSpacing="12"
                       RowSpacing="10">
 
                     <material:MaterialIcon Grid.Row="0" Grid.Column="0"
-                                           Kind="ChartBar"
+                                           Kind="Timer"
                                            Width="24" Height="24"
                                            Foreground="{DynamicResource AccentBrush}" />
 
                     <StackPanel Grid.Row="0" Grid.Column="1" Spacing="2">
-                        <TextBlock Text="Statements" FontWeight="SemiBold" />
+                        <TextBlock Text="Elapsed Time" FontWeight="SemiBold" />
                         <TextBlock
-                            Text="{Binding XapiStatementsCount,
-                          RelativeSource={RelativeSource AncestorType=views:SidebarView}}"
+                            Text="{Binding ElapsedTime,
+                          RelativeSource={RelativeSource AncestorType=views:SidebarView},
+                          StringFormat={}{0:hh\\:mm\\:ss}}"
                             Classes="secondary" />
                     </StackPanel>
-
-                    <!-- Game Objects -->
+                    
                     <material:MaterialIcon Grid.Row="1" Grid.Column="0"
-                                           Kind="GamepadVariant"
+                                           Kind="ChartBar"
                                            Width="24" Height="24"
                                            Foreground="{DynamicResource AccentBrush}" />
 
                     <StackPanel Grid.Row="1" Grid.Column="1" Spacing="2">
-                        <TextBlock Text="Game Objects" FontWeight="SemiBold" />
+                        <TextBlock Text="Statements" FontWeight="SemiBold" />
                         <TextBlock
-                            Text="{Binding GameObjectsCount,
+                            Text="{Binding StatementsCount,
                           RelativeSource={RelativeSource AncestorType=views:SidebarView}}"
                             Classes="secondary" />
                     </StackPanel>
@@ -182,6 +180,19 @@
                             Classes="secondary" />
                     </StackPanel>
 
+                    <!-- Game Objects -->
+                    <material:MaterialIcon Grid.Row="4" Grid.Column="0"
+                                           Kind="GamepadVariant"
+                                           Width="24" Height="24"
+                                           Foreground="{DynamicResource AccentBrush}" />
+
+                    <StackPanel Grid.Row="4" Grid.Column="1" Spacing="2">
+                        <TextBlock Text="Game Objects" FontWeight="SemiBold" />
+                        <TextBlock
+                            Text="{Binding GameObjectsCount,
+                          RelativeSource={RelativeSource AncestorType=views:SidebarView}}"
+                            Classes="secondary" />
+                    </StackPanel>
                 </Grid>
 
             </StackPanel>

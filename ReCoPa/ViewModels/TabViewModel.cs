@@ -9,6 +9,7 @@ public class TabViewModel : ReactiveObject
     private bool _isActive;
     private TabConnectionState _connectionState = TabConnectionState.Inactive;
     private Guid? _clientId;
+    private SessionViewModel? _session;
 
     public string Header
     {
@@ -32,6 +33,12 @@ public class TabViewModel : ReactiveObject
     {
         get => _clientId;
         set => this.RaiseAndSetIfChanged(ref _clientId, value);
+    }
+
+    public SessionViewModel? Session
+    {
+        get => _session;
+        set => this.RaiseAndSetIfChanged(ref _session, value);
     }
 }
 

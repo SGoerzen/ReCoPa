@@ -55,6 +55,7 @@
         <!-- Grid area -->
         <ScrollViewer HorizontalScrollBarVisibility="Disabled"
                       Padding="5,0,0,0"
+                      Margin="0,5,0,0"
                       VerticalScrollBarVisibility="Auto">
 
             <ItemsControl ItemsSource="{Binding Views}">

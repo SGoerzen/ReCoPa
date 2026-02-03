@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ReCoPa.ViewModels"
+             xmlns:views="clr-namespace:ReCoPa.Views"
+             x:Class="ReCoPa.Views.SessionView"
+             x:DataType="vm:SessionViewModel">
+
+    <Grid ColumnDefinitions="250,*">
+        <views:SidebarView Grid.Column="0"
+                           Margin="10,10, 5, 10"
+                           ClientName="{Binding ClientName}"
+                           IsConnected="{Binding IsConnected}"
+                           IsDisconnected="{Binding IsDisconnected}"
+                           IsSessionSelected="{Binding IsSessionSelected}"
+                           StatementsCount="{Binding StatementsCount}"
+                           GameObjectsCount="{Binding GameObjectsCount}"
+                           Fps="{Binding Fps}"
+                           HeartRate="{Binding HeartRate}"
+                           ElapsedTime="{Binding ElapsedTime}"
+                           NavigateVisualizationsCommand="{Binding NavigateVisualizationsCommand}"
+                           NavigateSettingsCommand="{Binding NavigateSettingsCommand}"
+                           StartEyeCalibrationCommand="{Binding StartCalibrationCommand}"
+                           PauseTrackingCommand="{Binding PauseTrackingCommand}"
+                           StopTrackingCommand="{Binding StopTrackingCommand}"
+                           ShutdownUnityAppCommand="{Binding ShutdownAppCommand}" />
+
+        <views:VisualizationContainerView Grid.Column="1"
+                                          Margin="0,10,10,0"
+                                          DataContext="{Binding Visualization}" />
+    </Grid>
+</UserControl>

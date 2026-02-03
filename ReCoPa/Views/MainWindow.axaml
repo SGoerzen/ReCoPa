@@ -9,7 +9,7 @@
                    MinWidth="1200"
                    Width="1200"
                    MinHeight="860"
-                   Height="860"
+                   Height="800"
                    Title="ReCoPa - Researcher Companion Panel"
                    Icon="avares://ReCoPa/Assets/app-icon.ico"
                    BackgroundStyle="Gradient">

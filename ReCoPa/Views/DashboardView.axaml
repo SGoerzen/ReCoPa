@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="clr-namespace:ReCoPa.ViewModels"
              xmlns:views="clr-namespace:ReCoPa.Views"
-             xmlns:visualizations="clr-namespace:ReCoPa.Views.Visualizations"
              x:Class="ReCoPa.Views.DashboardView"
              x:DataType="vm:DashboardViewModel">
 
@@ -11,74 +10,66 @@
         <views:TabsHeaderView DockPanel.Dock="Top"
                               Items="{Binding SessionTabs}"
                               SelectTabCommand="{Binding SelectTabCommand}"
-                              AddClientCommand="{Binding AddClientCommand}"/>
+                              AddClientCommand="{Binding AddClientCommand}"
+                              CloseTabCommand="{Binding CloseTabCommand}"/>
 
         <!-- MAIN -->
-        <Grid ColumnDefinitions="250,*">
-            <!-- Sidebar -->
-            <views:SidebarView Grid.Column="0"
-                               ClientName="{Binding SelectedClientName}"
-                               IsConnected="{Binding IsSelectedClientConnected}"
-                               IsDisconnected="{Binding IsSelectedClientDisconnected}"
-                               IsSessionSelected="{Binding IsSessionSelected}"
-                               XapiStatementsCount="{Binding SelectedClientStatementsCount}"
-                               GameObjectsCount="{Binding SelectedClientGameObjectsCount}"
-                               Fps="{Binding SelectedClientFps}"
-                               HeartRate="{Binding SelectedClientHeartRate}"
-                               NavigateVisualizationsCommand="{Binding NavigateVisualizationsCommand}"
-                               NavigateSettingsCommand="{Binding NavigateSettingsCommand}"
-                               StartEyeCalibrationCommand="{Binding StartCalibrationCommand}"
-                               PauseTrackingCommand="{Binding PauseTrackingCommand}"
-                               StopTrackingCommand="{Binding StopTrackingCommand}"
-                               ShutdownUnityAppCommand="{Binding ShutdownAppCommand}" />
+        <Grid>
+            <ContentPresenter Content="{Binding SelectedSession}"
+                              IsVisible="{Binding HasSessions}"/>
 
-            <!-- Content (bei dir erstmal wie gehabt) -->
-            <Grid Grid.Column="1">
-                <views:VisualizationContainerView IsVisible="{Binding HasSessions}" />
+            <Border IsVisible="{Binding HasSessions, Converter={StaticResource BoolInvertConverter}}"
+                    Background="White"
+                    Padding="40">
+                <StackPanel HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Spacing="16"
+                            MaxWidth="640">
+                    <Image Source="avares://ReCoPa/Assets/app-icon.png"
+                           Width="140"
+                           Height="140"
+                           HorizontalAlignment="Center"/>
 
-                <Border IsVisible="{Binding HasSessions, Converter={StaticResource BoolInvertConverter}}"
-                        Background="White"
-                        Padding="40">
-                    <StackPanel HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Spacing="16"
-                                MaxWidth="640">
-                        <Image Source="avares://ReCoPa/Assets/app-icon.png"
-                               Width="140"
-                               Height="140"
-                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="Du siehst nichts? Wir auch nicht."
+                               FontSize="18"
+                               FontWeight="SemiBold"
+                               TextAlignment="Center"/>
 
-                        <TextBlock Text="Du siehst nichts? Wir auch nicht."
-                                   FontSize="18"
-                                   FontWeight="SemiBold"
-                                   TextAlignment="Center"/>
+                    <TextBlock Text="Verbundene Unity-Apps werden hier angezeigt. Derzeit scheint allerdings keine Unity-App gestartet zu sein, die ReCoPa unterstuetzt."
+                               Opacity="0.8"
+                               TextAlignment="Center"
+                               TextWrapping="Wrap"/>
+                    
+                    <HyperlinkButton NavigateUri="https://www.npmjs.com/package/com.rwth.unity.omilaxr.recopa"
+                                     Content="com.rwth.unity.omilaxr.recopa auf npm.js ansehen"
+                                     Foreground="#8A8A8A"
+                                     Opacity="0.85"
+                                     HorizontalAlignment="Center"
+                                     VerticalAlignment="Center"
+                                     HorizontalContentAlignment="Center"
+                                     VerticalContentAlignment="Center"
+                                     FontSize="14"
+                                     Click="OpenRecopaPackageLink"/>
 
-                        <TextBlock Text="Verbundene Unity-Apps werden hier angezeigt. Derzeit scheint allerdings keine Unity-App gestartet zu sein, die ReCoPa unterstuetzt."
-                                   Opacity="0.8"
-                                   TextAlignment="Center"
-                                   TextWrapping="Wrap"/>
-                        
-                        <HyperlinkButton NavigateUri="https://www.npmjs.com/package/com.rwth.unity.omilaxr.recopa"
-                                         Content="com.rwth.unity.omilaxr.recopa auf npm.js ansehen"
-                                         Foreground="#8A8A8A"
-                                         Opacity="0.85"
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Center"
-                                         HorizontalContentAlignment="Center"
-                                         VerticalContentAlignment="Center"
-                                         FontSize="14"
-                                         Click="OpenRecopaPackageLink"/>
-
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                Spacing="10">
                         <Button Content="OmiLAXR.ReCoPa in meinem Projekt installieren"
                                 Click="InstallUnityPackage"
                                 Background="{DynamicResource AccentBrush}"
                                 Foreground="White"
+                                Classes="secondary"
                                 Padding="14,10"
-                                CornerRadius="10"
-                                HorizontalAlignment="Center"/>
+                                CornerRadius="10"/>
+
+                        <Button Content="+ Neue Session"
+                                Classes="secondary"
+                                Command="{Binding AddClientCommand}"
+                                Padding="14,10"
+                                CornerRadius="10"/>
                     </StackPanel>
-                </Border>
-            </Grid>
+                </StackPanel>
+            </Border>
         </Grid>
 
     </DockPanel>

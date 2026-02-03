@@ -20,10 +20,10 @@
              <ResourceDictionary.MergedDictionaries>
                  <ResourceInclude Source="avares://ReCoPa/Styles/Colors.axaml"/>
              </ResourceDictionary.MergedDictionaries>
+
+             <conv:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
+             <conv:BoolInvertConverter x:Key="BoolInvertConverter"/>
          </ResourceDictionary>
-         
-         <conv:BoolToBrushConverter x:Key="BoolToBrushConverter"/>
-         <conv:BoolInvertConverter x:Key="BoolInvertConverter"/>
      </Application.Resources>
 
      <!-- ===================== -->
@@ -32,6 +32,7 @@
      <Application.Styles>
          <!-- https://kikipoulet.github.io/SukiUI/documentation/getting-started -->
          <sukiUi:SukiTheme />
+         <StyleInclude Source="avares://ReCoPa/Styles/Controls.axaml"/>
          <avalonia:MaterialIconStyles />
      </Application.Styles>
 </Application>

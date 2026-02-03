@@ -56,11 +56,10 @@
 
     </UserControl.Styles>
 
-    <Grid ColumnDefinitions="*,Auto"
-          ColumnSpacing="6">
+    <Grid>
         <Button x:Name="TabButton"
-                Grid.Column="0"
-                ZIndex="100"
+                ZIndex="0"
+                Padding="10,6,28,6"
                 Command="{Binding SelectCommand, RelativeSource={RelativeSource AncestorType=views:TabView}}"
                 CommandParameter="{Binding SelectCommandParameter, RelativeSource={RelativeSource AncestorType=views:TabView}}">
 
@@ -87,8 +86,10 @@
 
         <!-- Close -->
         <Button x:Name="CloseButton"
-                Grid.Column="1"
+                ZIndex="1"
+                HorizontalAlignment="Right"
                 VerticalAlignment="Center"
+                Margin="0,0,6,0"
                 Command="{Binding CloseCommand, RelativeSource={RelativeSource AncestorType=views:TabView}}"
                 CommandParameter="{Binding CloseCommandParameter, RelativeSource={RelativeSource AncestorType=views:TabView}}"
                 ToolTip.Tip="Close session">

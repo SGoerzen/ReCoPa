@@ -42,9 +42,11 @@
                             <views:TabView x:CompileBindings="False"
                                            Header="{Binding Header}"
                                            IsActive="{Binding IsActive}"
-                                           IsConnected="{Binding IsConnected}" 
+                                           ConnectionState="{Binding ConnectionState}"
                                            SelectCommand="{Binding SelectTabCommand, RelativeSource={RelativeSource AncestorType=views:TabsHeaderView}}"
                                            SelectCommandParameter="{Binding}"
+                                           CloseCommand="{Binding CloseTabCommand, RelativeSource={RelativeSource AncestorType=views:TabsHeaderView}}"
+                                           CloseCommandParameter="{Binding}"
                                            Margin="0,0,10,0"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

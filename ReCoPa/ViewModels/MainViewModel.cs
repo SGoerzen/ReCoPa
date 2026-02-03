@@ -46,7 +46,7 @@ public class MainViewModel : ViewModelBase
         Clients = new ObservableCollection<XRClient>();
         ClientsTableViewModel = new ClientsTableViewModel(Clients);
         
-        Dashboard = new DashboardViewModel();
+        Dashboard = new DashboardViewModel(_server);
         Settings = new SettingsViewModel();
         
         CurrentViewModel = Dashboard;

@@ -32,6 +32,9 @@ public partial class TabsHeaderView : UserControl, INotifyPropertyChanged
     public static readonly StyledProperty<ICommand?> AddClientCommandProperty =
         AvaloniaProperty.Register<TabsHeaderView, ICommand?>(nameof(AddClientCommand));
 
+    public static readonly StyledProperty<ICommand?> CloseTabCommandProperty =
+        AvaloniaProperty.Register<TabsHeaderView, ICommand?>(nameof(CloseTabCommand));
+
     public IEnumerable? Items
     {
         get => GetValue(ItemsProperty);
@@ -48,6 +51,12 @@ public partial class TabsHeaderView : UserControl, INotifyPropertyChanged
     {
         get => GetValue(AddClientCommandProperty);
         set => SetValue(AddClientCommandProperty, value);
+    }
+
+    public ICommand? CloseTabCommand
+    {
+        get => GetValue(CloseTabCommandProperty);
+        set => SetValue(CloseTabCommandProperty, value);
     }
 
     public bool CanScrollLeft

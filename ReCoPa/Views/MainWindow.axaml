@@ -6,10 +6,10 @@
                    x:DataType="vm:MainViewModel"
                    xmlns:sukiUi="clr-namespace:SukiUI.Controls;assembly=SukiUI"
                    xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-                   MinWidth="1000"
-                   Width="1000"
-                   MinHeight="700"
-                   Height="700"
+                   MinWidth="1200"
+                   Width="1200"
+                   MinHeight="860"
+                   Height="860"
                    Title="ReCoPa - Researcher Companion Panel"
                    Icon="avares://ReCoPa/Assets/app-icon.ico"
                    BackgroundStyle="Gradient">
@@ -42,9 +42,8 @@
     </sukiUi:SukiWindow.RightWindowTitleBarControls>
 
     <ScrollViewer>
-        
-         <DockPanel>
-            <views:DashboardView />
+        <DockPanel>
+            <views:DashboardView DataContext="{Binding Dashboard}" />
         </DockPanel>
     </ScrollViewer>
 </sukiUi:SukiWindow>

@@ -42,6 +42,9 @@ public partial class SidebarView : UserControl
     public static readonly StyledProperty<int> HeartRateProperty =
         AvaloniaProperty.Register<SidebarView, int>(nameof(HeartRate));
 
+    public static readonly StyledProperty<bool> IsSessionSelectedProperty =
+        AvaloniaProperty.Register<SidebarView, bool>(nameof(IsSessionSelected));
+
     public static readonly StyledProperty<ICommand?> NavigateVisualizationsCommandProperty =
         AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(NavigateVisualizationsCommand));
 
@@ -66,6 +69,7 @@ public partial class SidebarView : UserControl
     public int GameObjectsCount { get => GetValue(GameObjectsCountProperty); set => SetValue(GameObjectsCountProperty, value); }
     public double Fps { get => GetValue(FpsProperty); set => SetValue(FpsProperty, value); }
     public int HeartRate { get => GetValue(HeartRateProperty); set => SetValue(HeartRateProperty, value); }
+    public bool IsSessionSelected { get => GetValue(IsSessionSelectedProperty); set => SetValue(IsSessionSelectedProperty, value); }
 
     public ICommand? NavigateVisualizationsCommand { get => GetValue(NavigateVisualizationsCommandProperty); set => SetValue(NavigateVisualizationsCommandProperty, value); }
     public ICommand? NavigateSettingsCommand { get => GetValue(NavigateSettingsCommandProperty); set => SetValue(NavigateSettingsCommandProperty, value); }

@@ -1,14 +1,18 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ReCoPa.Network;
 
 namespace ReCoPa.ViewModels;
 
 public partial class DashboardViewModel : ViewModelBase
 {
-    public ObservableCollection<TabViewModel> ClientTabs { get; } = new();
+    private readonly SocketServerHost? _server;
+
+    public ObservableCollection<TabViewModel> SessionTabs { get; } = new();
 
     // ---- Selected client summary for Sidebar ----
     [ObservableProperty] private string? selectedClientName;
@@ -23,29 +27,116 @@ public partial class DashboardViewModel : ViewModelBase
     // Optional: which view is currently shown in the main area
     [ObservableProperty] private string currentView = "Visualizations"; // or "Settings"
 
+    [ObservableProperty] private bool hasSessions;
+    [ObservableProperty] private bool isSessionSelected;
+
     public bool IsSelectedClientDisconnected => !IsSelectedClientConnected;
     
-    public DashboardViewModel()
+    public DashboardViewModel(SocketServerHost? server = null)
     {
-        // Demo data (replace with real clients later)
-        ClientTabs.Add(new TabViewModel { Header = "VR Training - PC1", IsActive = true });
-        ClientTabs.Add(new TabViewModel { Header = "Cognitive Test - Lab-PC", IsActive = false });
-        ClientTabs.Add(new TabViewModel { Header = "VR Experience - PC2", IsActive = false });
+        _server = server;
+        SessionTabs.CollectionChanged += OnSessionTabsChanged;
 
+        if (_server == null)
+        {
+            // Demo data (replace with real clients later)
+            SessionTabs.Add(new TabViewModel { Header = "VR Training - PC1", IsActive = true, ConnectionState = TabConnectionState.Connected });
+            SessionTabs.Add(new TabViewModel { Header = "Cognitive Test - Lab-PC", IsActive = false, ConnectionState = TabConnectionState.Disconnected });
+            SessionTabs.Add(new TabViewModel { Header = "VR Experience - PC2", IsActive = false, ConnectionState = TabConnectionState.Connected });
+
+            // Demo numbers
+            SelectedClientStatementsCount = 12541;
+            SelectedClientGameObjectsCount = 10;
+            SelectedClientFps = 72.4;
+            SelectedClientHeartRate = 98;
+            IsSelectedClientConnected = true;
+        }
+        else
+        {
+            _server.ClientConnected += OnClientConnected;
+            _server.ClientDisconnected += OnClientDisconnected;
+        }
+
+        UpdateHasSessions();
         ApplySelectedFromActiveTab();
-
-        // Demo numbers
-        SelectedClientStatementsCount = 12541;
-        SelectedClientGameObjectsCount = 10;
-        SelectedClientFps = 72.4;
-        SelectedClientHeartRate = 98;
-        IsSelectedClientConnected = true;
     }
 
     private void ApplySelectedFromActiveTab()
     {
-        var active = ClientTabs.FirstOrDefault(t => t.IsActive) ?? ClientTabs.FirstOrDefault();
+        var active = SessionTabs.FirstOrDefault(t => t.IsActive) ?? SessionTabs.FirstOrDefault();
         SelectedClientName = active?.Header ?? "No Session";
+    }
+
+    private void ClearSelectedClientSummary()
+    {
+        SelectedClientName = "No Session";
+        SelectedClientStatementsCount = 0;
+        SelectedClientGameObjectsCount = 0;
+        SelectedClientFps = 0;
+        SelectedClientHeartRate = 0;
+        IsSelectedClientConnected = false;
+        IsSessionSelected = false;
+    }
+
+    private void SetActiveTab(TabViewModel tab)
+    {
+        foreach (var t in SessionTabs) t.IsActive = false;
+        tab.IsActive = true;
+        SelectedClientName = tab.Header;
+        IsSessionSelected = true;
+    }
+
+    private void AddSessionTab(string header, Guid? clientId, TabConnectionState connectionState, bool activate)
+    {
+        var tab = new TabViewModel
+        {
+            Header = header,
+            IsActive = false,
+            ConnectionState = connectionState,
+            ClientId = clientId
+        };
+
+        SessionTabs.Add(tab);
+
+        if (activate || SessionTabs.Count == 1)
+            SetActiveTab(tab);
+    }
+
+    private void OnSessionTabsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        UpdateHasSessions();
+
+        if (!HasSessions)
+        {
+            ClearSelectedClientSummary();
+            return;
+        }
+
+        if (!SessionTabs.Any(t => t.IsActive))
+            ApplySelectedFromActiveTab();
+    }
+
+    private void UpdateHasSessions()
+    {
+        HasSessions = SessionTabs.Count > 0;
+        IsSessionSelected = HasSessions;
+    }
+
+    private void OnClientConnected(SocketServerHost.SocketConnection conn)
+    {
+        var endpoint = conn.RemoteEndPoint?.ToString();
+        var header = string.IsNullOrWhiteSpace(endpoint)
+            ? $"Session {SessionTabs.Count + 1}"
+            : $"Session {SessionTabs.Count + 1} ({endpoint})";
+
+        AddSessionTab(header, conn.Id, TabConnectionState.Connected, activate: SessionTabs.Count == 0);
+    }
+
+    private void OnClientDisconnected(SocketServerHost.SocketConnection conn)
+    {
+        var tab = SessionTabs.FirstOrDefault(t => t.ClientId == conn.Id);
+        if (tab != null)
+            tab.ConnectionState = TabConnectionState.Disconnected;
     }
 
     // ---- Commands ----
@@ -53,8 +144,8 @@ public partial class DashboardViewModel : ViewModelBase
     [RelayCommand]
     private void AddClient()
     {
-        var idx = ClientTabs.Count + 1;
-        ClientTabs.Add(new TabViewModel { Header = $"Session {idx}", IsActive = false });
+        var idx = SessionTabs.Count + 1;
+        AddSessionTab($"Session {idx}", clientId: null, connectionState: TabConnectionState.Inactive, activate: true);
     }
 
     [RelayCommand]
@@ -93,10 +184,7 @@ public partial class DashboardViewModel : ViewModelBase
     // Optional: if you want clicking a tab to select it (wire up later)
     public void ActivateTab(TabViewModel tab)
     {
-        foreach (var t in ClientTabs) t.IsActive = false;
-        tab.IsActive = true;
-
-        SelectedClientName = tab.Header;
+        SetActiveTab(tab);
         // TODO: load counts/fps/heartrate from this tab's client model
     }
     
@@ -105,12 +193,23 @@ public partial class DashboardViewModel : ViewModelBase
     {
         if (tab is null) return;
 
-        foreach (var t in ClientTabs)
-            t.IsActive = false;
+        SetActiveTab(tab);
+    }
 
-        tab.IsActive = true;
+    [RelayCommand]
+    private void CloseTab(TabViewModel? tab)
+    {
+        if (tab is null) return;
 
-        // optional: hier deine SelectedClient* Felder updaten
-        SelectedClientName = tab.Header;
+        var index = SessionTabs.IndexOf(tab);
+        var wasActive = tab.IsActive;
+
+        SessionTabs.Remove(tab);
+
+        if (!wasActive || SessionTabs.Count == 0)
+            return;
+
+        var nextIndex = Math.Min(index, SessionTabs.Count - 1);
+        SetActiveTab(SessionTabs[nextIndex]);
     }
 }

@@ -26,42 +26,73 @@
             <Setter Property="Background" Value="{DynamicResource TabActiveBackground}"/>
             <Setter Property="Foreground" Value="{DynamicResource TabActiveForeground}"/>
             <Setter Property="BorderBrush" Value="{DynamicResource TabActiveBorder}"/>
-            <Setter Property="IsHitTestVisible" Value="False"/>
-            <Setter Property="Focusable" Value="False"/>
         </Style>
 
-        <!-- Status dot default (disconnected) -->
+        <!-- Status dot default (inactive) -->
         <Style Selector="Ellipse#StatusDot">
             <Setter Property="Fill" Value="#9CA3AF"/> <!-- gray -->
         </Style>
 
         <!-- Status dot connected -->
-        <Style Selector="views|TabView[IsConnected=True] Ellipse#StatusDot">
+        <Style Selector="views|TabView[ConnectionState=Connected] Ellipse#StatusDot">
             <Setter Property="Fill" Value="#22C55E"/> <!-- green -->
+        </Style>
+
+        <!-- Status dot disconnected -->
+        <Style Selector="views|TabView[ConnectionState=Disconnected] Ellipse#StatusDot">
+            <Setter Property="Fill" Value="#EF4444"/> <!-- red -->
+        </Style>
+
+        <Style Selector="Button#CloseButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondary}"/>
+        </Style>
+
+        <Style Selector="Button#CloseButton:pointerover">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimary}"/>
         </Style>
 
     </UserControl.Styles>
 
-    <Button x:Name="TabButton"
-            ZIndex="100"
-            Command="{Binding SelectCommand, RelativeSource={RelativeSource AncestorType=views:TabView}}"
-            CommandParameter="{Binding SelectCommandParameter, RelativeSource={RelativeSource AncestorType=views:TabView}}">
+    <Grid ColumnDefinitions="*,Auto"
+          ColumnSpacing="6">
+        <Button x:Name="TabButton"
+                Grid.Column="0"
+                ZIndex="100"
+                Command="{Binding SelectCommand, RelativeSource={RelativeSource AncestorType=views:TabView}}"
+                CommandParameter="{Binding SelectCommandParameter, RelativeSource={RelativeSource AncestorType=views:TabView}}">
 
-        <StackPanel Orientation="Horizontal"
-                    Spacing="8"
-                    VerticalAlignment="Center">
+            <Grid ColumnDefinitions="Auto,*"
+                  ColumnSpacing="8"
+                  VerticalAlignment="Center">
 
-            <!-- Status dot -->
-            <Ellipse x:Name="StatusDot"
-                     Width="8"
-                     Height="8"
-                     VerticalAlignment="Center"/>
+                <!-- Status dot -->
+                <Ellipse x:Name="StatusDot"
+                         Grid.Column="0"
+                         Width="8"
+                         Height="8"
+                         VerticalAlignment="Center"/>
 
-            <!-- Header -->
-            <TextBlock Text="{Binding Header,
-                              RelativeSource={RelativeSource AncestorType=views:TabView}}"
-                       VerticalAlignment="Center"/>
-        </StackPanel>
+                <!-- Header -->
+                <TextBlock Grid.Column="1"
+                           Text="{Binding Header,
+                                  RelativeSource={RelativeSource AncestorType=views:TabView}}"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"/>
+            </Grid>
 
-    </Button>
+        </Button>
+
+        <!-- Close -->
+        <Button x:Name="CloseButton"
+                Grid.Column="1"
+                VerticalAlignment="Center"
+                Command="{Binding CloseCommand, RelativeSource={RelativeSource AncestorType=views:TabView}}"
+                CommandParameter="{Binding CloseCommandParameter, RelativeSource={RelativeSource AncestorType=views:TabView}}"
+                ToolTip.Tip="Close session">
+            <TextBlock Text="x" FontSize="12" FontWeight="Bold"/>
+        </Button>
+    </Grid>
 </UserControl>

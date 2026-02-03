@@ -20,6 +20,7 @@
     
     <sukiUi:SukiWindow.Hosts>
         <sukiUi:SukiToastHost  Name="ToastHost" />
+        <sukiUi:SukiDialogHost Name="DialogHost" />
     </sukiUi:SukiWindow.Hosts>
     
     <sukiUi:SukiWindow.RightWindowTitleBarControls>

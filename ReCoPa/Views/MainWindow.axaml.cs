@@ -1,6 +1,7 @@
 using System.Reflection;
 using Avalonia.Controls;
 using SukiUI.Controls;
+using SukiUI.Dialogs;
 using SukiUI.Toasts;
 
 namespace ReCoPa.Views;
@@ -8,17 +9,26 @@ namespace ReCoPa.Views;
 public partial class MainWindow : SukiWindow
 {
     public static ISukiToastManager ToastManager = new SukiToastManager();
+    private static Window? _pluginWindow;
+    public static ISukiDialogManager DialogManager = new SukiDialogManager();
 
     public MainWindow()
     {
         InitializeComponent();
         ToastHost.Manager = ToastManager;
+        DialogHost.Manager = DialogManager;
         Title = Title + " v" + (Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "unknown");
     }
     
     private void OpenPlugins(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
     {
-        var window = new Window
+        if (_pluginWindow != null)
+        {
+            _pluginWindow.Activate();
+            return;
+        }
+
+        _pluginWindow = new Window
         {
             Title = "Plugins",
             MinWidth = 800,
@@ -28,6 +38,7 @@ public partial class MainWindow : SukiWindow
             Content = new PluginManagerView()
         };
 
-        window.Show();
+        _pluginWindow.Closed += (_, __) => _pluginWindow = null;
+        _pluginWindow.Show();
     }
 }

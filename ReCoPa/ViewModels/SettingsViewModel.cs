@@ -1,7 +1,9 @@
 // ViewModels/SettingsViewModel.cs
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ReCoPa.Services;
 
 namespace ReCoPa.ViewModels;
 
@@ -15,6 +17,8 @@ public partial class SettingsViewModel : ViewModelBase
     public ObservableCollection<string> ExcludeGestures { get; } = new();
 
     [ObservableProperty] private string? filterSearchText;
+    [ObservableProperty] private string? unityManifestStatus;
+    [ObservableProperty] private string? unityManifestPath;
 
     public SettingsViewModel()
     {
@@ -75,6 +79,12 @@ public partial class SettingsViewModel : ViewModelBase
     private void ApplySettings()
     {
         // TODO: persist/apply to runtime
+    }
+
+    public async Task UpdateUnityManifestAsync(string manifestPath)
+    {
+        UnityManifestPath = manifestPath;
+        UnityManifestStatus = await UnityManifestUpdater.UpdateAsync(manifestPath);
     }
 }
 

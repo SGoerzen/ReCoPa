@@ -139,6 +139,31 @@
         </StackPanel>
       </Border>
 
+      <!-- ===================== -->
+      <!-- Unity Package         -->
+      <!-- ===================== -->
+      <Border Classes="card">
+        <StackPanel Spacing="10">
+          <TextBlock Text="Unity Package" FontWeight="SemiBold"/>
+
+          <TextBlock Text="Select Packages/manifest.json to add the scoped registry and dependency."
+                     Classes="secondary"
+                     TextWrapping="Wrap"/>
+
+          <Button Content="Select manifest.json..."
+                  Classes="secondary"
+                  Click="SelectUnityManifest"/>
+
+          <TextBlock Text="{Binding UnityManifestPath}"
+                     Classes="secondary"
+                     TextWrapping="Wrap"/>
+
+          <TextBlock Text="{Binding UnityManifestStatus}"
+                     Classes="secondary"
+                     TextWrapping="Wrap"/>
+        </StackPanel>
+      </Border>
+
     </StackPanel>
   </ScrollViewer>
 </UserControl>

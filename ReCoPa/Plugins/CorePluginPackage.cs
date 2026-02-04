@@ -19,7 +19,8 @@ public sealed class CorePluginPackage : IPluginPackage, ICorePlugin
         new CsvFileEndpoint(),
         
         new HelloWorld(),
-        new PulseMonitor()
+        new PulseMonitor(),
+        new Annotation(),
     ];
 
     public string Website => "https://omilaxr.dev/recopa";

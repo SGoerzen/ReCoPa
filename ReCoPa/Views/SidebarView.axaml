@@ -62,6 +62,7 @@
                 Margin="0,5,0,0">
             <StackPanel Spacing="8">
                 <Button Classes="nav secondary"
+                        Classes.active="{Binding IsVisualizationsView, RelativeSource={RelativeSource AncestorType=views:SidebarView}}"
                         Command="{Binding NavigateVisualizationsCommand, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <material:MaterialIcon Kind="ChartLine" Width="18" Height="18" />
@@ -70,6 +71,7 @@
                 </Button>
 
                 <Button Classes="nav secondary"
+                        Classes.active="{Binding IsSettingsView, RelativeSource={RelativeSource AncestorType=views:SidebarView}}"
                         Command="{Binding NavigateSettingsCommand, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
                     <StackPanel Orientation="Horizontal" Spacing="10">
                         <material:MaterialIcon Kind="Cogs" Width="18" Height="18" />

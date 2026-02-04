@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:viewModels="clr-namespace:ReCoPa.ViewModels"
+             x:DataType="viewModels:AnnotationViewModel"
+             x:Class="ReCoPa.Views.Visualizations.AnnotationView">
+
+    <StackPanel Spacing="6">
+        <TextBlock Text="Researcher Notes"
+                   FontWeight="Bold"/>
+
+        <TextBox Text="{Binding Note}"
+                 AcceptsReturn="True"
+                 Height="80"/>
+
+        <Button Content="Add Annotation"
+                Command="{Binding AddCommand}"/>
+    </StackPanel>
+</UserControl>

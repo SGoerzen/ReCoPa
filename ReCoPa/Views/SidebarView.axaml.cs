@@ -71,6 +71,12 @@ public partial class SidebarView : UserControl
     public static readonly StyledProperty<ICommand?> ShutdownUnityAppCommandProperty =
         AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(ShutdownUnityAppCommand));
 
+    public static readonly StyledProperty<bool> IsVisualizationsViewProperty =
+        AvaloniaProperty.Register<SidebarView, bool>(nameof(IsVisualizationsView));
+
+    public static readonly StyledProperty<bool> IsSettingsViewProperty =
+        AvaloniaProperty.Register<SidebarView, bool>(nameof(IsSettingsView));
+
     public string? ClientName { get => GetValue(ClientNameProperty); set => SetValue(ClientNameProperty, value); }
     public bool IsConnected { get => GetValue(IsConnectedProperty); set => SetValue(IsConnectedProperty, value); }
     public int StatementsCount { get => GetValue(StatementsCountProperty); set => SetValue(StatementsCountProperty, value); }
@@ -88,4 +94,7 @@ public partial class SidebarView : UserControl
     public ICommand? PauseTrackingCommand { get => GetValue(PauseTrackingCommandProperty); set => SetValue(PauseTrackingCommandProperty, value); }
     public ICommand? StopTrackingCommand { get => GetValue(StopTrackingCommandProperty); set => SetValue(StopTrackingCommandProperty, value); }
     public ICommand? ShutdownUnityAppCommand { get => GetValue(ShutdownUnityAppCommandProperty); set => SetValue(ShutdownUnityAppCommandProperty, value); }
+
+    public bool IsVisualizationsView { get => GetValue(IsVisualizationsViewProperty); set => SetValue(IsVisualizationsViewProperty, value); }
+    public bool IsSettingsView { get => GetValue(IsSettingsViewProperty); set => SetValue(IsSettingsViewProperty, value); }
 }

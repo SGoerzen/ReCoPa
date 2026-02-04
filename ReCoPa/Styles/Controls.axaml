@@ -227,6 +227,12 @@
         <Setter Property="CornerRadius" Value="10"/>
     </Style>
 
+    <Style Selector="Button.nav.active">
+        <Setter Property="Background" Value="{DynamicResource SurfaceSelected}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceBorderStrong}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+
     <!-- Tab button default -->
     <Style Selector="Button.tab">
         <Setter Property="Background" Value="{DynamicResource SurfaceHover}"/>

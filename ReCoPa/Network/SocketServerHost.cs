@@ -212,6 +212,18 @@ namespace ReCoPa.Network
             return BroadcastAsync(eventName, payload, ct);
         }
 
+        public Task EmitToClientAsync(Guid clientId, string eventName, string payload = "", CancellationToken ct = default)
+        {
+            SocketConnection? client = null;
+            lock (_gate)
+                client = _clients.Find(c => c.Id == clientId);
+
+            if (client == null || !client.IsConnected)
+                return Task.CompletedTask;
+
+            return client.EmitAsync(eventName, payload, ct);
+        }
+
         // ---------------------------
         // Accept loop & dispatch
         // ---------------------------

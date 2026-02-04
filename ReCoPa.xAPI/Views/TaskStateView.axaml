@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ReCoPa.xAPI.Views.TaskStateView">
+
+    <StackPanel>
+        <TextBlock Text="Task States"
+                   FontWeight="Bold"
+                   Margin="0,0,0,8"/>
+
+        <ItemsControl ItemsSource="{Binding Tasks}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="6"
+                            Margin="0,2"
+                            Background="{Binding StateColor}"
+                            CornerRadius="4">
+                        <TextBlock Text="{Binding TaskId}" />
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

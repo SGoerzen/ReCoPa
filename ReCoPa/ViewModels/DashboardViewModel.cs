@@ -55,10 +55,11 @@ public partial class DashboardViewModel : ViewModelBase
 
     private void AddSessionTab(string header, Guid? clientId, TabConnectionState connectionState, bool activate)
     {
-        var session = new SessionViewModel(header)
+        var session = new SessionViewModel(header, _server, clientId)
         {
             IsConnected = connectionState == TabConnectionState.Connected
         };
+        session.CurrentView = "Settings";
         var sessionView = new Views.SessionView
         {
             DataContext = session

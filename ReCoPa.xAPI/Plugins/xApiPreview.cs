@@ -1,7 +1,7 @@
 using ReCoPa.Plugins;
 using ReCoPa.xAPI.Views;
 
-namespace ReCoPa.xAPI;
+namespace ReCoPa.xAPI.Plugins;
 
 public sealed class xApiPreview : IVisualization
 {

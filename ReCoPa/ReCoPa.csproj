@@ -66,6 +66,10 @@
       <Compile Update="Views\EndpointsDialogView.axaml.cs">
         <DependentUpon>EndpointsDialogView.axaml</DependentUpon>
       </Compile>
+      <Compile Update="Views\Visualizations\AnnotationView.axaml.cs">
+        <DependentUpon>AnnotationView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

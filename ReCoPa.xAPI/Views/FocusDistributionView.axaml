@@ -1,0 +1,24 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ReCoPa.xAPI.Views.FocusDistributionView">
+
+    <StackPanel>
+        <TextBlock Text="Focus Distribution"
+                   FontWeight="Bold"
+                   Margin="0,0,0,8"/>
+
+        <ItemsControl ItemsSource="{Binding Items}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel Margin="0,2">
+                        <TextBlock Text="{Binding ObjectId}"
+                                   Width="120"/>
+                        <ProgressBar Value="{Binding Score}"
+                                     Maximum="100"
+                                     Height="8"/>
+                    </DockPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,19 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="ReCoPa.xAPI.Views.ActivityPulseView">
+
+    <StackPanel Spacing="8">
+        <TextBlock Text="Activity Pulse"
+                   FontWeight="Bold"
+                   FontSize="14"/>
+
+        <ProgressBar Minimum="0"
+                     Maximum="100"
+                     Value="{Binding ActivityLevel}"
+                     Height="12"/>
+
+        <TextBlock Text="{Binding Description}"
+                   FontSize="11"
+                   Foreground="Gray"/>
+    </StackPanel>
+</UserControl>

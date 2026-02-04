@@ -21,11 +21,14 @@
                            ElapsedTime="{Binding ElapsedTime}"
                            IsVisualizationsView="{Binding IsVisualizationsView}"
                            IsSettingsView="{Binding IsSettingsView}"
+                           IsTrackingRunning="{Binding IsTrackingRunning}"
+                           StartStopText="{Binding StartStopText}"
+                           StartStopIcon="{Binding StartStopIcon}"
                            NavigateVisualizationsCommand="{Binding NavigateVisualizationsCommand}"
                            NavigateSettingsCommand="{Binding NavigateSettingsCommand}"
                            StartEyeCalibrationCommand="{Binding StartCalibrationCommand}"
                            PauseTrackingCommand="{Binding PauseTrackingCommand}"
-                           StopTrackingCommand="{Binding StopTrackingCommand}"
+                           StartStopTrackingCommand="{Binding StartStopTrackingCommand}"
                            ShutdownUnityAppCommand="{Binding ShutdownAppCommand}" />
 
         <Grid Grid.Column="1">

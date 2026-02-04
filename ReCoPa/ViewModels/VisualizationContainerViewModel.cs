@@ -1,11 +1,13 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ReCoPa.Plugins;
+using ReCoPa.Services;
 
 namespace ReCoPa.ViewModels;
 
@@ -31,13 +33,13 @@ public partial class VisualizationContainerViewModel : ObservableObject
     }
 
     public IRelayCommand AddVisualizationCommand { get; }
-    public IRelayCommand<VisualizationHostItem> RemoveVisualizationCommand { get; }
+    public IAsyncRelayCommand<VisualizationHostItem> RemoveVisualizationCommand { get; }
     public IRelayCommand<VisualizationHostItem> ToggleSettingsCommand { get; }
 
     public VisualizationContainerViewModel()
     {
         AddVisualizationCommand = new RelayCommand(AddSelectedVisualization, () => SelectedToAdd is not null);
-        RemoveVisualizationCommand = new RelayCommand<VisualizationHostItem>(RemoveVisualization);
+        RemoveVisualizationCommand = new AsyncRelayCommand<VisualizationHostItem>(RemoveVisualizationAsync);
         ToggleSettingsCommand = new RelayCommand<VisualizationHostItem>(ToggleSettings);
 
         ReloadAvailableVisualizations();
@@ -49,9 +51,14 @@ public partial class VisualizationContainerViewModel : ObservableObject
         };
     }
 
-    private void RemoveVisualization(VisualizationHostItem? item)
+    private async Task RemoveVisualizationAsync(VisualizationHostItem? item)
     {
         if (item is null) return;
+
+        var title = string.IsNullOrWhiteSpace(item.Title) ? "Visualization" : item.Title;
+        var confirmed = await SukiDialogService.ConfirmVisualizationDeleteAsync(title);
+        if (!confirmed) return;
+
         Views.Remove(item);
     }
 

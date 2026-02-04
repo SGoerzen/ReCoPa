@@ -48,13 +48,21 @@ public partial class VisualizationContainerView : UserControl
 
         if (source is null || target is null || ReferenceEquals(source, target))
         {
+            control.Classes.Remove("drag-target");
             e.DragEffects = DragDropEffects.None;
             e.Handled = true;
             return;
         }
 
+        control.Classes.Add("drag-target");
         e.DragEffects = DragDropEffects.Move;
         e.Handled = true;
+    }
+
+    private void OnTileDragLeave(object? sender, DragEventArgs e)
+    {
+        if (sender is Control control)
+            control.Classes.Remove("drag-target");
     }
 
     private void OnTileDrop(object? sender, DragEventArgs e)
@@ -81,6 +89,7 @@ public partial class VisualizationContainerView : UserControl
             return;
 
         vm.Views.Move(sourceIndex, targetIndex);
+        control.Classes.Remove("drag-target");
         e.Handled = true;
     }
 }

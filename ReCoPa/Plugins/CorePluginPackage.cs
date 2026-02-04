@@ -18,7 +18,6 @@ public sealed class CorePluginPackage : IPluginPackage, ICorePlugin
         new LocalFileEndpoint(),
         new CsvFileEndpoint(),
         
-        new HelloWorld(),
         new PulseMonitor(),
         new Annotation(),
     ];

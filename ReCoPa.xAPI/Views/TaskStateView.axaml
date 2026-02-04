@@ -3,10 +3,6 @@
              x:Class="ReCoPa.xAPI.Views.TaskStateView">
 
     <StackPanel>
-        <TextBlock Text="Task States"
-                   FontWeight="Bold"
-                   Margin="0,0,0,8"/>
-
         <ItemsControl ItemsSource="{Binding Tasks}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>

@@ -3,6 +3,7 @@ using System.Windows.Input;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
+using Material.Icons;
 
 namespace ReCoPa.Views;
 
@@ -68,6 +69,9 @@ public partial class SidebarView : UserControl
     public static readonly StyledProperty<ICommand?> StopTrackingCommandProperty =
         AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(StopTrackingCommand));
 
+    public static readonly StyledProperty<ICommand?> StartStopTrackingCommandProperty =
+        AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(StartStopTrackingCommand));
+
     public static readonly StyledProperty<ICommand?> ShutdownUnityAppCommandProperty =
         AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(ShutdownUnityAppCommand));
 
@@ -76,6 +80,15 @@ public partial class SidebarView : UserControl
 
     public static readonly StyledProperty<bool> IsSettingsViewProperty =
         AvaloniaProperty.Register<SidebarView, bool>(nameof(IsSettingsView));
+
+    public static readonly StyledProperty<bool> IsTrackingRunningProperty =
+        AvaloniaProperty.Register<SidebarView, bool>(nameof(IsTrackingRunning));
+
+    public static readonly StyledProperty<string> StartStopTextProperty =
+        AvaloniaProperty.Register<SidebarView, string>(nameof(StartStopText), "Stop");
+
+    public static readonly StyledProperty<MaterialIconKind> StartStopIconProperty =
+        AvaloniaProperty.Register<SidebarView, MaterialIconKind>(nameof(StartStopIcon), MaterialIconKind.Stop);
 
     public string? ClientName { get => GetValue(ClientNameProperty); set => SetValue(ClientNameProperty, value); }
     public bool IsConnected { get => GetValue(IsConnectedProperty); set => SetValue(IsConnectedProperty, value); }
@@ -93,8 +106,12 @@ public partial class SidebarView : UserControl
     public ICommand? StartEyeCalibrationCommand { get => GetValue(StartEyeCalibrationCommandProperty); set => SetValue(StartEyeCalibrationCommandProperty, value); }
     public ICommand? PauseTrackingCommand { get => GetValue(PauseTrackingCommandProperty); set => SetValue(PauseTrackingCommandProperty, value); }
     public ICommand? StopTrackingCommand { get => GetValue(StopTrackingCommandProperty); set => SetValue(StopTrackingCommandProperty, value); }
+    public ICommand? StartStopTrackingCommand { get => GetValue(StartStopTrackingCommandProperty); set => SetValue(StartStopTrackingCommandProperty, value); }
     public ICommand? ShutdownUnityAppCommand { get => GetValue(ShutdownUnityAppCommandProperty); set => SetValue(ShutdownUnityAppCommandProperty, value); }
 
     public bool IsVisualizationsView { get => GetValue(IsVisualizationsViewProperty); set => SetValue(IsVisualizationsViewProperty, value); }
     public bool IsSettingsView { get => GetValue(IsSettingsViewProperty); set => SetValue(IsSettingsViewProperty, value); }
+    public bool IsTrackingRunning { get => GetValue(IsTrackingRunningProperty); set => SetValue(IsTrackingRunningProperty, value); }
+    public string StartStopText { get => GetValue(StartStopTextProperty); set => SetValue(StartStopTextProperty, value); }
+    public MaterialIconKind StartStopIcon { get => GetValue(StartStopIconProperty); set => SetValue(StartStopIconProperty, value); }
 }

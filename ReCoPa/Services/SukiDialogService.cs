@@ -63,4 +63,35 @@ public static class SukiDialogService
 
         return tcs.Task;
     }
+
+    public static Task<bool> ConfirmVisualizationDeleteAsync(string title)
+    {
+        var tcs = new TaskCompletionSource<bool>();
+
+        var content = new StackPanel
+        {
+            Spacing = 6,
+            Children =
+            {
+                new TextBlock
+                {
+                    Text = $"Möchtest du \"{title}\" wirklich löschen?",
+                    TextWrapping = TextWrapping.Wrap
+                }
+            }
+        };
+
+        var builder = FluentSukiDialogBuilder.CreateDialog(MainWindow.DialogManager);
+        builder.SetTitle("Visualisierung löschen");
+        builder.SetContent(content);
+        builder.SetCanDismissWithBackgroundClick(true);
+        builder.SetOnDismissed(_ => tcs.TrySetResult(false));
+        builder.AddActionButton("Abbrechen", _ => tcs.TrySetResult(false), true, []);
+        builder.AddActionButton("Löschen", _ => tcs.TrySetResult(true), true, []);
+
+        if (!MainWindow.DialogManager.TryShowDialog(builder.Dialog))
+            tcs.TrySetResult(false);
+
+        return tcs.Task;
+    }
 }

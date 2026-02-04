@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Material.Icons;
 using ReCoPa;
 using ReCoPa.Network;
 
@@ -32,12 +33,17 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private TimeSpan elapsedTime = TimeSpan.Zero;
     [ObservableProperty] private bool isSessionSelected = true;
     [ObservableProperty] private bool isEyeTrackingEnabled = true;
+    [ObservableProperty] private bool isTrackingRunning = true;
+    [ObservableProperty] private bool isTrackingPaused;
     [ObservableProperty] private string currentView = "Visualizations";
 
     public bool IsVisualizationsView => CurrentView == "Visualizations";
     public bool IsSettingsView => CurrentView == "Settings";
 
     public bool IsDisconnected => !IsConnected;
+
+    public string StartStopText => IsTrackingRunning ? "Stop" : "Start";
+    public MaterialIconKind StartStopIcon => IsTrackingRunning ? MaterialIconKind.Stop : MaterialIconKind.PlayCircle;
 
     public SessionViewModel(string? clientName = null, SocketServerHost? server = null, Guid? clientId = null)
     {
@@ -53,6 +59,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         _timer.Start();
 
         SubscribeToSocket();
+        StartTracking();
     }
 
     [RelayCommand]
@@ -70,13 +77,33 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void PauseTracking()
     {
+        if (!IsTrackingRunning)
+            return;
+
         _ = EmitAsync("clients:tracking:pause");
+        IsTrackingPaused = !IsTrackingPaused;
     }
 
     [RelayCommand]
     private void StopTracking()
     {
         _ = EmitAsync("clients:tracking:stop");
+        IsTrackingRunning = false;
+        IsTrackingPaused = false;
+    }
+
+    [RelayCommand]
+    private void StartStopTracking()
+    {
+        if (IsTrackingRunning)
+        {
+            _ = EmitAsync("clients:tracking:stop");
+            IsTrackingRunning = false;
+            IsTrackingPaused = false;
+            return;
+        }
+
+        StartTracking();
     }
 
     [RelayCommand]
@@ -88,6 +115,12 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     partial void OnIsConnectedChanged(bool value)
     {
         OnPropertyChanged(nameof(IsDisconnected));
+    }
+
+    partial void OnIsTrackingRunningChanged(bool value)
+    {
+        OnPropertyChanged(nameof(StartStopText));
+        OnPropertyChanged(nameof(StartStopIcon));
     }
 
     public void Dispose()
@@ -280,7 +313,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
 
     private void SimulateMetrics()
     {
-        StatementsCount += _rng.Next(0, 4);
+        StatementsCount += _rng.Next(5, 13);
         GameObjectsCount += _rng.Next(0, 6);
         ScoreProgressValue = Math.Min(100, ScoreProgressValue + _rng.NextDouble() * 2.5);
 
@@ -293,4 +326,11 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
 
     private static double Clamp(double value, double min, double max)
         => value < min ? min : value > max ? max : value;
+
+    private void StartTracking()
+    {
+        _ = EmitAsync("clients:tracking:start");
+        IsTrackingRunning = true;
+        IsTrackingPaused = false;
+    }
 }

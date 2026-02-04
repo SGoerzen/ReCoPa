@@ -25,6 +25,13 @@
             <Setter Property="IsHitTestVisible" Value="True"/>
         </Style>
 
+        <!-- Drag target highlight -->
+        <Style Selector="Border.visTile.drag-target">
+            <Setter Property="BorderBrush" Value="#B3B3B3"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="#11000000"/>
+        </Style>
+
     </UserControl.Styles>
 
     <DockPanel>
@@ -49,6 +56,7 @@
                     <NumericUpDown Value="{Binding GridColumns}"
                                    Minimum="1"
                                    Maximum="12"
+                                   FormatString="0"
                                    Width="70" />
                 </StackPanel>
 
@@ -57,6 +65,7 @@
                     <NumericUpDown Value="{Binding GridRows}"
                                    Minimum="1"
                                    Maximum="12"
+                                   FormatString="0"
                                    Width="70" />
                 </StackPanel>
 
@@ -93,7 +102,9 @@
                                 PointerPressed="OnTilePointerPressed"
                                 DragDrop.DragOver="OnTileDragOver"
                                 DragDrop.Drop="OnTileDrop"
-                                DragDrop.AllowDrop="True">
+                                DragDrop.DragLeave="OnTileDragLeave"
+                                DragDrop.AllowDrop="True"
+                                Margin="6">
 
                             <Grid RowDefinitions="Auto,*">
 

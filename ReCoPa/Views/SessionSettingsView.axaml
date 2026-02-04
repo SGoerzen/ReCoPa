@@ -25,8 +25,7 @@
                                 <TextBlock Text="{Binding ActorEmail}" Classes="secondary"/>
 
                                 <Button Content="Generate Actor-Pseudonym"
-                                        Background="{DynamicResource AppPrimaryColor}"
-                                        Foreground="{DynamicResource TextOnPrimary}"
+                                        Classes="secondary"
                                         Padding="10,6"
                                         CornerRadius="8"
                                         HorizontalAlignment="Left"/>
@@ -72,8 +71,7 @@
                     </ItemsControl>
 
                     <Button Content="Configure Endpoints"
-                            Background="{DynamicResource AppPrimaryColor}"
-                            Foreground="{DynamicResource TextOnPrimary}"
+                            Classes="secondary"
                             HorizontalAlignment="Stretch"
                             Command="{Binding ConfigureEndpointsCommand}"/>
                 </StackPanel>

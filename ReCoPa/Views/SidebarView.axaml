@@ -28,6 +28,7 @@
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                     <Button Grid.Column="0" Classes="secondary"
                             Background="{StaticResource AppWarningBackground}"
+                            IsEnabled="{Binding IsTrackingRunning, RelativeSource={RelativeSource AncestorType=views:SidebarView}}"
                             Command="{Binding PauseTrackingCommand, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <material:MaterialIcon Kind="Pause" Width="18" Height="18" Foreground="{StaticResource AppWarningForeground}" />
@@ -37,10 +38,12 @@
 
                     <Button Grid.Column="1" Classes="secondary"
                             Background="{StaticResource AppDangerBackground}"
-                            Command="{Binding StopTrackingCommand, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
+                            Command="{Binding StartStopTrackingCommand, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
                         <StackPanel Orientation="Horizontal" Spacing="10">
-                            <material:MaterialIcon Kind="Stop" Width="18" Height="18" Foreground="{StaticResource AppDangerForeground}" />
-                            <TextBlock Text="Stop" VerticalAlignment="Center" Foreground="{StaticResource AppDangerForeground}" />
+                            <material:MaterialIcon Kind="{Binding StartStopIcon, RelativeSource={RelativeSource AncestorType=views:SidebarView}}"
+                                                   Width="18" Height="18" Foreground="{StaticResource AppDangerForeground}" />
+                            <TextBlock Text="{Binding StartStopText, RelativeSource={RelativeSource AncestorType=views:SidebarView}}"
+                                       VerticalAlignment="Center" Foreground="{StaticResource AppDangerForeground}" />
                         </StackPanel>
                     </Button>
                 </Grid>

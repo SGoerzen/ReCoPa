@@ -35,12 +35,18 @@ public partial class VisualizationContainerViewModel : ObservableObject
     public IRelayCommand AddVisualizationCommand { get; }
     public IAsyncRelayCommand<VisualizationHostItem> RemoveVisualizationCommand { get; }
     public IRelayCommand<VisualizationHostItem> ToggleSettingsCommand { get; }
+    public IRelayCommand<VisualizationHostItem> StartTitleEditCommand { get; }
+    public IRelayCommand<VisualizationHostItem> SaveTitleEditCommand { get; }
+    public IRelayCommand<VisualizationHostItem> CancelTitleEditCommand { get; }
 
     public VisualizationContainerViewModel()
     {
         AddVisualizationCommand = new RelayCommand(AddSelectedVisualization, () => SelectedToAdd is not null);
         RemoveVisualizationCommand = new AsyncRelayCommand<VisualizationHostItem>(RemoveVisualizationAsync);
         ToggleSettingsCommand = new RelayCommand<VisualizationHostItem>(ToggleSettings);
+        StartTitleEditCommand = new RelayCommand<VisualizationHostItem>(StartTitleEdit);
+        SaveTitleEditCommand = new RelayCommand<VisualizationHostItem>(SaveTitleEdit);
+        CancelTitleEditCommand = new RelayCommand<VisualizationHostItem>(CancelTitleEdit);
 
         ReloadAvailableVisualizations();
 
@@ -66,6 +72,29 @@ public partial class VisualizationContainerViewModel : ObservableObject
     {
         if (item is null) return;
         item.IsSettingsOpen = !item.IsSettingsOpen;
+    }
+
+    private void StartTitleEdit(VisualizationHostItem? item)
+    {
+        if (item is null) return;
+        item.TitleEdit = item.Title;
+        item.IsEditingTitle = true;
+    }
+
+    private void SaveTitleEdit(VisualizationHostItem? item)
+    {
+        if (item is null) return;
+        var title = item.TitleEdit?.Trim();
+        if (!string.IsNullOrWhiteSpace(title))
+            item.Title = title;
+        item.IsEditingTitle = false;
+    }
+
+    private void CancelTitleEdit(VisualizationHostItem? item)
+    {
+        if (item is null) return;
+        item.TitleEdit = item.Title;
+        item.IsEditingTitle = false;
     }
 
     private void ReloadAvailableVisualizations()
@@ -154,7 +183,27 @@ public partial class VisualizationContainerViewModel : ObservableObject
 public class VisualizationHostItem : ObservableObject
 {
     public required Control View { get; init; }
-    public required string Title { get; init; }
+    private string _title = string.Empty;
+    private string _titleEdit = string.Empty;
+    private bool _isEditingTitle;
+
+    public string Title
+    {
+        get => _title;
+        set => SetProperty(ref _title, value);
+    }
+
+    public string TitleEdit
+    {
+        get => _titleEdit;
+        set => SetProperty(ref _titleEdit, value);
+    }
+
+    public bool IsEditingTitle
+    {
+        get => _isEditingTitle;
+        set => SetProperty(ref _isEditingTitle, value);
+    }
 
     public Control? SettingsView { get; init; }
 

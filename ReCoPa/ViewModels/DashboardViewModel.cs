@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace ReCoPa.ViewModels;
 public partial class DashboardViewModel : ViewModelBase
 {
     private readonly SocketServerHost? _server;
+    private readonly Dictionary<SessionViewModel, System.ComponentModel.PropertyChangedEventHandler> _sessionNameHandlers = new();
 
     public ObservableCollection<TabViewModel> SessionTabs { get; } = new();
 
@@ -74,6 +76,14 @@ public partial class DashboardViewModel : ViewModelBase
             Session = session,
             SessionView = sessionView
         };
+
+        var handler = new System.ComponentModel.PropertyChangedEventHandler((_, e) =>
+        {
+            if (e.PropertyName == nameof(SessionViewModel.ClientName) && !string.IsNullOrWhiteSpace(session.ClientName))
+                tab.Header = session.ClientName;
+        });
+        session.PropertyChanged += handler;
+        _sessionNameHandlers[session] = handler;
 
         SessionTabs.Add(tab);
 
@@ -148,6 +158,12 @@ public partial class DashboardViewModel : ViewModelBase
 
         var index = SessionTabs.IndexOf(tab);
         var wasActive = tab.IsActive;
+
+        if (tab.Session != null && _sessionNameHandlers.TryGetValue(tab.Session, out var handler))
+        {
+            tab.Session.PropertyChanged -= handler;
+            _sessionNameHandlers.Remove(tab.Session);
+        }
 
         tab.Session?.Dispose();
         SessionTabs.Remove(tab);

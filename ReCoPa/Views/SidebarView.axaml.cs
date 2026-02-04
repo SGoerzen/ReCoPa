@@ -75,6 +75,15 @@ public partial class SidebarView : UserControl
     public static readonly StyledProperty<ICommand?> ShutdownUnityAppCommandProperty =
         AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(ShutdownUnityAppCommand));
 
+    public static readonly StyledProperty<ICommand?> StartEditSessionNameCommandProperty =
+        AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(StartEditSessionNameCommand));
+
+    public static readonly StyledProperty<ICommand?> SaveSessionNameCommandProperty =
+        AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(SaveSessionNameCommand));
+
+    public static readonly StyledProperty<ICommand?> CancelSessionNameEditCommandProperty =
+        AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(CancelSessionNameEditCommand));
+
     public static readonly StyledProperty<bool> IsVisualizationsViewProperty =
         AvaloniaProperty.Register<SidebarView, bool>(nameof(IsVisualizationsView));
 
@@ -89,6 +98,12 @@ public partial class SidebarView : UserControl
 
     public static readonly StyledProperty<MaterialIconKind> StartStopIconProperty =
         AvaloniaProperty.Register<SidebarView, MaterialIconKind>(nameof(StartStopIcon), MaterialIconKind.Stop);
+
+    public static readonly StyledProperty<bool> IsEditingSessionNameProperty =
+        AvaloniaProperty.Register<SidebarView, bool>(nameof(IsEditingSessionName));
+
+    public static readonly StyledProperty<string> SessionNameEditProperty =
+        AvaloniaProperty.Register<SidebarView, string>(nameof(SessionNameEdit), string.Empty);
 
     public string? ClientName { get => GetValue(ClientNameProperty); set => SetValue(ClientNameProperty, value); }
     public bool IsConnected { get => GetValue(IsConnectedProperty); set => SetValue(IsConnectedProperty, value); }
@@ -108,10 +123,15 @@ public partial class SidebarView : UserControl
     public ICommand? StopTrackingCommand { get => GetValue(StopTrackingCommandProperty); set => SetValue(StopTrackingCommandProperty, value); }
     public ICommand? StartStopTrackingCommand { get => GetValue(StartStopTrackingCommandProperty); set => SetValue(StartStopTrackingCommandProperty, value); }
     public ICommand? ShutdownUnityAppCommand { get => GetValue(ShutdownUnityAppCommandProperty); set => SetValue(ShutdownUnityAppCommandProperty, value); }
+    public ICommand? StartEditSessionNameCommand { get => GetValue(StartEditSessionNameCommandProperty); set => SetValue(StartEditSessionNameCommandProperty, value); }
+    public ICommand? SaveSessionNameCommand { get => GetValue(SaveSessionNameCommandProperty); set => SetValue(SaveSessionNameCommandProperty, value); }
+    public ICommand? CancelSessionNameEditCommand { get => GetValue(CancelSessionNameEditCommandProperty); set => SetValue(CancelSessionNameEditCommandProperty, value); }
 
     public bool IsVisualizationsView { get => GetValue(IsVisualizationsViewProperty); set => SetValue(IsVisualizationsViewProperty, value); }
     public bool IsSettingsView { get => GetValue(IsSettingsViewProperty); set => SetValue(IsSettingsViewProperty, value); }
     public bool IsTrackingRunning { get => GetValue(IsTrackingRunningProperty); set => SetValue(IsTrackingRunningProperty, value); }
     public string StartStopText { get => GetValue(StartStopTextProperty); set => SetValue(StartStopTextProperty, value); }
     public MaterialIconKind StartStopIcon { get => GetValue(StartStopIconProperty); set => SetValue(StartStopIconProperty, value); }
+    public bool IsEditingSessionName { get => GetValue(IsEditingSessionNameProperty); set => SetValue(IsEditingSessionNameProperty, value); }
+    public string SessionNameEdit { get => GetValue(SessionNameEditProperty); set => SetValue(SessionNameEditProperty, value); }
 }

@@ -88,9 +88,37 @@
             <StackPanel Spacing="12">
 
                 <StackPanel>
-                    <TextBlock
-                        Text="{Binding ClientName, RelativeSource={RelativeSource AncestorType=views:SidebarView}}"
-                        FontSize="16" FontWeight="Bold" />
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                        <TextBlock
+                            Text="{Binding ClientName, RelativeSource={RelativeSource AncestorType=views:SidebarView}}"
+                            FontSize="16" FontWeight="Bold"
+                            IsVisible="{Binding !IsEditingSessionName, RelativeSource={RelativeSource AncestorType=views:SidebarView}}" />
+
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding SessionNameEdit, RelativeSource={RelativeSource AncestorType=views:SidebarView}}"
+                                 Padding="6,3"
+                                 IsVisible="{Binding IsEditingSessionName, RelativeSource={RelativeSource AncestorType=views:SidebarView}}" />
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4"
+                                    IsVisible="{Binding !IsEditingSessionName, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
+                            <Button Classes="secondary icon"
+                                    Command="{Binding StartEditSessionNameCommand, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
+                                <material:MaterialIcon Kind="Pencil" Width="14" Height="14"/>
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4"
+                                    IsVisible="{Binding IsEditingSessionName, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
+                            <Button Classes="secondary icon"
+                                    Command="{Binding SaveSessionNameCommand, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
+                                <material:MaterialIcon Kind="Check" Width="14" Height="14"/>
+                            </Button>
+                            <Button Classes="secondary icon"
+                                    Command="{Binding CancelSessionNameEditCommand, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
+                                <material:MaterialIcon Kind="Close" Width="14" Height="14"/>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
 
                     <!-- Status line -->
                     <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">

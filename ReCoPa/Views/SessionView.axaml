@@ -24,11 +24,16 @@
                            IsTrackingRunning="{Binding IsTrackingRunning}"
                            StartStopText="{Binding StartStopText}"
                            StartStopIcon="{Binding StartStopIcon}"
+                           IsEditingSessionName="{Binding IsEditingSessionName}"
+                           SessionNameEdit="{Binding SessionNameEdit, Mode=TwoWay}"
                            NavigateVisualizationsCommand="{Binding NavigateVisualizationsCommand}"
                            NavigateSettingsCommand="{Binding NavigateSettingsCommand}"
                            StartEyeCalibrationCommand="{Binding StartCalibrationCommand}"
                            PauseTrackingCommand="{Binding PauseTrackingCommand}"
                            StartStopTrackingCommand="{Binding StartStopTrackingCommand}"
+                           StartEditSessionNameCommand="{Binding StartEditSessionNameCommand}"
+                           SaveSessionNameCommand="{Binding SaveSessionNameCommand}"
+                           CancelSessionNameEditCommand="{Binding CancelSessionNameEditCommand}"
                            ShutdownUnityAppCommand="{Binding ShutdownAppCommand}" />
 
         <Grid Grid.Column="1">

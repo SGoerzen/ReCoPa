@@ -25,6 +25,11 @@
             <Setter Property="IsHitTestVisible" Value="True"/>
         </Style>
 
+        <Style Selector="Grid#HeaderActions.editing">
+            <Setter Property="Opacity" Value="1"/>
+            <Setter Property="IsHitTestVisible" Value="True"/>
+        </Style>
+
         <!-- Drag target highlight -->
         <Style Selector="Border.visTile.drag-target">
             <Setter Property="BorderBrush" Value="#B3B3B3"/>
@@ -115,15 +120,45 @@
                                       Background="Transparent">
                                     <TextBlock Text="{Binding Title}"
                                                FontWeight="SemiBold"
-                                               VerticalAlignment="Center"/>
+                                               VerticalAlignment="Center"
+                                               IsVisible="{Binding !IsEditingTitle}"/>
+                                    <TextBox Text="{Binding TitleEdit}"
+                                             Padding="6,3"
+                                             VerticalAlignment="Center"
+                                             IsVisible="{Binding IsEditingTitle}"
+                                             KeyDown="OnTitleEditorKeyDown"/>
 
                                     <Grid Grid.Column="1"
-                                          ColumnDefinitions="Auto,Auto"
+                                          ColumnDefinitions="Auto,Auto,Auto"
                                           ColumnSpacing="6"
-                                          Name="HeaderActions">
+                                          Name="HeaderActions"
+                                          Classes.editing="{Binding IsEditingTitle}">
+                                        <Button Classes="secondary icon"
+                                                IsVisible="{Binding !IsEditingTitle}"
+                                                Command="{Binding #Root.DataContext.StartTitleEditCommand}"
+                                                CommandParameter="{Binding}">
+                                            <material:MaterialIcon Kind="Pencil" Width="16" Height="16"/>
+                                        </Button>
+
+                                        <Button Classes="secondary icon"
+                                                Grid.Column="0"
+                                                IsVisible="{Binding IsEditingTitle}"
+                                                Command="{Binding #Root.DataContext.SaveTitleEditCommand}"
+                                                CommandParameter="{Binding}">
+                                            <material:MaterialIcon Kind="Check" Width="16" Height="16"/>
+                                        </Button>
+
+                                        <Button Classes="secondary icon"
+                                                Grid.Column="1"
+                                                IsVisible="{Binding IsEditingTitle}"
+                                                Command="{Binding #Root.DataContext.CancelTitleEditCommand}"
+                                                CommandParameter="{Binding}">
+                                            <material:MaterialIcon Kind="Close" Width="16" Height="16"/>
+                                        </Button>
+
                                         <!-- Settings (nur wenn SettingsView existiert) -->
-                                        <Button Classes="secondary"
-                                                Padding="6"
+                                        <Button Classes="secondary icon"
+                                                Grid.Column="1"
                                                 IsVisible="{Binding HasSettingsView}"
                                                 Command="{Binding #Root.DataContext.ToggleSettingsCommand}"
                                                 CommandParameter="{Binding}">
@@ -131,9 +166,9 @@
                                         </Button>
 
                                         <!-- Remove -->
-                                        <Button Grid.Column="1"
-                                                Classes="secondary"
-                                                Padding="6"
+                                        <Button Grid.Column="2"
+                                                Classes="secondary icon"
+                                                IsVisible="{Binding !IsEditingTitle}"
                                                 Command="{Binding #Root.DataContext.RemoveVisualizationCommand}"
                                                 CommandParameter="{Binding}">
                                             <material:MaterialIcon Kind="Trash" Width="16" Height="16"/>

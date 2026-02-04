@@ -33,8 +33,10 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private TimeSpan elapsedTime = TimeSpan.Zero;
     [ObservableProperty] private bool isSessionSelected = true;
     [ObservableProperty] private bool isEyeTrackingEnabled = true;
-    [ObservableProperty] private bool isTrackingRunning = true;
+    [ObservableProperty] private bool isTrackingRunning;
     [ObservableProperty] private bool isTrackingPaused;
+    [ObservableProperty] private bool isEditingSessionName;
+    [ObservableProperty] private string sessionNameEdit = string.Empty;
     [ObservableProperty] private string currentView = "Visualizations";
 
     public bool IsVisualizationsView => CurrentView == "Visualizations";
@@ -59,7 +61,6 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         _timer.Start();
 
         SubscribeToSocket();
-        StartTracking();
     }
 
     [RelayCommand]
@@ -104,6 +105,30 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         }
 
         StartTracking();
+    }
+
+    [RelayCommand]
+    private void StartEditSessionName()
+    {
+        SessionNameEdit = ClientName ?? string.Empty;
+        IsEditingSessionName = true;
+    }
+
+    [RelayCommand]
+    private void SaveSessionName()
+    {
+        var name = SessionNameEdit?.Trim();
+        if (!string.IsNullOrWhiteSpace(name))
+            ClientName = name;
+
+        IsEditingSessionName = false;
+    }
+
+    [RelayCommand]
+    private void CancelSessionNameEdit()
+    {
+        SessionNameEdit = ClientName ?? string.Empty;
+        IsEditingSessionName = false;
     }
 
     [RelayCommand]

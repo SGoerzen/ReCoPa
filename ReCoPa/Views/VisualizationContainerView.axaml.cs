@@ -1,6 +1,5 @@
 using Avalonia.Controls;
 using Avalonia.Input;
-using CommunityToolkit.Mvvm.ComponentModel;
 using ReCoPa.ViewModels;
 
 namespace ReCoPa.Views;
@@ -91,5 +90,28 @@ public partial class VisualizationContainerView : UserControl
         vm.Views.Move(sourceIndex, targetIndex);
         control.Classes.Remove("drag-target");
         e.Handled = true;
+    }
+
+    private void OnTitleEditorKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (sender is not Control control)
+            return;
+
+        if (control.DataContext is not VisualizationHostItem item)
+            return;
+
+        if (DataContext is not VisualizationContainerViewModel vm)
+            return;
+
+        if (e.Key == Key.Enter)
+        {
+            vm.SaveTitleEditCommand.Execute(item);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Escape)
+        {
+            vm.CancelTitleEditCommand.Execute(item);
+            e.Handled = true;
+        }
     }
 }

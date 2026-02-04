@@ -72,6 +72,14 @@
         <Setter Property="BorderBrush" Value="{DynamicResource AppPrimaryColor}"/>
     </Style>
 
+    <!-- Compact icon button -->
+    <Style Selector="Button.icon">
+        <Setter Property="Padding" Value="4"/>
+        <Setter Property="MinWidth" Value="24"/>
+        <Setter Property="MinHeight" Value="24"/>
+        <Setter Property="CornerRadius" Value="6"/>
+    </Style>
+
     <!-- Danger button -->
     <Style Selector="Button.danger">
         <Setter Property="Background" Value="{DynamicResource AppDangerColor}"/>

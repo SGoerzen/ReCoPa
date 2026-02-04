@@ -20,9 +20,44 @@
                             Padding="10">
                         <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
                             <StackPanel Spacing="6">
-                                <TextBlock Text="{Binding ActorName}" FontSize="16" FontWeight="SemiBold"/>
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="6">
+                                    <TextBlock Text="{Binding ActorName}"
+                                               FontSize="16"
+                                               FontWeight="SemiBold"
+                                               IsVisible="{Binding !IsEditingActor}"/>
+                                    <TextBox Text="{Binding ActorNameEdit}"
+                                             Padding="6,3"
+                                             IsVisible="{Binding IsEditingActor}"/>
+
+                                    <Button Grid.Column="1"
+                                            Classes="secondary icon"
+                                            IsVisible="{Binding !IsEditingActor}"
+                                            Command="{Binding StartEditActorCommand}">
+                                        <material:MaterialIcon Kind="Pencil" Width="14" Height="14"/>
+                                    </Button>
+
+                                    <StackPanel Grid.Column="1"
+                                                Orientation="Horizontal"
+                                                Spacing="4"
+                                                IsVisible="{Binding IsEditingActor}">
+                                        <Button Classes="secondary icon"
+                                                Command="{Binding SaveActorEditCommand}">
+                                            <material:MaterialIcon Kind="Check" Width="14" Height="14"/>
+                                        </Button>
+                                        <Button Classes="secondary icon"
+                                                Command="{Binding CancelActorEditCommand}">
+                                            <material:MaterialIcon Kind="Close" Width="14" Height="14"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+
                                 <TextBlock Text="{Binding ActorMeta}" Classes="secondary"/>
-                                <TextBlock Text="{Binding ActorEmail}" Classes="secondary"/>
+                                <TextBlock Text="{Binding ActorEmail}"
+                                           Classes="secondary"
+                                           IsVisible="{Binding !IsEditingActor}"/>
+                                <TextBox Text="{Binding ActorEmailEdit}"
+                                         Padding="6,3"
+                                         IsVisible="{Binding IsEditingActor}"/>
 
                                 <Button Content="Generate Actor-Pseudonym"
                                         Classes="secondary"
@@ -84,22 +119,58 @@
                         <material:MaterialIcon Grid.Column="1" Kind="ChevronRight" Width="18" Height="18"/>
                     </Grid>
 
-                    <ItemsControl ItemsSource="{Binding Filters}">
+                    <ItemsControl ItemsSource="{Binding FiltersPreview}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Background="{DynamicResource SurfaceHover}"
                                         CornerRadius="8"
                                         Padding="8"
                                         Margin="0,0,0,6">
-                                    <TextBlock Text="{Binding Label}" />
+                                    <TextBlock Text="{Binding}" />
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                    <TextBlock Text="..."
+                               Classes="secondary"
+                               IsVisible="{Binding FiltersHasMore}"/>
 
                     <Button Content="Edit Filters"
                             Classes="secondary"
-                            HorizontalAlignment="Stretch"/>
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding StartEditFiltersCommand}">
+                        <Button.Flyout>
+                            <Flyout Placement="Bottom">
+                                <Border Background="White" Padding="12" Width="280">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="Filters auswählen" FontWeight="SemiBold"/>
+                                        <ScrollViewer MaxHeight="220">
+                                            <ItemsControl ItemsSource="{Binding FilterOptions}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox Content="{Binding Label}"
+                                                                  IsChecked="{Binding IsTempSelected}"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                        <StackPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Right"
+                                                    Spacing="8">
+                                            <Button Content="Cancel"
+                                                    Classes="secondary"
+                                                    Command="{Binding CancelFiltersCommand}"/>
+                                            <Button Foreground="{DynamicResource TextOnPrimary}"
+                                                    Command="{Binding SaveFiltersCommand}">
+                                                <TextBlock Text="Save"
+                                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
                 </StackPanel>
             </Border>
 
@@ -110,22 +181,58 @@
                         <material:MaterialIcon Grid.Column="1" Kind="ChevronRight" Width="18" Height="18"/>
                     </Grid>
 
-                    <ItemsControl ItemsSource="{Binding Actions}">
+                    <ItemsControl ItemsSource="{Binding ActionsPreview}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Background="{DynamicResource SurfaceHover}"
                                         CornerRadius="8"
                                         Padding="8"
                                         Margin="0,0,0,6">
-                                    <TextBlock Text="{Binding Label}" />
+                                    <TextBlock Text="{Binding}" />
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                    <TextBlock Text="..."
+                               Classes="secondary"
+                               IsVisible="{Binding ActionsHasMore}"/>
 
                     <Button Content="Edit Actions"
                             Classes="secondary"
-                            HorizontalAlignment="Stretch"/>
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding StartEditActionsCommand}">
+                        <Button.Flyout>
+                            <Flyout Placement="Bottom">
+                                <Border Background="White" Padding="12" Width="280">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="Actions auswählen" FontWeight="SemiBold"/>
+                                        <ScrollViewer MaxHeight="220">
+                                            <ItemsControl ItemsSource="{Binding ActionOptions}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox Content="{Binding Label}"
+                                                                  IsChecked="{Binding IsTempSelected}"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                        <StackPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Right"
+                                                    Spacing="8">
+                                            <Button Content="Cancel"
+                                                    Classes="secondary"
+                                                    Command="{Binding CancelActionsCommand}"/>
+                                            <Button Foreground="{DynamicResource TextOnPrimary}"
+                                                    Command="{Binding SaveActionsCommand}">
+                                                <TextBlock Text="Save"
+                                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
                 </StackPanel>
             </Border>
 
@@ -136,22 +243,58 @@
                         <material:MaterialIcon Grid.Column="1" Kind="ChevronRight" Width="18" Height="18"/>
                     </Grid>
 
-                    <ItemsControl ItemsSource="{Binding Gestures}">
+                    <ItemsControl ItemsSource="{Binding GesturesPreview}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Background="{DynamicResource SurfaceHover}"
                                         CornerRadius="8"
                                         Padding="8"
                                         Margin="0,0,0,6">
-                                    <TextBlock Text="{Binding Label}" />
+                                    <TextBlock Text="{Binding}" />
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                    <TextBlock Text="..."
+                               Classes="secondary"
+                               IsVisible="{Binding GesturesHasMore}"/>
 
                     <Button Content="Edit Gestures"
                             Classes="secondary"
-                            HorizontalAlignment="Stretch"/>
+                            HorizontalAlignment="Stretch"
+                            Command="{Binding StartEditGesturesCommand}">
+                        <Button.Flyout>
+                            <Flyout Placement="Bottom">
+                                <Border Background="White" Padding="12" Width="280">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="Gestures auswählen" FontWeight="SemiBold"/>
+                                        <ScrollViewer MaxHeight="220">
+                                            <ItemsControl ItemsSource="{Binding GestureOptions}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <CheckBox Content="{Binding Label}"
+                                                                  IsChecked="{Binding IsTempSelected}"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                        <StackPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Right"
+                                                    Spacing="8">
+                                            <Button Content="Cancel"
+                                                    Classes="secondary"
+                                                    Command="{Binding CancelGesturesCommand}"/>
+                                            <Button Foreground="{DynamicResource TextOnPrimary}"
+                                                    Command="{Binding SaveGesturesCommand}">
+                                                <TextBlock Text="Save"
+                                                           Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"/>
+                                            </Button>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
                 </StackPanel>
             </Border>
         </Grid>

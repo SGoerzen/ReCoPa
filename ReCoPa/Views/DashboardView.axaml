@@ -15,7 +15,7 @@
 
         <!-- MAIN -->
         <Grid>
-            <ContentPresenter Content="{Binding SelectedSession}"
+            <ContentPresenter Content="{Binding SelectedSessionView}"
                               IsVisible="{Binding HasSessions}"/>
 
             <Border IsVisible="{Binding HasSessions, Converter={StaticResource BoolInvertConverter}}"

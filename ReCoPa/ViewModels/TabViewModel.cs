@@ -1,4 +1,5 @@
 using System;
+using Avalonia.Controls;
 using ReactiveUI;
 
 namespace ReCoPa.ViewModels;
@@ -10,6 +11,7 @@ public class TabViewModel : ReactiveObject
     private TabConnectionState _connectionState = TabConnectionState.Inactive;
     private Guid? _clientId;
     private SessionViewModel? _session;
+    private Control? _sessionView;
 
     public string Header
     {
@@ -39,6 +41,12 @@ public class TabViewModel : ReactiveObject
     {
         get => _session;
         set => this.RaiseAndSetIfChanged(ref _session, value);
+    }
+
+    public Control? SessionView
+    {
+        get => _sessionView;
+        set => this.RaiseAndSetIfChanged(ref _sessionView, value);
     }
 }
 

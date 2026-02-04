@@ -8,8 +8,8 @@
                    xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
                    MinWidth="1200"
                    Width="1200"
-                   MinHeight="860"
-                   Height="800"
+                   MinHeight="780"
+                   Height="780"
                    Title="ReCoPa - Researcher Companion Panel"
                    Icon="avares://ReCoPa/Assets/app-icon.ico"
                    BackgroundStyle="Gradient">

@@ -17,7 +17,7 @@ public partial class DashboardViewModel : ViewModelBase
     public ObservableCollection<TabViewModel> SessionTabs { get; } = new();
 
     [ObservableProperty] private bool hasSessions;
-    [ObservableProperty] private SessionViewModel? selectedSession;
+    [ObservableProperty] private object? selectedSessionView;
     
     public DashboardViewModel(SocketServerHost? server = null)
     {
@@ -43,14 +43,14 @@ public partial class DashboardViewModel : ViewModelBase
     private void ApplySelectedFromActiveTab()
     {
         var active = SessionTabs.FirstOrDefault(t => t.IsActive) ?? SessionTabs.FirstOrDefault();
-        SelectedSession = active?.Session;
+        SelectedSessionView = active?.SessionView;
     }
 
     private void SetActiveTab(TabViewModel tab)
     {
         foreach (var t in SessionTabs) t.IsActive = false;
         tab.IsActive = true;
-        SelectedSession = tab.Session;
+        SelectedSessionView = tab.SessionView;
     }
 
     private void AddSessionTab(string header, Guid? clientId, TabConnectionState connectionState, bool activate)
@@ -59,6 +59,10 @@ public partial class DashboardViewModel : ViewModelBase
         {
             IsConnected = connectionState == TabConnectionState.Connected
         };
+        var sessionView = new Views.SessionView
+        {
+            DataContext = session
+        };
 
         var tab = new TabViewModel
         {
@@ -66,7 +70,8 @@ public partial class DashboardViewModel : ViewModelBase
             IsActive = false,
             ConnectionState = connectionState,
             ClientId = clientId,
-            Session = session
+            Session = session,
+            SessionView = sessionView
         };
 
         SessionTabs.Add(tab);
@@ -81,7 +86,7 @@ public partial class DashboardViewModel : ViewModelBase
 
         if (!HasSessions)
         {
-            SelectedSession = null;
+            SelectedSessionView = null;
             return;
         }
 

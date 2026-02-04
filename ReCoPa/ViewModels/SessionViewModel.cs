@@ -17,6 +17,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     private readonly SocketServerHost? _server;
     private readonly Guid? _clientId;
     private readonly List<IDisposable> _subscriptions = new();
+    private readonly Random _rng = new();
 
     public VisualizationContainerViewModel Visualization { get; } = new();
     public SessionSettingsViewModel Settings { get; } = new();
@@ -102,6 +103,9 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     private void OnTick(object? sender, EventArgs e)
     {
         ElapsedTime = DateTime.UtcNow - _startedAtUtc;
+
+        if (!IsConnected)
+            SimulateMetrics();
     }
 
     partial void OnCurrentViewChanged(string value)
@@ -273,4 +277,20 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
 
         return _server.EmitToClientAsync(_clientId.Value, eventName, payload);
     }
+
+    private void SimulateMetrics()
+    {
+        StatementsCount += _rng.Next(0, 4);
+        GameObjectsCount += _rng.Next(0, 6);
+        ScoreProgressValue = Math.Min(100, ScoreProgressValue + _rng.NextDouble() * 2.5);
+
+        var fpsBase = Fps <= 0 ? 70 : Fps;
+        Fps = Clamp(fpsBase + (_rng.NextDouble() * 6 - 3), 45, 90);
+
+        var heartBase = HeartRate <= 0 ? 78 : HeartRate;
+        HeartRate = (int)Math.Round(Clamp(heartBase + _rng.Next(-4, 5), 60, 140));
+    }
+
+    private static double Clamp(double value, double min, double max)
+        => value < min ? min : value > max ? max : value;
 }

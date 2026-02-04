@@ -8,7 +8,7 @@ public sealed class TaskState : IVisualization
     public string Name => "Task State";
     public object CreateView()
     {
-        return new XApiPreviewView();
+        return new TaskStateView();
     }
 
     public void ConsumeData(object data)

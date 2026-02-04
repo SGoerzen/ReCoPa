@@ -26,7 +26,7 @@
 
         <!-- Top bar: Add / Layout -->
         <Border DockPanel.Dock="Top" Classes="card" Padding="0,10,10,10">
-            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+            <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="10">
 
                 <ComboBox Grid.Column="0"
                           ItemsSource="{Binding AvailableVisualizations}"
@@ -39,12 +39,23 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <ComboBox Grid.Column="1"
-                          ItemsSource="{Binding LayoutOptions}"
-                          SelectedItem="{Binding SelectedLayout}"
-                          MinWidth="90" />
+                <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+                    <TextBlock Text="Cols" Classes="secondary" FontSize="11" />
+                    <NumericUpDown Value="{Binding GridColumns}"
+                                   Minimum="1"
+                                   Maximum="12"
+                                   Width="70" />
+                </StackPanel>
 
-                <Button Grid.Column="2"
+                <StackPanel Grid.Column="2" Spacing="4" VerticalAlignment="Center">
+                    <TextBlock Text="Rows" Classes="secondary" FontSize="11" />
+                    <NumericUpDown Value="{Binding GridRows}"
+                                   Minimum="1"
+                                   Maximum="12"
+                                   Width="70" />
+                </StackPanel>
+
+                <Button Grid.Column="3"
                         Classes="secondary"
                         Command="{Binding AddVisualizationCommand}">
                     <TextBlock Text="Add" />

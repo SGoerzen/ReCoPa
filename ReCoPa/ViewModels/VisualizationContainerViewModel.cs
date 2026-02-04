@@ -15,20 +15,19 @@ public partial class VisualizationContainerViewModel : ObservableObject
     public ObservableCollection<IVisualization> AvailableVisualizations { get; } = new();
 
     [ObservableProperty] private IVisualization? selectedToAdd;
-
-    public ObservableCollection<string> LayoutOptions { get; } = new()
-    {
-        "1:1", "2:1", "1:2", "2:2", "3:1", "1:3"
-    };
-
-    [ObservableProperty] private string selectedLayout = "2:2";
-    [ObservableProperty] private int gridRows = 2;
-
+    private int _gridRows = 2;
     private int _gridColumns = 2;
+
+    public int GridRows
+    {
+        get => _gridRows;
+        set => SetProperty(ref _gridRows, Math.Max(1, value));
+    }
+
     public int GridColumns
     {
         get => _gridColumns;
-        set => SetProperty(ref _gridColumns, value);
+        set => SetProperty(ref _gridColumns, Math.Max(1, value));
     }
 
     public IRelayCommand AddVisualizationCommand { get; }
@@ -42,13 +41,9 @@ public partial class VisualizationContainerViewModel : ObservableObject
         ToggleSettingsCommand = new RelayCommand<VisualizationHostItem>(ToggleSettings);
 
         ReloadAvailableVisualizations();
-        ApplyLayout(SelectedLayout);
 
         PropertyChanged += (_, e) =>
         {
-            if (e.PropertyName == nameof(SelectedLayout))
-                ApplyLayout(SelectedLayout);
-
             if (e.PropertyName == nameof(SelectedToAdd))
                 AddVisualizationCommand.NotifyCanExecuteChanged();
         };
@@ -98,15 +93,6 @@ public partial class VisualizationContainerViewModel : ObservableObject
             Title = SelectedToAdd.Name,
             SettingsView = settings
         });
-    }
-
-    private void ApplyLayout(string layout)
-    {
-        var parts = layout.Split(':');
-        if (parts.Length != 2) return;
-
-        if (int.TryParse(parts[0], out var c)) GridColumns = Math.Max(1, c);
-        if (int.TryParse(parts[1], out var r)) GridRows = Math.Max(1, r);
     }
 
     private static Control CreateViewFromVisualization(IVisualization viz)

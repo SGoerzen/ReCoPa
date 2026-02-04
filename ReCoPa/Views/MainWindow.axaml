@@ -42,9 +42,7 @@
         </Button>
     </sukiUi:SukiWindow.RightWindowTitleBarControls>
 
-    <ScrollViewer>
-        <DockPanel>
-            <views:DashboardView DataContext="{Binding Dashboard}" />
-        </DockPanel>
-    </ScrollViewer>
+    <DockPanel>
+        <views:DashboardView DataContext="{Binding Dashboard}" />
+    </DockPanel>
 </sukiUi:SukiWindow>

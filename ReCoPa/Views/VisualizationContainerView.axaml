@@ -9,13 +9,18 @@
 
     <UserControl.Styles>
 
-        <!-- Hover-Bar ein-/ausblenden -->
-        <Style Selector="Border.visTile Border#HoverBar">
+        <!-- Hover-Actions ein-/ausblenden -->
+        <Style Selector="Border.visTile Grid#HeaderActions">
             <Setter Property="Opacity" Value="0"/>
             <Setter Property="IsHitTestVisible" Value="False"/>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.12"/>
+                </Transitions>
+            </Setter>
         </Style>
 
-        <Style Selector="Border.visTile:pointerover Border#HoverBar">
+        <Style Selector="Border.visTile:pointerover Grid#HeaderActions">
             <Setter Property="Opacity" Value="1"/>
             <Setter Property="IsHitTestVisible" Value="True"/>
         </Style>
@@ -84,55 +89,53 @@
 
                         <!-- Tile -->
                         <Border Classes="card visTile"
-                                ClipToBounds="True">
+                                ClipToBounds="True"
+                                PointerPressed="OnTilePointerPressed"
+                                DragDrop.DragOver="OnTileDragOver"
+                                DragDrop.Drop="OnTileDrop"
+                                DragDrop.AllowDrop="True">
 
-                            <Grid>
+                            <Grid RowDefinitions="Auto,*">
 
-                                <!-- content -->
-                                <ContentPresenter Content="{Binding View}" />
+                                <!-- header (title + actions) -->
+                                <Grid ColumnDefinitions="*,Auto,Auto"
+                                      ColumnSpacing="8"
+                                      Margin="8,6"
+                                      Background="Transparent">
+                                    <TextBlock Text="{Binding Title}"
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"/>
 
-                                <!-- Hover header -->
-                                <Border Name="HoverBar"
-                                        VerticalAlignment="Top"
-                                        Background="#AA000000"
-                                        Padding="8">
-                                    <Border.Transitions>
-                                        <Transitions>
-                                            <DoubleTransition Property="Opacity" Duration="0:0:0.12"/>
-                                        </Transitions>
-                                    </Border.Transitions>
-
-                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
-                                        <TextBlock Text="{Binding Title}"
-                                                   Foreground="White"
-                                                   FontWeight="SemiBold"
-                                                   VerticalAlignment="Center"/>
-
+                                    <Grid Grid.Column="1"
+                                          ColumnDefinitions="Auto,Auto"
+                                          ColumnSpacing="6"
+                                          Name="HeaderActions">
                                         <!-- Settings (nur wenn SettingsView existiert) -->
-                                        <Button Grid.Column="1"
-                                                Classes="secondary"
+                                        <Button Classes="secondary"
                                                 Padding="6"
-                                                Foreground="White"
                                                 IsVisible="{Binding HasSettingsView}"
                                                 Command="{Binding #Root.DataContext.ToggleSettingsCommand}"
                                                 CommandParameter="{Binding}">
-                                            <material:MaterialIcon Kind="Cog" Width="16" Height="16" Foreground="White"/>
+                                            <material:MaterialIcon Kind="Cog" Width="16" Height="16"/>
                                         </Button>
 
                                         <!-- Remove -->
-                                        <Button Grid.Column="2"
+                                        <Button Grid.Column="1"
                                                 Classes="secondary"
                                                 Padding="6"
-                                                Foreground="White"
                                                 Command="{Binding #Root.DataContext.RemoveVisualizationCommand}"
                                                 CommandParameter="{Binding}">
-                                            <material:MaterialIcon Kind="Trash" Width="16" Height="16" Foreground="White"/>
+                                            <material:MaterialIcon Kind="Trash" Width="16" Height="16"/>
                                         </Button>
                                     </Grid>
-                                </Border>
+                                </Grid>
+
+                                <!-- content -->
+                                <ContentPresenter Grid.Row="1" Content="{Binding View}" />
 
                                 <!-- Settings overlay -->
                                 <Border Background="#99000000"
+                                        Grid.RowSpan="2"
                                         IsVisible="{Binding IsSettingsOpen}"
                                         Padding="12">
 

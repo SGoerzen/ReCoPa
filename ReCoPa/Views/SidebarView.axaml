@@ -3,7 +3,6 @@
              xmlns:views="clr-namespace:ReCoPa.Views"
              xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:global="clr-namespace:"
-             xmlns:suki="https://github.com/kikipoulet/SukiUI"
              x:Class="ReCoPa.Views.SidebarView"
              x:DataType="global:SidebarViewModel">
 
@@ -205,7 +204,7 @@
                         <TextBlock
                             Text="{Binding ScoreProgressValue,
                           RelativeSource={RelativeSource AncestorType=views:SidebarView},
-                          StringFormat={}{0} %}"
+                          StringFormat={}{0.000} %}"
                             Classes="secondary" />
                     </StackPanel>
                 </Grid>

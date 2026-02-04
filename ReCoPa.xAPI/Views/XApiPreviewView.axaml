@@ -30,7 +30,7 @@
                           HorizontalAlignment="Left"/>
 
                 <Button Grid.Column="1"
-                        Content="Export CSV"
+                        Content="Export Data"
                         Classes="secondary"
                         Padding="14,8"
                         Command="{Binding ExportCsvCommand}"/>

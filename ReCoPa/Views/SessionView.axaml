@@ -3,6 +3,7 @@
              xmlns:vm="clr-namespace:ReCoPa.ViewModels"
              xmlns:views="clr-namespace:ReCoPa.Views"
              x:Class="ReCoPa.Views.SessionView"
+             x:Name="Root"
              x:DataType="vm:SessionViewModel">
 
     <Grid ColumnDefinitions="250,*">
@@ -24,8 +25,16 @@
                            StopTrackingCommand="{Binding StopTrackingCommand}"
                            ShutdownUnityAppCommand="{Binding ShutdownAppCommand}" />
 
-        <views:VisualizationContainerView Grid.Column="1"
-                                          Margin="0,10,10,0"
-                                          DataContext="{Binding Visualization}" />
+        <Grid Grid.Column="1">
+            <views:VisualizationContainerView Margin="0,10,10,0"
+                                              x:CompileBindings="False"
+                                              IsVisible="{Binding #Root.DataContext.IsVisualizationsView}"
+                                              DataContext="{Binding Visualization}" />
+
+            <views:SessionSettingsView Margin="0,10,10,0"
+                                       x:CompileBindings="False"
+                                       IsVisible="{Binding #Root.DataContext.IsSettingsView}"
+                                       DataContext="{Binding Settings}" />
+        </Grid>
     </Grid>
 </UserControl>

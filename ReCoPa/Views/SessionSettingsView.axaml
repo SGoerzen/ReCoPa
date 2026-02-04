@@ -1,0 +1,117 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ReCoPa.ViewModels"
+             xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             x:Class="ReCoPa.Views.SessionSettingsView"
+             x:DataType="vm:SessionSettingsViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="10" Spacing="12">
+
+            <Border Classes="card">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Active Client" FontWeight="SemiBold"/>
+
+                    <Border Background="{DynamicResource SurfaceHover}"
+                            CornerRadius="10"
+                            Padding="10">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="{Binding ActorName}" FontSize="16" FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding ActorMeta}" Classes="secondary"/>
+                            <TextBlock Text="{Binding ActorEmail}" Classes="secondary"/>
+
+                            <Button Content="Generate Actor-Pseudonym"
+                                    Background="{DynamicResource AppPrimaryColor}"
+                                    Foreground="{DynamicResource TextOnPrimary}"
+                                    Padding="10,6"
+                                    CornerRadius="8"
+                                    HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12">
+
+                <Border Classes="card">
+                    <StackPanel Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="Filters" FontWeight="SemiBold"/>
+                            <material:MaterialIcon Grid.Column="1" Kind="ChevronRight" Width="18" Height="18"/>
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding Filters}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{DynamicResource SurfaceHover}"
+                                            CornerRadius="8"
+                                            Padding="8"
+                                            Margin="0,0,0,6">
+                                        <TextBlock Text="{Binding Label}" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Button Content="Edit Filters"
+                                Classes="secondary"
+                                HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card" Grid.Column="1">
+                    <StackPanel Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="Actions" FontWeight="SemiBold"/>
+                            <material:MaterialIcon Grid.Column="1" Kind="ChevronRight" Width="18" Height="18"/>
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding Actions}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{DynamicResource SurfaceHover}"
+                                            CornerRadius="8"
+                                            Padding="8"
+                                            Margin="0,0,0,6">
+                                        <TextBlock Text="{Binding Label}" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Button Content="Edit Actions"
+                                Classes="secondary"
+                                HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Classes="card" Grid.Column="2">
+                    <StackPanel Spacing="8">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="Gestures" FontWeight="SemiBold"/>
+                            <material:MaterialIcon Grid.Column="1" Kind="ChevronRight" Width="18" Height="18"/>
+                        </Grid>
+
+                        <ItemsControl ItemsSource="{Binding Gestures}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{DynamicResource SurfaceHover}"
+                                            CornerRadius="8"
+                                            Padding="8"
+                                            Margin="0,0,0,6">
+                                        <TextBlock Text="{Binding Label}" />
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <Button Content="Edit Gestures"
+                                Classes="secondary"
+                                HorizontalAlignment="Stretch"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

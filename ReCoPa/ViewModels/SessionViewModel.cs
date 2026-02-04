@@ -11,6 +11,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     private readonly DispatcherTimer _timer;
 
     public VisualizationContainerViewModel Visualization { get; } = new();
+    public SessionSettingsViewModel Settings { get; } = new();
 
     [ObservableProperty] private string? clientName;
     [ObservableProperty] private bool isConnected;
@@ -21,6 +22,10 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private TimeSpan elapsedTime = TimeSpan.Zero;
     [ObservableProperty] private bool isSessionSelected = true;
     [ObservableProperty] private bool isEyeTrackingEnabled = true;
+    [ObservableProperty] private string currentView = "Visualizations";
+
+    public bool IsVisualizationsView => CurrentView == "Visualizations";
+    public bool IsSettingsView => CurrentView == "Settings";
 
     public bool IsDisconnected => !IsConnected;
 
@@ -39,13 +44,13 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void NavigateVisualizations()
     {
-        // TODO: switch view when session settings are available
+        CurrentView = "Visualizations";
     }
 
     [RelayCommand]
     private void NavigateSettings()
     {
-        // TODO: switch view when session settings are available
+        CurrentView = "Settings";
     }
 
     [RelayCommand]
@@ -88,5 +93,11 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     private void OnTick(object? sender, EventArgs e)
     {
         ElapsedTime = DateTime.UtcNow - _startedAtUtc;
+    }
+
+    partial void OnCurrentViewChanged(string value)
+    {
+        OnPropertyChanged(nameof(IsVisualizationsView));
+        OnPropertyChanged(nameof(IsSettingsView));
     }
 }

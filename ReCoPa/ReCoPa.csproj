@@ -63,6 +63,9 @@
       <Compile Update="Views\SessionView.axaml.cs">
         <DependentUpon>SessionView.axaml</DependentUpon>
       </Compile>
+      <Compile Update="Views\EndpointsDialogView.axaml.cs">
+        <DependentUpon>EndpointsDialogView.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

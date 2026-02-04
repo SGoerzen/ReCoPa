@@ -1,5 +1,7 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using ReCoPa.Services;
 
 namespace ReCoPa.ViewModels;
 
@@ -28,6 +30,12 @@ public partial class SessionSettingsViewModel : ObservableObject
 
         Gestures.Add(new GestureSummaryItem("1 gesture excluded"));
         Gestures.Add(new GestureSummaryItem("2 gestures normalized"));
+    }
+
+    [RelayCommand]
+    private void ConfigureEndpoints()
+    {
+        SukiDialogService.ShowEndpointsDialog(Endpoints);
     }
 }
 

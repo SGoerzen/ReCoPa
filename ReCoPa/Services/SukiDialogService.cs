@@ -1,13 +1,32 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Media;
 using SukiUI.Dialogs;
 using ReCoPa.Views;
+using ReCoPa.ViewModels;
 
 namespace ReCoPa.Services;
 
 public static class SukiDialogService
 {
+    public static void ShowEndpointsDialog(IEnumerable<EndpointSummaryItem> endpoints)
+    {
+        var viewModel = new EndpointsDialogViewModel(endpoints);
+        var view = new EndpointsDialogView
+        {
+            DataContext = viewModel
+        };
+
+        var builder = FluentSukiDialogBuilder.CreateDialog(MainWindow.DialogManager);
+        builder.SetTitle("Data Endpoints");
+        builder.SetContent(view);
+        builder.SetCanDismissWithBackgroundClick(true);
+        builder.AddActionButton("Close", _ => { }, true, []);
+
+        MainWindow.DialogManager.TryShowDialog(builder.Dialog);
+    }
+
     public static Task<bool> ConfirmSessionCloseAsync()
     {
         var tcs = new TaskCompletionSource<bool>();

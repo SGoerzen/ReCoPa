@@ -1,0 +1,84 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:ReCoPa.ViewModels"
+             xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             x:Class="ReCoPa.Views.EndpointsDialogView"
+             x:Name="Root"
+             x:DataType="vm:EndpointsDialogViewModel">
+
+    <ScrollViewer>
+        <StackPanel Spacing="12" Margin="10" MaxWidth="720">
+            <StackPanel Spacing="4">
+                <TextBlock Text="BETA now allows adding multiple endpoints to work with and store xAPI statements."
+                           Classes="secondary"
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+
+            <ItemsControl ItemsSource="{Binding Endpoints}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:EndpointConfigViewModel">
+                        <Border Classes="card" Padding="12">
+                            <StackPanel Spacing="10">
+                                <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                    <material:MaterialIcon Grid.Column="1"
+                                                           Kind="AlertCircle"
+                                                           Width="16"
+                                                           Height="16"
+                                                           Foreground="{DynamicResource AppDangerColor}"
+                                                           IsVisible="{Binding HasFolderError}"/>
+                                    <Button Grid.Column="2"
+                                            Classes="danger"
+                                            Content="Remove Endpoint"
+                                            x:CompileBindings="False"
+                                            Command="{Binding #Root.DataContext.RemoveEndpointCommand}"
+                                            CommandParameter="{Binding}"/>
+                                </Grid>
+
+                                <StackPanel Spacing="6">
+                                    <TextBlock Text="Statements Folder"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource AppDangerColor}"/>
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <TextBox Text="{Binding StatementsFolder}"
+                                                 Watermark="Path to folder" />
+                                        <Button Content="Browse" Classes="secondary"/>
+                                    </Grid>
+                                    <TextBlock Text="This field is required."
+                                               Foreground="{DynamicResource AppDangerColor}"
+                                               FontSize="12"
+                                               IsVisible="{Binding HasFolderError}"/>
+                                    <TextBlock Text="Path to folder, where statements are being stored. Folder must be accessible and writable for Unity."
+                                               Classes="secondary"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+
+                                <CheckBox Content="One File Per Composer"
+                                          IsChecked="{Binding OneFilePerComposer}"/>
+
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Identifier" FontWeight="SemiBold"/>
+                                    <TextBox Text="{Binding Identifier}"/>
+                                    <TextBlock Text="Identification of the tracking session. You can use '{yyyyMMddHHmmss}' (default) to format current timestamp format."
+                                               Classes="secondary"
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+
+                                <CheckBox Content="Flatten"
+                                          IsChecked="{Binding Flatten}"/>
+                                <TextBlock Text="If true, deep structures will be flattened into a single row. May cost more performance."
+                                           Classes="secondary"
+                                           TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <Button Content="Add Endpoint"
+                    x:CompileBindings="False"
+                    Command="{Binding AddEndpointCommand}"
+                    HorizontalAlignment="Left"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

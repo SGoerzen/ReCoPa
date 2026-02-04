@@ -11,6 +11,7 @@ public partial class SidebarView : UserControl
     public SidebarView()
     {
         InitializeComponent();
+        ScoreProgressValue = 51.0;
     }
 
     private void InitializeComponent()
@@ -36,6 +37,9 @@ public partial class SidebarView : UserControl
 
     public static readonly StyledProperty<int> GameObjectsCountProperty =
         AvaloniaProperty.Register<SidebarView, int>(nameof(GameObjectsCount));
+    
+    public static readonly StyledProperty<double> ScoreProgressValueProperty =
+        AvaloniaProperty.Register<SidebarView, double>(nameof(ScoreProgressValue));
 
     public static readonly StyledProperty<double> FpsProperty =
         AvaloniaProperty.Register<SidebarView, double>(nameof(Fps));
@@ -71,6 +75,7 @@ public partial class SidebarView : UserControl
     public bool IsConnected { get => GetValue(IsConnectedProperty); set => SetValue(IsConnectedProperty, value); }
     public int StatementsCount { get => GetValue(StatementsCountProperty); set => SetValue(StatementsCountProperty, value); }
     public int GameObjectsCount { get => GetValue(GameObjectsCountProperty); set => SetValue(GameObjectsCountProperty, value); }
+    public double ScoreProgressValue { get => GetValue(ScoreProgressValueProperty); set => SetValue(ScoreProgressValueProperty, value); }
     public double Fps { get => GetValue(FpsProperty); set => SetValue(FpsProperty, value); }
     public int HeartRate { get => GetValue(HeartRateProperty); set => SetValue(HeartRateProperty, value); }
     public bool IsSessionSelected { get => GetValue(IsSessionSelectedProperty); set => SetValue(IsSessionSelectedProperty, value); }

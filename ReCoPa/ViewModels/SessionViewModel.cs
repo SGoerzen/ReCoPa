@@ -20,6 +20,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private int heartRate;
     [ObservableProperty] private TimeSpan elapsedTime = TimeSpan.Zero;
     [ObservableProperty] private bool isSessionSelected = true;
+    [ObservableProperty] private bool isEyeTrackingEnabled = true;
 
     public bool IsDisconnected => !IsConnected;
 

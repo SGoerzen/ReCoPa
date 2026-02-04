@@ -60,6 +60,9 @@
         <DependentUpon>VisualizationContainerView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\SessionView.axaml.cs">
+        <DependentUpon>SessionView.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

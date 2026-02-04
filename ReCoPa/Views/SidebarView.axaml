@@ -3,6 +3,7 @@
              xmlns:views="clr-namespace:ReCoPa.Views"
              xmlns:material="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:global="clr-namespace:"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
              x:Class="ReCoPa.Views.SidebarView"
              x:DataType="global:SidebarViewModel">
 
@@ -11,8 +12,7 @@
         <!-- Actions bottom -->
         <Border DockPanel.Dock="Bottom" 
                 Classes="card" 
-                Margin="0,5,0,0"
-                IsEnabled="{Binding IsSessionSelected, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
+                Margin="0,5,0,0">
             <StackPanel Spacing="10">
                 <TextBlock Text="Session Actions" FontWeight="SemiBold" />
 
@@ -59,8 +59,7 @@
         <!-- Menu middle -->
         <Border DockPanel.Dock="Bottom" 
                 Classes="card"
-                Margin="0,5,0,0"
-                IsEnabled="{Binding IsSessionSelected, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
+                Margin="0,5,0,0">
             <StackPanel Spacing="8">
                 <Button Classes="nav secondary"
                         Command="{Binding NavigateVisualizationsCommand, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
@@ -119,7 +118,7 @@
 
                 <Border BorderBrush="{DynamicResource SurfaceBorder}" BorderThickness="0,1,0,0" />
 
-                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
                       ColumnDefinitions="Auto,*"
                       ColumnSpacing="12"
                       RowSpacing="10">
@@ -193,8 +192,23 @@
                           RelativeSource={RelativeSource AncestorType=views:SidebarView}}"
                             Classes="secondary" />
                     </StackPanel>
+                    
+                    <material:MaterialIcon Grid.Row="5" Grid.Column="0"
+                                           Kind="ProgressTick"
+                                           Width="24" Height="24"
+                                           Foreground="{DynamicResource AccentBrush}" />
+                    
+                    <StackPanel Grid.Row="5" Grid.Column="1" Spacing="2">
+                        <TextBlock Text="Score" FontWeight="SemiBold" />
+                        <TextBlock
+                            Text="{Binding ScoreProgressValue,
+                          RelativeSource={RelativeSource AncestorType=views:SidebarView},
+                          StringFormat={}{0} %}"
+                            Classes="secondary" />
+                    </StackPanel>
                 </Grid>
 
+                
             </StackPanel>
         </Border>
 

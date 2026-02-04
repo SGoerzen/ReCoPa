@@ -79,6 +79,12 @@ public partial class VisualizationContainerViewModel : ObservableObject
         SelectedToAdd ??= AvailableVisualizations.FirstOrDefault();
     }
 
+    public void RefreshAvailableVisualizations()
+    {
+        ReloadAvailableVisualizations();
+        AddVisualizationCommand.NotifyCanExecuteChanged();
+    }
+
     private void AddSelectedVisualization()
     {
         if (SelectedToAdd is null) return;

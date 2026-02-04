@@ -9,7 +9,7 @@ public partial class VisualizationContainerView : UserControl
     public VisualizationContainerView()
     {
         InitializeComponent();
-        DataContext ??= new VisualizationContainerViewModel();
+        if (Design.IsDesignMode)
+            DataContext = new VisualizationContainerViewModel();
     }
 }
-

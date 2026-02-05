@@ -1,6 +1,6 @@
 # Changelog
 
-## ReCoPa v2.0.0 (2026-02-05)
+## ReCoPa v0.0.1 (2026-02-05)
 
 ### Summary
 ReCoPa v2 is a cross-platform researcher companion panel for real-time data capture, visualization, and analysis of XR learning sessions. This release focuses on a modular plugin system, live visual analytics, and xAPI/LRS integration, built on Avalonia and ReactiveUI.

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Media;
 using SukiUI.Dialogs;
+using SukiUI.Toasts;
 using ReCoPa.Views;
 using ReCoPa.ViewModels;
 
@@ -93,5 +94,14 @@ public static class SukiDialogService
             tcs.TrySetResult(false);
 
         return tcs.Task;
+    }
+
+    public static void ShowInfoToast(string title, string message)
+    {
+        var builder = FluentSukiToastBuilder.CreateSimpleInfoToast(MainWindow.ToastManager);
+        builder.SetTitle(title);
+        builder.SetContent(message);
+        builder.SetCanDismissByClicking(true);
+        builder.Queue();
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -116,6 +117,44 @@ public partial class VisualizationContainerViewModel : ObservableObject
         AddVisualizationCommand.NotifyCanExecuteChanged();
     }
 
+    public void RestoreFromSnapshots(IEnumerable<VisualizationSnapshot> snapshots)
+    {
+        Views.Clear();
+        ReloadAvailableVisualizations();
+
+        foreach (var snapshot in snapshots)
+        {
+            var viz = AvailableVisualizations.FirstOrDefault(v => v.Name == snapshot.VisualizationName);
+            Control view;
+            Control? settings;
+
+            if (viz != null)
+            {
+                view = CreateViewFromVisualization(viz);
+                settings = CreateSettingsViewFromVisualization(viz);
+            }
+            else
+            {
+                view = new TextBlock
+                {
+                    Text = $"Visualization '{snapshot.VisualizationName}' not available.",
+                    Opacity = 0.7,
+                    TextWrapping = Avalonia.Media.TextWrapping.Wrap
+                };
+                settings = null;
+            }
+
+            Views.Add(new VisualizationHostItem
+            {
+                View = view,
+                Title = snapshot.Title,
+                VisualizationName = snapshot.VisualizationName,
+                DataFileName = snapshot.DataFile,
+                SettingsView = settings
+            });
+        }
+    }
+
     private void AddSelectedVisualization()
     {
         if (SelectedToAdd is null) return;
@@ -127,6 +166,7 @@ public partial class VisualizationContainerViewModel : ObservableObject
         {
             View = view,
             Title = SelectedToAdd.Name,
+            VisualizationName = SelectedToAdd.Name,
             SettingsView = settings
         });
     }
@@ -186,11 +226,25 @@ public class VisualizationHostItem : ObservableObject
     private string _title = string.Empty;
     private string _titleEdit = string.Empty;
     private bool _isEditingTitle;
+    private string _visualizationName = string.Empty;
+    private string? _dataFileName;
 
     public string Title
     {
         get => _title;
         set => SetProperty(ref _title, value);
+    }
+
+    public string VisualizationName
+    {
+        get => _visualizationName;
+        set => SetProperty(ref _visualizationName, value);
+    }
+
+    public string? DataFileName
+    {
+        get => _dataFileName;
+        set => SetProperty(ref _dataFileName, value);
     }
 
     public string TitleEdit

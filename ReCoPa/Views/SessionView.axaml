@@ -12,6 +12,7 @@
                            ClientName="{Binding ClientName}"
                            IsConnected="{Binding IsConnected}"
                            IsDisconnected="{Binding IsDisconnected}"
+                           IsAwaitingConnection="{Binding IsAwaitingConnection}"
                            IsSessionSelected="{Binding IsSessionSelected}"
                            StatementsCount="{Binding StatementsCount}"
                            GameObjectsCount="{Binding GameObjectsCount}"

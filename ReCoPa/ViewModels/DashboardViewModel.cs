@@ -112,12 +112,27 @@ public partial class DashboardViewModel : ViewModelBase
 
     private void OnClientConnected(SocketServerHost.SocketConnection conn)
     {
+        var waitingTab = SessionTabs.FirstOrDefault(t => t.ClientId == null);
+        if (waitingTab != null)
+        {
+            waitingTab.ClientId = conn.Id;
+            waitingTab.ConnectionState = TabConnectionState.Connected;
+            if (waitingTab.Session != null)
+            {
+                waitingTab.Session.ClientId = conn.Id;
+                waitingTab.Session.IsConnected = true;
+            }
+
+            return;
+        }
+
         var endpoint = conn.RemoteEndPoint?.ToString();
         var header = string.IsNullOrWhiteSpace(endpoint)
             ? $"Session {SessionTabs.Count + 1}"
             : $"Session {SessionTabs.Count + 1} ({endpoint})";
 
         AddSessionTab(header, conn.Id, TabConnectionState.Connected, activate: SessionTabs.Count == 0);
+        SukiDialogService.ShowInfoToast("Neue Session", "Neue Session wurde automatisch eröffnet.");
     }
 
     private void OnClientDisconnected(SocketServerHost.SocketConnection conn)

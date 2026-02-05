@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Linq;
+using Bogus;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ReCoPa.Services;
@@ -99,6 +100,19 @@ public partial class SessionSettingsViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private void GenerateActorPseudonym()
+    {
+        var faker = new Faker("en");
+        var adjective = ToTitleCase(PickShortWord(faker, isAdjective: true, maxLen: 6));
+        var noun = ToTitleCase(PickShortWord(faker, isAdjective: false, maxLen: 7));
+        var pseudonym = $"{adjective}{noun}";
+
+        ActorName = pseudonym;
+        if (IsEditingActor)
+            ActorNameEdit = pseudonym;
+    }
+
+    [RelayCommand]
     private void StartEditFilters()
     {
         SyncTempSelections(FilterOptions);
@@ -185,6 +199,45 @@ public partial class SessionSettingsViewModel : ObservableObject
         foreach (var label in selected.Take(5))
             preview.Add(label);
         hasMore = selected.Count > 5;
+    }
+
+    private static string ToTitleCase(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return string.Empty;
+
+        var chars = value.Trim().ToLowerInvariant().ToCharArray();
+        chars[0] = char.ToUpperInvariant(chars[0]);
+        return new string(chars);
+    }
+
+    private static string PickShortWord(Faker faker, bool isAdjective, int maxLen)
+    {
+        var fallback = isAdjective
+            ? new[] { "Naked", "Quick", "Bright", "Calm", "Swift", "Happy", "Sharp", "Quiet" }
+            : new[] { "Tomato", "Fox", "Lemon", "River", "Panda", "Leaf", "Cloud", "Tiger" };
+
+        for (var i = 0; i < 12; i++)
+        {
+            var word = isAdjective
+                ? faker.Random.ListItem(new[]
+                {
+                    faker.Commerce.ProductAdjective(),
+                    faker.Commerce.Color(),
+                    faker.Random.Word()
+                })
+                : faker.Random.ListItem(new[]
+                {
+                    faker.Hacker.Noun(),
+                    faker.Random.Word()
+                });
+
+            var cleaned = new string(word.Where(char.IsLetter).ToArray());
+            if (!string.IsNullOrWhiteSpace(cleaned) && cleaned.Length <= maxLen)
+                return cleaned;
+        }
+
+        return faker.Random.ListItem(fallback);
     }
 }
 

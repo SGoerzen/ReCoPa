@@ -16,7 +16,6 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     private readonly DateTime _startedAtUtc = DateTime.UtcNow;
     private readonly DispatcherTimer _timer;
     private readonly SocketServerHost? _server;
-    private readonly Guid? _clientId;
     private readonly List<IDisposable> _subscriptions = new();
     private readonly Random _rng = new();
 
@@ -24,6 +23,8 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     public SessionSettingsViewModel Settings { get; } = new();
 
     [ObservableProperty] private string? clientName;
+    [ObservableProperty] private Guid sessionId = Guid.NewGuid();
+    [ObservableProperty] private Guid? clientId;
     [ObservableProperty] private bool isConnected;
     [ObservableProperty] private int statementsCount;
     [ObservableProperty] private int gameObjectsCount;
@@ -42,7 +43,8 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     public bool IsVisualizationsView => CurrentView == "Visualizations";
     public bool IsSettingsView => CurrentView == "Settings";
 
-    public bool IsDisconnected => !IsConnected;
+    public bool IsAwaitingConnection => !IsConnected && ClientId == null;
+    public bool IsDisconnected => !IsConnected && !IsAwaitingConnection;
 
     public string StartStopText => IsTrackingRunning ? "Stop" : "Start";
     public MaterialIconKind StartStopIcon => IsTrackingRunning ? MaterialIconKind.Stop : MaterialIconKind.PlayCircle;
@@ -51,7 +53,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     {
         ClientName = clientName ?? "Session";
         _server = server ?? App.Socket;
-        _clientId = clientId;
+        ClientId = clientId;
 
         _timer = new DispatcherTimer
         {
@@ -140,6 +142,13 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     partial void OnIsConnectedChanged(bool value)
     {
         OnPropertyChanged(nameof(IsDisconnected));
+        OnPropertyChanged(nameof(IsAwaitingConnection));
+    }
+
+    partial void OnClientIdChanged(Guid? value)
+    {
+        OnPropertyChanged(nameof(IsDisconnected));
+        OnPropertyChanged(nameof(IsAwaitingConnection));
     }
 
     partial void OnIsTrackingRunningChanged(bool value)
@@ -224,7 +233,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
 
     private bool IsForThisSession(JsonElement root)
     {
-        if (_clientId == null)
+        if (ClientId == null)
             return true;
 
         if (TryReadString(root, "clientId", out var idText)
@@ -232,14 +241,14 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
             || TryReadString(root, "id", out idText))
         {
             if (Guid.TryParse(idText, out var id))
-                return id == _clientId;
+                return id == ClientId;
         }
 
         if (root.TryGetProperty("client", out var clientEl)
             && TryReadString(clientEl, "id", out idText)
             && Guid.TryParse(idText, out var clientId))
         {
-            return clientId == _clientId;
+            return clientId == ClientId;
         }
 
         return true;
@@ -330,10 +339,10 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     {
         if (_server == null)
             return Task.CompletedTask;
-        if (_clientId == null)
+        if (ClientId == null)
             return _server.BroadcastAsync(eventName, payload);
 
-        return _server.EmitToClientAsync(_clientId.Value, eventName, payload);
+        return _server.EmitToClientAsync(ClientId.Value, eventName, payload);
     }
 
     private void SimulateMetrics()

@@ -13,6 +13,7 @@
     <PackageVersion Include="Avalonia.Fonts.Inter" Version="11.3.11" />
     <PackageVersion Include="Avalonia.Diagnostics" Version="11.3.11" />
     <PackageVersion Include="Avalonia.Desktop" Version="11.3.11" />
+    <PackageVersion Include="Bogus" Version="35.6.5" />
     <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageVersion Include="HotAvalonia" Version="3.0.2" />
     <PackageVersion Include="Live.Avalonia" Version="1.4.1" />

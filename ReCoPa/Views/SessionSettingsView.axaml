@@ -63,7 +63,8 @@
                                         Classes="secondary"
                                         Padding="10,6"
                                         CornerRadius="8"
-                                        HorizontalAlignment="Left"/>
+                                        HorizontalAlignment="Left"
+                                        Command="{Binding GenerateActorPseudonymCommand}"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" Spacing="8" HorizontalAlignment="Right">

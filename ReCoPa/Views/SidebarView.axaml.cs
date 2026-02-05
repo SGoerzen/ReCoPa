@@ -20,11 +20,20 @@ public partial class SidebarView : UserControl
     
     public static readonly StyledProperty<bool> IsDisconnectedProperty =
         AvaloniaProperty.Register<SidebarView, bool>(nameof(IsDisconnected));
+    
+    public static readonly StyledProperty<bool> IsAwaitingConnectionProperty =
+        AvaloniaProperty.Register<SidebarView, bool>(nameof(IsAwaitingConnection));
 
     public bool IsDisconnected
     {
         get => GetValue(IsDisconnectedProperty);
         set => SetValue(IsDisconnectedProperty, value);
+    }
+    
+    public bool IsAwaitingConnection
+    {
+        get => GetValue(IsAwaitingConnectionProperty);
+        set => SetValue(IsAwaitingConnectionProperty, value);
     }
 
     public static readonly StyledProperty<string?> ClientNameProperty =

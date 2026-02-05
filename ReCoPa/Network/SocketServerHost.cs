@@ -54,6 +54,20 @@ namespace ReCoPa.Network
             {
                 TryReadHeaders(ctx.Payload, ctx.Connection.ClientHeaders);
             });
+
+            // Built-in: respond to heartbeat from clients
+            _router.On("heartbeat:pong", async ctx =>
+            {
+                try
+                {
+                    var payload = JsonConvert.SerializeObject(new { ts = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() });
+                    await ctx.Connection.EmitAsync("heartbeat:ping", payload).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    Error?.Invoke(ex);
+                }
+            });
         }
 
         // ---------------------------

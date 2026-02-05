@@ -35,6 +35,22 @@ namespace ReCoPa.Network
             {
                 TryReadHeaders(ctx.Payload, ctx.Connection.ClientHeaders);
             });
+            // Built-in: respond to heartbeat from clients
+            _router.On("heartbeat:pong", async ctx =>
+            {
+                try
+                {
+                    Console.WriteLine($"[ReCoPa] Received heartbeat:pong from {ctx.Connection.RemoteEndPoint}");
+                    var payload = JsonSerializer.Serialize(new { ts = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() });
+                    await ctx.Connection.EmitAsync("heartbeat:ping", payload).ConfigureAwait(false);
+                    Console.WriteLine($"[ReCoPa] Sent heartbeat:ping to {ctx.Connection.RemoteEndPoint}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[ReCoPa] Heartbeat handler error: {ex.GetType().Name}: {ex.Message}");
+                    Error?.Invoke(ex);
+                }
+            });
         }
 
         public void On(string eventName, Func<SocketEventContext, Task> handler) => _router.On(eventName, handler);

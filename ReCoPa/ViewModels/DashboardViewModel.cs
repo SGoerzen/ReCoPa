@@ -26,17 +26,9 @@ public partial class DashboardViewModel : ViewModelBase
         _server = server;
         SessionTabs.CollectionChanged += OnSessionTabsChanged;
 
-        if (_server == null)
-        {
-            AddSessionTab("VR Training - PC1", Guid.NewGuid(), TabConnectionState.Connected, activate: true);
-            AddSessionTab("Cognitive Test - Lab-PC", Guid.NewGuid(), TabConnectionState.Disconnected, activate: false);
-            AddSessionTab("VR Experience - PC2", Guid.NewGuid(), TabConnectionState.Connected, activate: false);
-        }
-        else
-        {
-            _server.ClientConnected += OnClientConnected;
-            _server.ClientDisconnected += OnClientDisconnected;
-        }
+        RestoreSavedSessions();
+        _server!.ClientConnected += OnClientConnected;
+        _server!.ClientDisconnected += OnClientDisconnected;
 
         UpdateHasSessions();
         ApplySelectedFromActiveTab();
@@ -62,6 +54,32 @@ public partial class DashboardViewModel : ViewModelBase
             IsConnected = connectionState == TabConnectionState.Connected
         };
         session.CurrentView = "Settings";
+        CreateTab(session, header, clientId, connectionState, activate);
+    }
+
+    private void RestoreSavedSessions()
+    {
+        var snapshots = SessionStore.LoadSessions();
+        foreach (var snapshot in snapshots)
+        {
+            var session = new SessionViewModel(snapshot.Name, _server, clientId: null);
+            session.ApplySnapshot(snapshot);
+
+            var tab = CreateTab(
+                session,
+                session.ClientName ?? snapshot.Name,
+                clientId: null,
+                connectionState: TabConnectionState.Disconnected,
+                activate: snapshot.IsActive);
+
+            if (snapshot.IsActive)
+                SetActiveTab(tab);
+        }
+    }
+
+    private TabViewModel CreateTab(SessionViewModel session, string header, Guid? clientId,
+        TabConnectionState connectionState, bool activate)
+    {
         var sessionView = new Views.SessionView
         {
             DataContext = session
@@ -89,6 +107,8 @@ public partial class DashboardViewModel : ViewModelBase
 
         if (activate || SessionTabs.Count == 1)
             SetActiveTab(tab);
+
+        return tab;
     }
 
     private void OnSessionTabsChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -112,7 +132,7 @@ public partial class DashboardViewModel : ViewModelBase
 
     private void OnClientConnected(SocketServerHost.SocketConnection conn)
     {
-        var waitingTab = SessionTabs.FirstOrDefault(t => t.ClientId == null);
+        var waitingTab = SessionTabs.FirstOrDefault(t => t.ClientId == null && t.ConnectionState == TabConnectionState.Inactive);
         if (waitingTab != null)
         {
             waitingTab.ClientId = conn.Id;

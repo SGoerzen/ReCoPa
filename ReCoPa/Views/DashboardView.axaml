@@ -62,7 +62,7 @@
                                 Padding="14,10"
                                 CornerRadius="10"/>
 
-                        <Button Content="+ Neue Session"
+                        <Button Content="+ New Session"
                                 Classes="secondary"
                                 Command="{Binding AddClientCommand}"
                                 Padding="14,10"

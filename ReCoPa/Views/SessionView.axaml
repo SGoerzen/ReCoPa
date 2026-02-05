@@ -19,6 +19,7 @@
                            ScoreProgressValue="{Binding ScoreProgressValue}"
                            Fps="{Binding Fps}"
                            HeartRate="{Binding HeartRate}"
+                           IsEyeTrackingEnabled="{Binding IsEyeTrackingEnabled}"
                            ElapsedTime="{Binding ElapsedTime}"
                            IsVisualizationsView="{Binding IsVisualizationsView}"
                            IsSettingsView="{Binding IsSettingsView}"

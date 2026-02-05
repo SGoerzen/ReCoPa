@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using ReCoPa.Plugins;
 using ReCoPa.ViewModels;
 
 namespace ReCoPa.Services;
@@ -14,7 +15,9 @@ public static class SessionStore
         WriteIndented = true
     };
 
-    public static string BasePath => Path.Combine(Path.GetTempPath(), "ReCoPa", "Sessions");
+    private const string IndexFileName = "sessions.json";
+
+    public static string BasePath => Path.Combine(PluginPaths.GetAppDataDirectory(), "Sessions");
 
     public static void SaveSession(SessionViewModel session)
     {
@@ -33,13 +36,62 @@ public static class SessionStore
         SaveVisualizationFiles(snapshot, folder);
     }
 
+    public static void SaveSessions(IEnumerable<TabViewModel> tabs)
+    {
+        if (tabs == null)
+            return;
+
+        Directory.CreateDirectory(BasePath);
+
+        var snapshots = new List<SessionSnapshot>();
+        foreach (var tab in tabs)
+        {
+            if (tab.Session == null)
+                continue;
+
+            if (tab.Session.SessionId == Guid.Empty)
+                tab.Session.SessionId = Guid.NewGuid();
+
+            var snapshot = SessionSnapshot.FromSession(tab.Session);
+            snapshot.IsActive = tab.IsActive;
+            snapshot.UpdatedUtc = DateTime.UtcNow;
+
+            var folder = EnsureSessionFolder(snapshot.Id, snapshot.Name);
+            var metaPath = Path.Combine(folder, "session.json");
+            File.WriteAllText(metaPath, JsonSerializer.Serialize(snapshot, JsonOptions));
+            SaveVisualizationFiles(snapshot, folder);
+
+            snapshots.Add(snapshot);
+        }
+
+        var index = new SessionIndex
+        {
+            SessionIds = snapshots.Select(s => s.Id).ToList()
+        };
+
+        var indexPath = Path.Combine(BasePath, IndexFileName);
+        File.WriteAllText(indexPath, JsonSerializer.Serialize(index, JsonOptions));
+    }
+
     public static IReadOnlyList<SessionSnapshot> LoadSessions()
     {
         if (!Directory.Exists(BasePath))
             return Array.Empty<SessionSnapshot>();
 
+        var orderedIds = TryLoadIndex();
+
         var sessions = new List<SessionSnapshot>();
-        foreach (var file in Directory.EnumerateFiles(BasePath, "session.json", SearchOption.AllDirectories))
+        IEnumerable<string> files = Directory.EnumerateFiles(BasePath, "session.json", SearchOption.AllDirectories);
+        if (orderedIds is { Count: > 0 })
+        {
+            files = orderedIds
+                .Select(id => Directory.GetDirectories(BasePath, $"{id}_*").FirstOrDefault())
+                .Where(d => !string.IsNullOrWhiteSpace(d))
+                .Select(d => Path.Combine(d!, "session.json"))
+                .Where(File.Exists);
+        }
+
+        foreach (var file in files)
         {
             try
             {
@@ -53,6 +105,9 @@ public static class SessionStore
                 // Ignore corrupted session data.
             }
         }
+
+        if (orderedIds is { Count: > 0 })
+            return sessions;
 
         return sessions
             .OrderBy(s => s.UpdatedUtc == default ? s.CreatedUtc : s.UpdatedUtc)
@@ -77,6 +132,24 @@ public static class SessionStore
             };
 
             File.WriteAllText(path, JsonSerializer.Serialize(payload, JsonOptions));
+        }
+    }
+
+    private static List<Guid>? TryLoadIndex()
+    {
+        try
+        {
+            var path = Path.Combine(BasePath, IndexFileName);
+            if (!File.Exists(path))
+                return null;
+
+            var json = File.ReadAllText(path);
+            var index = JsonSerializer.Deserialize<SessionIndex>(json);
+            return index?.SessionIds;
+        }
+        catch
+        {
+            return null;
         }
     }
 
@@ -119,6 +192,19 @@ public sealed class SessionSnapshot
     public string Name { get; set; } = "Session";
     public DateTime CreatedUtc { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedUtc { get; set; }
+    public bool IsActive { get; set; }
+    public string CurrentView { get; set; } = "Visualizations";
+    public bool IsEyeTrackingEnabled { get; set; } = true;
+    public bool IsTrackingRunning { get; set; }
+    public bool IsTrackingPaused { get; set; }
+    public int StatementsCount { get; set; }
+    public int GameObjectsCount { get; set; }
+    public double Fps { get; set; }
+    public int HeartRate { get; set; }
+    public double ScoreProgressValue { get; set; }
+    public double ElapsedSeconds { get; set; }
+    public int GridRows { get; set; } = 2;
+    public int GridColumns { get; set; } = 2;
     public SessionSettingsSnapshot Settings { get; set; } = new();
     public List<VisualizationSnapshot> Visualizations { get; set; } = new();
 
@@ -148,8 +234,20 @@ public sealed class SessionSnapshot
         {
             Id = session.SessionId,
             Name = session.ClientName ?? "Session",
-            CreatedUtc = DateTime.UtcNow,
-            //Settings = session.Settings.ToSnapshot(),
+            CreatedUtc = session.CreatedUtc == default ? DateTime.UtcNow : session.CreatedUtc,
+            CurrentView = session.CurrentView,
+            IsEyeTrackingEnabled = session.IsEyeTrackingEnabled,
+            IsTrackingRunning = session.IsTrackingRunning,
+            IsTrackingPaused = session.IsTrackingPaused,
+            StatementsCount = session.StatementsCount,
+            GameObjectsCount = session.GameObjectsCount,
+            Fps = session.Fps,
+            HeartRate = session.HeartRate,
+            ScoreProgressValue = session.ScoreProgressValue,
+            ElapsedSeconds = session.ElapsedTime.TotalSeconds,
+            GridRows = session.Visualization.GridRows,
+            GridColumns = session.Visualization.GridColumns,
+            Settings = session.Settings.ToSnapshot(),
             Visualizations = visSnapshots
         };
     }
@@ -174,6 +272,7 @@ public sealed class SessionSettingsSnapshot
     public List<string> Filters { get; set; } = new();
     public List<string> Actions { get; set; } = new();
     public List<string> Gestures { get; set; } = new();
+    public List<ToggleSnapshot> Endpoints { get; set; } = new();
 }
 
 public sealed class VisualizationSnapshot
@@ -181,4 +280,15 @@ public sealed class VisualizationSnapshot
     public string VisualizationName { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
     public string DataFile { get; set; } = string.Empty;
+}
+
+public sealed class ToggleSnapshot
+{
+    public string Label { get; set; } = string.Empty;
+    public bool IsEnabled { get; set; }
+}
+
+public sealed class SessionIndex
+{
+    public List<Guid> SessionIds { get; set; } = new();
 }

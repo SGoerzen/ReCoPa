@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform.Storage;
+using ReCoPa.Extensions;
 using ReCoPa.Services;
 using SukiUI.Toasts;
 namespace ReCoPa.Views;
@@ -54,6 +55,6 @@ public partial class DashboardView : UserControl
         MainWindow.ToastManager.CreateToast()
             .WithTitle("Unity manifest")
             .WithContent(status)
-            .Queue();
+            .QuickShow();
     }
 }

@@ -3,18 +3,18 @@ using ReCoPa.Plugins.Visualizations;
 
 namespace ReCoPa.Plugins;
 
-public sealed class CorePluginPackage : IPluginPackage, ICorePlugin
+public sealed class CorePluginPackage : PluginPackageBase, ICorePlugin
 {
-    public string Id => "com.rwth.recopa.plugins.core";
-    public string Name => "Core Plugin";
-    public Contributor[] Contributors =>
+    public override string Id => "com.rwth.recopa.plugins.core";
+    public override string Name => "Core Plugin";
+    public override Contributor[] Contributors =>
     [
         new Contributor
             { Name = "Sergej Görzen", Github = "https://github.com/SGoerzen", Email = "goerzen@cs.rwth-aachen.de" }
     ];
-    public string Description => "Delivering core endpoints and filters.";
+    public override string Description => "Delivering core endpoints and filters.";
 
-    public IPluginComponent[] Components => [
+    public override IPluginComponent[] Components => [
         new LocalFileEndpoint(),
         new CsvFileEndpoint(),
         
@@ -22,7 +22,7 @@ public sealed class CorePluginPackage : IPluginPackage, ICorePlugin
         new Annotation(),
     ];
 
-    public string Website => "https://omilaxr.dev/recopa";
-    public string Repository => "https://github.com/SGoerzen/ReCoPa";
-    public string ChangelogUrl => "https://github.com/SGoerzen/ReCoPa/blob/main/CHANGELOG.md";
+    public override string Website => "https://omilaxr.dev/recopa";
+    public override string Repository => "https://github.com/SGoerzen/ReCoPa";
+    public override string ChangelogUrl => "https://github.com/SGoerzen/ReCoPa/blob/main/CHANGELOG.md";
 }

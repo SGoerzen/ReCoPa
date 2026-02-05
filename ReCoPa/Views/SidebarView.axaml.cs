@@ -57,6 +57,9 @@ public partial class SidebarView : UserControl
     public static readonly StyledProperty<int> HeartRateProperty =
         AvaloniaProperty.Register<SidebarView, int>(nameof(HeartRate));
 
+    public static readonly StyledProperty<bool> IsEyeTrackingEnabledProperty =
+        AvaloniaProperty.Register<SidebarView, bool>(nameof(IsEyeTrackingEnabled));
+
     public static readonly StyledProperty<bool> IsSessionSelectedProperty =
         AvaloniaProperty.Register<SidebarView, bool>(nameof(IsSessionSelected));
     
@@ -121,6 +124,7 @@ public partial class SidebarView : UserControl
     public double ScoreProgressValue { get => GetValue(ScoreProgressValueProperty); set => SetValue(ScoreProgressValueProperty, value); }
     public double Fps { get => GetValue(FpsProperty); set => SetValue(FpsProperty, value); }
     public int HeartRate { get => GetValue(HeartRateProperty); set => SetValue(HeartRateProperty, value); }
+    public bool IsEyeTrackingEnabled { get => GetValue(IsEyeTrackingEnabledProperty); set => SetValue(IsEyeTrackingEnabledProperty, value); }
     public bool IsSessionSelected { get => GetValue(IsSessionSelectedProperty); set => SetValue(IsSessionSelectedProperty, value); }
     public TimeSpan ElapsedTime { get => GetValue(ElapsedTimeProperty); set => SetValue(ElapsedTimeProperty, value); }
     

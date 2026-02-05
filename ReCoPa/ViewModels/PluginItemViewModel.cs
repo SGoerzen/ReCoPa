@@ -43,6 +43,10 @@ public sealed class PluginItemViewModel : ViewModelBase
     public bool HasContributors => Contributors.Count > 0;
 
     // --- UI summaries
+    public string VisualizationsInline => string.Join(" • ", Visualizations.Select(v => v.Name));
+    public string FiltersInline => string.Join(" • ", Filters.Select(f => f.Name));
+    public string EndpointsInline => string.Join(" • ", Endpoints.Select(e => e.Name));
+
     public string ComponentSummary
     {
         get

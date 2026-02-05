@@ -3,24 +3,25 @@ using ReCoPa.xAPI.Plugins;
 
 namespace ReCoPa.xAPI;
 
-public class PluginPackage : IPluginPackage
+public class PluginPackage : PluginPackageBase
 {
-    public string Id => "com.rwth.recopa.xapi";
-    public string Name => "ReCoPa.xAPI";
+    public override string Id => "com.rwth.recopa.xapi";
+    public override string Name => "ReCoPa.xAPI";
 
-    public Contributor[] Contributors =>
+    public override Contributor[] Contributors =>
     [
         new Contributor
             { Name = "Sergej Görzen", Github = "https://github.com/SGoerzen", Email = "goerzen@cs.rwth-aachen.de" }
     ];
-    public string Description => "Plugin enabling xAPI and LRS.";
-    public IPluginComponent[] Components => [
+    public override string Description => "Plugin enabling xAPI and LRS.";
+    public override IPluginComponent[] Components => [
         new ActivityPulse(),
         new FocusDistribution(),
         new TaskState(),
         new xApiPreview(),
+        new LearningRecordStore()
     ];
-    public string Website => "https://omilaxr.dev/recopa";
-    public string Repository => "https://github.com/SGoerzen/ReCoPa.xAPI";
-    public string ChangelogUrl => "https://github.com/SGoerzen/ReCoPa.xAPI/blob/main/CHANGELOG.md";
+    public override string Website => "https://omilaxr.dev/recopa";
+    public override string Repository => "https://github.com/SGoerzen/ReCoPa.xAPI";
+    public override string ChangelogUrl => "https://github.com/SGoerzen/ReCoPa.xAPI/blob/main/CHANGELOG.md";
 }

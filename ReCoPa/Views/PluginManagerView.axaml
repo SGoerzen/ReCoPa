@@ -41,7 +41,7 @@
         <ItemsControl.ItemTemplate>
           <DataTemplate x:DataType="vm:PluginItemViewModel">
 
-            <Border Classes="card" Padding="12">
+            <Border Classes="card" Padding="12" Margin="0,0,0,5">
               <StackPanel Spacing="10">
 
                 <!-- Top area -->
@@ -120,35 +120,23 @@
 
                     <StackPanel Spacing="4" IsVisible="{Binding HasVisualizations}">
                       <TextBlock Text="Visualizations" FontWeight="SemiBold"/>
-                      <ItemsControl ItemsSource="{Binding Visualizations}">
-                        <ItemsControl.ItemTemplate>
-                          <DataTemplate>
-                            <TextBlock Text="{Binding Name}" Classes="secondary"/>
-                          </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                      </ItemsControl>
+                      <TextBlock Text="{Binding VisualizationsInline}"
+                                 Classes="secondary"
+                                 TextWrapping="Wrap"/>
                     </StackPanel>
 
                     <StackPanel Spacing="4" IsVisible="{Binding HasFilters}">
                       <TextBlock Text="Filters" FontWeight="SemiBold"/>
-                      <ItemsControl ItemsSource="{Binding Filters}">
-                        <ItemsControl.ItemTemplate>
-                          <DataTemplate>
-                            <TextBlock Text="{Binding Name}" Classes="secondary"/>
-                          </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                      </ItemsControl>
+                      <TextBlock Text="{Binding FiltersInline}"
+                                 Classes="secondary"
+                                 TextWrapping="Wrap"/>
                     </StackPanel>
 
                     <StackPanel Spacing="4" IsVisible="{Binding HasEndpoints}">
                       <TextBlock Text="Endpoints" FontWeight="SemiBold"/>
-                      <ItemsControl ItemsSource="{Binding Endpoints}">
-                        <ItemsControl.ItemTemplate>
-                          <DataTemplate>
-                            <TextBlock Text="{Binding Name}" Classes="secondary"/>
-                          </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                      </ItemsControl>
+                      <TextBlock Text="{Binding EndpointsInline}"
+                                 Classes="secondary"
+                                 TextWrapping="Wrap"/>
                     </StackPanel>
 
                   </StackPanel>

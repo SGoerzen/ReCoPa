@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Bogus;
@@ -34,26 +35,22 @@ public partial class SessionSettingsViewModel : ObservableObject
         Endpoints.Add(new EndpointSummaryItem("Local JSON File", true));
         Endpoints.Add(new EndpointSummaryItem("Learning Record Store", true));
 
-        FilterOptions.Add(new SelectionItem("Exclude GameObjects", true));
-        FilterOptions.Add(new SelectionItem("Exclude Gestures", true));
-        FilterOptions.Add(new SelectionItem("Exclude Components", false));
-        FilterOptions.Add(new SelectionItem("Normalize Collisions", false));
-        FilterOptions.Add(new SelectionItem("Ignore Stationary Objects", false));
-        FilterOptions.Add(new SelectionItem("Remove Outliers", true));
+        FilterOptions.Add(new SelectionItem("Blacklist", true));
+        FilterOptions.Add(new SelectionItem("Exclude From Tracking", false));
+        FilterOptions.Add(new SelectionItem("Unity Components", false));
 
-        ActionOptions.Add(new SelectionItem("Exclude actions", true));
-        ActionOptions.Add(new SelectionItem("Delay actions", true));
-        ActionOptions.Add(new SelectionItem("Normalize verbs", false));
-        ActionOptions.Add(new SelectionItem("Collapse duplicates", false));
-        ActionOptions.Add(new SelectionItem("Limit burst actions", false));
-        ActionOptions.Add(new SelectionItem("Remove idle actions", false));
+        ActionOptions.Add(new SelectionItem("Saccade", true));
+        ActionOptions.Add(new SelectionItem("Pursuit", true));
+        ActionOptions.Add(new SelectionItem("Shake", true));
+        ActionOptions.Add(new SelectionItem("Nod", true));
+        ActionOptions.Add(new SelectionItem("Click", true));
+        ActionOptions.Add(new SelectionItem("Press", true));
+        ActionOptions.Add(new SelectionItem("Hover", true));
+        ActionOptions.Add(new SelectionItem("Change", true));
 
-        GestureOptions.Add(new SelectionItem("Exclude gestures", true));
-        GestureOptions.Add(new SelectionItem("Normalize gestures", true));
-        GestureOptions.Add(new SelectionItem("Deduplicate gestures", false));
-        GestureOptions.Add(new SelectionItem("Filter low confidence", false));
-        GestureOptions.Add(new SelectionItem("Merge similar", false));
-        GestureOptions.Add(new SelectionItem("Sort by intensity", false));
+        GestureOptions.Add(new SelectionItem("Eyes", true));
+        GestureOptions.Add(new SelectionItem("Head", true));
+        GestureOptions.Add(new SelectionItem("UI", true));
 
         ApplyPreview(FilterOptions, FiltersPreview, out var filtersMore);
         ApplyPreview(ActionOptions, ActionsPreview, out var actionsMore);
@@ -61,6 +58,69 @@ public partial class SessionSettingsViewModel : ObservableObject
         FiltersHasMore = filtersMore;
         ActionsHasMore = actionsMore;
         GesturesHasMore = gesturesMore;
+    }
+
+    public SessionSettingsSnapshot ToSnapshot()
+    {
+        return new SessionSettingsSnapshot
+        {
+            ActorName = ActorName,
+            ActorMeta = ActorMeta,
+            ActorEmail = ActorEmail,
+            Filters = FilterOptions.Where(i => i.IsSelected).Select(i => i.Label).ToList(),
+            Actions = ActionOptions.Where(i => i.IsSelected).Select(i => i.Label).ToList(),
+            Gestures = GestureOptions.Where(i => i.IsSelected).Select(i => i.Label).ToList(),
+            Endpoints = Endpoints.Select(e => new ToggleSnapshot
+            {
+                Label = e.Label,
+                IsEnabled = e.IsActive
+            }).ToList()
+        };
+    }
+
+    public void ApplySnapshot(SessionSettingsSnapshot snapshot)
+    {
+        if (snapshot == null)
+            return;
+
+        if (!string.IsNullOrWhiteSpace(snapshot.ActorName))
+            ActorName = snapshot.ActorName;
+        if (!string.IsNullOrWhiteSpace(snapshot.ActorMeta))
+            ActorMeta = snapshot.ActorMeta;
+        if (!string.IsNullOrWhiteSpace(snapshot.ActorEmail))
+            ActorEmail = snapshot.ActorEmail;
+
+        ApplySelections(FilterOptions, snapshot.Filters);
+        ApplySelections(ActionOptions, snapshot.Actions);
+        ApplySelections(GestureOptions, snapshot.Gestures);
+
+        if (snapshot.Endpoints is { Count: > 0 })
+        {
+            foreach (var endpoint in Endpoints)
+            {
+                var match = snapshot.Endpoints.FirstOrDefault(e =>
+                    string.Equals(e.Label, endpoint.Label, System.StringComparison.OrdinalIgnoreCase));
+                if (match != null)
+                    endpoint.IsActive = match.IsEnabled;
+            }
+        }
+
+        ApplyPreview(FilterOptions, FiltersPreview, out var filtersMore);
+        FiltersHasMore = filtersMore;
+        ApplyPreview(ActionOptions, ActionsPreview, out var actionsMore);
+        ActionsHasMore = actionsMore;
+        ApplyPreview(GestureOptions, GesturesPreview, out var gesturesMore);
+        GesturesHasMore = gesturesMore;
+    }
+
+    private static void ApplySelections(ObservableCollection<SelectionItem> items, List<string> selected)
+    {
+        var set = new HashSet<string>(selected ?? new List<string>(), System.StringComparer.OrdinalIgnoreCase);
+        foreach (var item in items)
+        {
+            item.IsSelected = set.Contains(item.Label);
+            item.IsTempSelected = item.IsSelected;
+        }
     }
 
     [RelayCommand]

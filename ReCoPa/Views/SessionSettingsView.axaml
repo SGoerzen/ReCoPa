@@ -68,10 +68,10 @@
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" Spacing="8" HorizontalAlignment="Right">
-                                <Button Content="Session speichern unter"
+                                <Button Content="Save Session..."
                                         Classes="secondary"
                                         HorizontalAlignment="Stretch"/>
-                                <Button Content="Session wiederherstellen"
+                                <Button Content="Restore session"
                                         Classes="secondary"
                                         HorizontalAlignment="Stretch"/>
                             </StackPanel>

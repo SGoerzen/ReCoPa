@@ -8,12 +8,14 @@ using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
 using ReCoPa;
 using ReCoPa.Network;
+using ReCoPa.Services;
 
 namespace ReCoPa.ViewModels;
 
 public partial class SessionViewModel : ViewModelBase, IDisposable
 {
-    private readonly DateTime _startedAtUtc = DateTime.UtcNow;
+    private DateTime _startedAtUtc = DateTime.UtcNow;
+    public DateTime CreatedUtc { get; private set; } = DateTime.UtcNow;
     private readonly DispatcherTimer _timer;
     private readonly SocketServerHost? _server;
     private readonly List<IDisposable> _subscriptions = new();
@@ -63,6 +65,42 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         _timer.Start();
 
         SubscribeToSocket();
+    }
+
+    public void ApplySnapshot(SessionSnapshot snapshot)
+    {
+        if (snapshot == null)
+            return;
+
+        SessionId = snapshot.Id == Guid.Empty ? Guid.NewGuid() : snapshot.Id;
+        ClientId = null;
+        IsConnected = false;
+        ClientName = string.IsNullOrWhiteSpace(snapshot.Name) ? ClientName : snapshot.Name;
+        CreatedUtc = snapshot.CreatedUtc == default ? DateTime.UtcNow : snapshot.CreatedUtc;
+
+        IsEyeTrackingEnabled = snapshot.IsEyeTrackingEnabled;
+        IsTrackingRunning = snapshot.IsTrackingRunning;
+        IsTrackingPaused = snapshot.IsTrackingPaused;
+
+        StatementsCount = snapshot.StatementsCount;
+        GameObjectsCount = snapshot.GameObjectsCount;
+        Fps = snapshot.Fps;
+        HeartRate = snapshot.HeartRate;
+        ScoreProgressValue = snapshot.ScoreProgressValue;
+
+        CurrentView = string.IsNullOrWhiteSpace(snapshot.CurrentView) ? "Visualizations" : snapshot.CurrentView;
+
+        var elapsed = TimeSpan.FromSeconds(Math.Max(0, snapshot.ElapsedSeconds));
+        _startedAtUtc = DateTime.UtcNow - elapsed;
+        ElapsedTime = elapsed;
+
+        Settings.ApplySnapshot(snapshot.Settings);
+
+        if (snapshot.GridRows > 0)
+            Visualization.GridRows = snapshot.GridRows;
+        if (snapshot.GridColumns > 0)
+            Visualization.GridColumns = snapshot.GridColumns;
+        Visualization.RestoreFromSnapshots(snapshot.Visualizations);
     }
 
     [RelayCommand]
@@ -171,7 +209,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     {
         ElapsedTime = DateTime.UtcNow - _startedAtUtc;
 
-        if (!IsConnected)
+        if (!IsConnected && IsTrackingRunning)
             SimulateMetrics();
     }
 
@@ -208,6 +246,13 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
             Fps = fps;
         if (TryReadDouble(root, "score", out var score))
             ScoreProgressValue = score;
+
+        if (TryReadBool(root, "isTracking", out var isTracking))
+            IsTrackingRunning = isTracking;
+        if (TryReadBool(root, "isTrackingPaused", out var isTrackingPaused))
+            IsTrackingPaused = isTrackingPaused;
+        if (TryReadBool(root, "isCalibrated", out var isCalibrated))
+            IsEyeTrackingEnabled = isCalibrated;
     }
 
     private void HandleStatement(string payload)
@@ -309,6 +354,21 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         };
     }
 
+    private static bool TryReadBool(JsonElement element, string name, out bool value)
+    {
+        value = false;
+        if (!element.TryGetProperty(name, out var prop))
+            return false;
+
+        return prop.ValueKind switch
+        {
+            JsonValueKind.True => (value = true) == true,
+            JsonValueKind.False => (value = false) == false,
+            JsonValueKind.String => bool.TryParse(prop.GetString(), out value),
+            _ => false
+        };
+    }
+
     private static bool TryReadDouble(JsonElement element, string name, out double value)
     {
         value = 0;
@@ -345,6 +405,9 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         return _server.EmitToClientAsync(ClientId.Value, eventName, payload);
     }
 
+    private static double Clamp(double value, double min, double max)
+        => value < min ? min : value > max ? max : value;
+
     private void SimulateMetrics()
     {
         StatementsCount += _rng.Next(5, 13);
@@ -357,9 +420,6 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         var heartBase = HeartRate <= 0 ? 78 : HeartRate;
         HeartRate = (int)Math.Round(Clamp(heartBase + _rng.Next(-4, 5), 60, 140));
     }
-
-    private static double Clamp(double value, double min, double max)
-        => value < min ? min : value > max ? max : value;
 
     private void StartTracking()
     {

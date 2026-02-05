@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.Input;
 using ReactiveUI;
 using ReCoPa.Models;
 using ReCoPa.Network;
+using ReCoPa.Services;
 using SukiUI.Toasts;
 
 namespace ReCoPa.ViewModels;
@@ -115,5 +116,10 @@ public class MainViewModel : ViewModelBase
             canQuitAll,
             outputScheduler: RxApp.MainThreadScheduler
         );
+    }
+
+    public void PersistSessions()
+    {
+        SessionStore.SaveSessions(Dashboard.SessionTabs);
     }
 }

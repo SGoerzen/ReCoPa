@@ -1,12 +1,27 @@
+using System;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 using Material.Icons;
+using ReCoPa;
+using ReCoPa.Models;
 using ReCoPa.ViewModels;
 
 public class SidebarViewModel : ViewModelBase
 {
     private bool _isTrackingRunning;
     private bool _isTrackingPaused;
+
+    public SidebarViewModel()
+    {
+        App.Socket?.On<TrackingMeta>("clients:info", (meta) =>
+        {
+            Console.WriteLine(meta);
+            IsTrackingRunning = meta.isTracking;
+            IsTrackingPaused = meta.isTrackingPaused;
+            IsEyeTrackingEnabled = meta.isCalibrated;
+            RaiseTrackingUi();
+        });
+    }
 
     public bool IsTrackingRunning
     {

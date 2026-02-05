@@ -18,6 +18,7 @@ using ReCoPa.Views;
 using SukiUI;
 using SukiUI.Models;
 using Avalonia.Media;
+using ReCoPa.Extensions;
 using SukiUI.Toasts;
 
 namespace ReCoPa;
@@ -28,7 +29,9 @@ public partial class App : Application
     public static PluginStateStore? PluginStateStore { get; private set; }
     
     public static SocketServerHost? Socket { get; private set; }
+    private MainViewModel? _mainViewModel;
     private int _disposed; 
+    private int _persisted;
     
     public override void Initialize()
     {
@@ -49,7 +52,7 @@ public partial class App : Application
         }
         catch (Exception ex)
         {
-            MainWindow.ToastManager.CreateToast().WithTitle("Cannot load plugins.").WithContent(ex.Message).Queue();
+            MainWindow.ToastManager.CreateToast().WithTitle("Cannot load plugins.").WithContent(ex.Message).QuickShow();
         }
     }
 
@@ -72,12 +75,12 @@ public partial class App : Application
         Socket.ClientDisconnected += c =>
         {
             Console.WriteLine($"Client disconnected: {c.RemoteEndPoint}");
-            MainWindow.ToastManager.CreateToast().WithTitle($"Client disconnected: {c.RemoteEndPoint}").Queue();
+            MainWindow.ToastManager.CreateToast().WithTitle($"Client disconnected: {c.RemoteEndPoint}").QuickShow();
         };
         Socket.ClientConnected += c =>
         {
             Console.WriteLine($"Client connected: {c.RemoteEndPoint}");
-            MainWindow.ToastManager.CreateToast().WithTitle($"Client connected: {c.RemoteEndPoint}").Queue();
+            MainWindow.ToastManager.CreateToast().WithTitle($"Client connected: {c.RemoteEndPoint}").QuickShow();
         };
 
         // ✅ cover unexpected exits/crashes too
@@ -91,6 +94,7 @@ public partial class App : Application
             {
                 DataContext = new MainViewModel(Socket)
             };
+            _mainViewModel = window.DataContext as MainViewModel;
 
             // User closes the window (X)
             window.Closing += async (_, __) => await DisposeServerOnceAsync();
@@ -144,6 +148,8 @@ public partial class App : Application
     {
         if (Interlocked.Exchange(ref _disposed, 1) == 1) return;
 
+        PersistSessionsOnce();
+
         var s = Socket;
         Socket = null;
         if (s == null) return;
@@ -163,6 +169,8 @@ public partial class App : Application
     private void DisposeServerOnceSync()
     {
         if (Interlocked.Exchange(ref _disposed, 1) == 1) return;
+
+        PersistSessionsOnce();
 
         var s = Socket;
         Socket = null;
@@ -188,5 +196,18 @@ public partial class App : Application
 
         foreach (var plugin in plugins)
             BindingPlugins.DataValidators.Remove(plugin);
+    }
+
+    private void PersistSessionsOnce()
+    {
+        if (Interlocked.Exchange(ref _persisted, 1) == 1) return;
+        try
+        {
+            _mainViewModel?.PersistSessions();
+        }
+        catch
+        {
+            // swallow during shutdown
+        }
     }
 }

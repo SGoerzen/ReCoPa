@@ -10,6 +10,7 @@ using Avalonia.Controls.Notifications;
 using Avalonia.Platform.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using ReCoPa.Extensions;
 using ReCoPa.Plugins;
 using ReCoPa.Views;
 using SukiUI.Toasts;
@@ -87,13 +88,11 @@ public sealed partial class PluginManagerViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            var toast = MainWindow.ToastManager.CreateToast()
+            MainWindow.ToastManager.CreateToast()
                 .OfType(NotificationType.Error)
                 .WithTitle("Cannot load plugins.")
-                .WithContent(ex.Message);
-            
-            toast.SetCanDismissByClicking(true);
-            toast.Queue();
+                .WithContent(ex.Message)
+                .QuickShow();
         }
     }
 
@@ -148,11 +147,10 @@ public sealed partial class PluginManagerViewModel : ViewModelBase
         
         LoadPlugins();
         
-        var toast = MainWindow.ToastManager.CreateToast()
+        MainWindow.ToastManager.CreateToast()
             .OfType(NotificationType.Success)
             .WithTitle("Install Plugin")
-            .WithContent($"Installed plugin {Path.GetFileName(targetPath)}, successfully.");
-        toast.SetCanDismissByClicking(true);
-        toast.Queue();
+            .WithContent($"Installed plugin {Path.GetFileName(targetPath)}, successfully.")
+            .QuickShow();
     }
 }

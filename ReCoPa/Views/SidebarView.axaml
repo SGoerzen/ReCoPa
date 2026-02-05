@@ -142,7 +142,7 @@
                                     <SolidColorBrush Color="#f59e0b" />
                                 </Ellipse.Fill>
                             </Ellipse>
-                            <TextBlock Text="Warte auf Verbindung..." Classes="secondary" VerticalAlignment="Center" />
+                            <TextBlock Text="Waiting for connection..." Classes="secondary" VerticalAlignment="Center" />
                         </StackPanel>
 
                         <!-- DISCONNECTED -->

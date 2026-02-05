@@ -1,10 +1,10 @@
-﻿cff-version: 1.2.0
+cff-version: 1.2.0
 message: "If you use this software, please cite it using the metadata below."
 type: software
-title: "OmiLAXR"
-version: "2.2.0"
-date-released: 2025-08-17
-repository-code: "https://github.com/SGoerzen/OmiLAXR"
+title: "ReCoPa v2 - Researcher Companion Panel"
+version: "0.0.1"
+date-released: 2026-02-05
+repository-code: "https://github.com/SGoerzen/ReCoPa"
 url: "https://omilaxr.dev/"
 license: "AGPL-3.0-or-later"
 authors:
@@ -13,22 +13,18 @@ authors:
     orcid: "https://orcid.org/0000-0003-3853-2435"
     affiliation: "RWTH Aachen University"
 abstract: >
-  OmiLAXR is the base package of a modular Learning Analytics framework for XR.
-  It provides the core pipeline components and patterns to track interactions in
-  Unity-based VR/AR/MR applications and to compose xAPI statements via
-  extensible modules and endpoints.
+  ReCoPa ist eine hochgradig erweiterbare Forschungs-Plattform für die Echtzeit-Datenerfassung von XR-Geräten und Learning Analytics Systemen. Die Anwendung ermöglicht es Forschern, komplexe Lernprozesse zu visualisieren, zu analysieren und durch ein modulares Plugin-System zu erweitern.
 keywords:
   - Learning Analytics
-  - XR
-  - Virtual Reality
-  - Augmented Reality
-  - Unity
+  - ReCoPa
+  - Researcher Panel
   - xAPI
+  - Dashboard
 preferred-citation:
   type: software
-  title: "OmiLAXR"
-  version: "2.2.0"
-  date-released: 2025-08-17
+  title: "ReCoPa v2 - Researcher Companion Panel"
+  version: "0.0.1"
+  date-released: 2026-02-05
   url: "https://omilaxr.dev/"
   authors:
     - given-names: "Sergej"

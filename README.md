@@ -1,5 +1,7 @@
 # 🔬 ReCoPa v2 - Researcher Companion Panel
 
+[![DOI](https://zenodo.org/badge/1143544056.svg)](https://doi.org/10.5281/zenodo.18496218)
+
 **Eine moderne Desktop-Plattform für Echtzeit-Datenerfassung, Visualisierung und Analyse von Extended Reality (XR) Learning Sessions.**
 
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4?style=flat-square)](https://dotnet.microsoft.com/)

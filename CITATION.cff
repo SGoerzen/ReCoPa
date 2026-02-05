@@ -1,0 +1,36 @@
+﻿cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below."
+type: software
+title: "OmiLAXR"
+version: "2.2.0"
+date-released: 2025-08-17
+repository-code: "https://github.com/SGoerzen/OmiLAXR"
+url: "https://omilaxr.dev/"
+license: "AGPL-3.0-or-later"
+authors:
+  - given-names: "Sergej"
+    family-names: "Görzen"
+    orcid: "https://orcid.org/0000-0003-3853-2435"
+    affiliation: "RWTH Aachen University"
+abstract: >
+  OmiLAXR is the base package of a modular Learning Analytics framework for XR.
+  It provides the core pipeline components and patterns to track interactions in
+  Unity-based VR/AR/MR applications and to compose xAPI statements via
+  extensible modules and endpoints.
+keywords:
+  - Learning Analytics
+  - XR
+  - Virtual Reality
+  - Augmented Reality
+  - Unity
+  - xAPI
+preferred-citation:
+  type: software
+  title: "OmiLAXR"
+  version: "2.2.0"
+  date-released: 2025-08-17
+  url: "https://omilaxr.dev/"
+  authors:
+    - given-names: "Sergej"
+      family-names: "Görzen"
+      orcid: "https://orcid.org/0000-0003-3853-2435"

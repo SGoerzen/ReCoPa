@@ -28,7 +28,7 @@ public sealed class SocketConnection : IAsyncDisposable
     public EndPoint? RemoteEndPoint => _tcp.Client?.RemoteEndPoint;
     public bool IsConnected => _tcp.Connected;
 
-    // Optional: stores "ExtraHeaders" the client sent in "clients:hello"
+    // Optional: stores "ExtraHeaders" the client sent in "hello"
     public Dictionary<string, string> ClientHeaders { get; } =
         new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 

@@ -112,7 +112,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void StartCalibration()
     {
-        _ = EmitAsync("clients:calibration:start");
+        _ = EmitAsync("calibration:start");
     }
 
     [RelayCommand]
@@ -121,14 +121,14 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         if (!IsTrackingRunning)
             return;
 
-        _ = EmitAsync("clients:tracking:pause");
+        _ = EmitAsync("tracking:pause");
         IsTrackingPaused = !IsTrackingPaused;
     }
 
     [RelayCommand]
     private void StopTracking()
     {
-        _ = EmitAsync("clients:tracking:stop");
+        _ = EmitAsync("tracking:stop");
         IsTrackingRunning = false;
         IsTrackingPaused = false;
     }
@@ -138,7 +138,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     {
         if (IsTrackingRunning)
         {
-            _ = EmitAsync("clients:tracking:stop");
+            _ = EmitAsync("tracking:stop");
             IsTrackingRunning = false;
             IsTrackingPaused = false;
             return;
@@ -174,7 +174,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void ShutdownApp()
     {
-        _ = EmitAsync("clients:shutdown");
+        _ = EmitAsync("shutdown");
     }
 
     partial void OnIsConnectedChanged(bool value)
@@ -224,8 +224,8 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         if (_server == null)
             return;
 
-        _subscriptions.Add(_server.On("clients:meta", HandleMeta));
-        _subscriptions.Add(_server.On("clients:statements", HandleStatement));
+        _subscriptions.Add(_server.On("meta", HandleMeta));
+        _subscriptions.Add(_server.On("statements", HandleStatement));
     }
 
     private void HandleMeta(string payload)
@@ -423,7 +423,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
 
     private void StartTracking()
     {
-        _ = EmitAsync("clients:tracking:start");
+        _ = EmitAsync("tracking:start");
         IsTrackingRunning = true;
         IsTrackingPaused = false;
     }

@@ -30,8 +30,8 @@ namespace ReCoPa.Network
         {
             _opt = options ?? new SocketServerOptions();
 
-            // Built-in: accept "clients:hello" to store headers
-            _router.On("clients:hello", ctx =>
+            // Built-in: accept "hello" to store headers
+            _router.On("hello", ctx =>
             {
                 TryReadHeaders(ctx.Payload, ctx.Connection.ClientHeaders);
             });

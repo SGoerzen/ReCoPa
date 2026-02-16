@@ -13,7 +13,7 @@ public class SidebarViewModel : ViewModelBase
 
     public SidebarViewModel()
     {
-        App.Socket?.On<TrackingMeta>("clients:info", (meta) =>
+        App.Socket?.On<TrackingMeta>("info", (meta) =>
         {
             Console.WriteLine(meta);
             IsTrackingRunning = meta.isTracking;

@@ -112,7 +112,7 @@ public class MainViewModel : ViewModelBase
                              .ObserveOn(RxApp.MainThreadScheduler);
 
         QuitAllClientsCommand = ReactiveCommand.CreateFromTask(
-            async () => await _server.BroadcastAsync("clients:quit"),
+            async () => await _server.BroadcastAsync("quit"),
             canQuitAll,
             outputScheduler: RxApp.MainThreadScheduler
         );

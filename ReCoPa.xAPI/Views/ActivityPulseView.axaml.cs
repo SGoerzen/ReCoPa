@@ -1,13 +1,18 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+using ReCoPa.xAPI.ViewModels;
 
 namespace ReCoPa.xAPI.Views;
 
 public partial class ActivityPulseView : UserControl
 {
     public ActivityPulseView()
+        : this(new ActivityPulseViewModel())
+    {
+    }
+
+    public ActivityPulseView(ActivityPulseViewModel vm)
     {
         InitializeComponent();
+        DataContext = vm;
     }
 }

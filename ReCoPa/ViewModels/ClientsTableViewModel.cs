@@ -28,7 +28,7 @@ public class ClientsTableViewModel : ReactiveObject
 
             try
             {
-                await client.EmitAsync("clients:quit");
+                await client.EmitAsync("quit");
             }
             catch (Exception ex)
             {

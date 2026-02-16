@@ -6,10 +6,13 @@ namespace ReCoPa.xAPI.Views;
 public partial class XApiPreviewView : UserControl
 {
     public XApiPreviewView()
+        : this(new XApiPreviewViewModel())
+    {
+    }
+
+    public XApiPreviewView(XApiPreviewViewModel vm)
     {
         InitializeComponent();
-
-        var vm = new XApiPreviewViewModel();
         DataContext = vm;
 
         // hook clipboard action for all items (and future items)

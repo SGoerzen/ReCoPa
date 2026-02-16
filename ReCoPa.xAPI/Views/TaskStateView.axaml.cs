@@ -1,13 +1,18 @@
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+using ReCoPa.xAPI.ViewModels;
 
 namespace ReCoPa.xAPI.Views;
 
 public partial class TaskStateView : UserControl
 {
     public TaskStateView()
+        : this(new TaskStateViewModel())
+    {
+    }
+
+    public TaskStateView(TaskStateViewModel vm)
     {
         InitializeComponent();
+        DataContext = vm;
     }
 }

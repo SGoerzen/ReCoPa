@@ -49,8 +49,8 @@ namespace ReCoPa.Network
             _opt = options ?? new SocketServerOptions();
             _uiPost = uiPost;
             
-            // Built-in: accept "clients:hello" to store headers into connection.ClientHeaders
-            _router.On("clients:hello", ctx =>
+            // Built-in: accept "hello" to store headers into connection.ClientHeaders
+            _router.On("hello", ctx =>
             {
                 TryReadHeaders(ctx.Payload, ctx.Connection.ClientHeaders);
             });

@@ -20,6 +20,7 @@ using SukiUI.Models;
 using Avalonia.Media;
 using ReCoPa.Extensions;
 using SukiUI.Toasts;
+using ReCoPa.Services;
 
 namespace ReCoPa;
 
@@ -27,6 +28,7 @@ public partial class App : Application
 {
     public static PluginManager PluginManager { get; } = new();
     public static PluginStateStore? PluginStateStore { get; private set; }
+    public static DataHub? DataHub { get; private set; }
     
     public static SocketServerHost? Socket { get; private set; }
     private MainViewModel? _mainViewModel;
@@ -49,6 +51,7 @@ public partial class App : Application
         
             Directory.CreateDirectory(pluginDir);
             PluginManager.Load(pluginDir);
+            DataHub?.BindPluginComponents(PluginManager.Components);
         }
         catch (Exception ex)
         {
@@ -71,6 +74,15 @@ public partial class App : Application
         _ = Socket.StartAsync(4567);
         
         Console.WriteLine("SocketServer started on port 45679.");
+        
+        DataHub = new DataHub();
+        DataHub.BindPluginComponents(PluginManager.Components);
+        Socket.EventReceived += (eventName, payload) =>
+        {
+            var hub = DataHub;
+            if (hub != null)
+                hub.Publish(eventName, payload);
+        };
         
         Socket.ClientDisconnected += c =>
         {

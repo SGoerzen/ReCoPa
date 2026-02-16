@@ -73,6 +73,7 @@ public sealed partial class PluginManagerViewModel : ViewModelBase
             Plugins.Clear();
 
             App.PluginManager!.Load();
+            App.DataHub?.BindPluginComponents(App.PluginManager.Components);
 
             foreach (var plugin in App.PluginManager.Plugins)
             {

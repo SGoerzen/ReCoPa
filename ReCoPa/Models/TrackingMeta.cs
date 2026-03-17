@@ -11,7 +11,8 @@ public struct TrackingMeta
     public string computerName;
     public string actorName;
     public string actorEmail;
-    public string metaContext;       
+    public string metaContext;
+    public string sessionId;
         
     public static readonly TrackingMeta Empty = new TrackingMeta();
 }

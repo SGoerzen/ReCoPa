@@ -29,6 +29,7 @@ public partial class DashboardViewModel : ViewModelBase
         RestoreSavedSessions();
         _server!.ClientConnected += OnClientConnected;
         _server!.ClientDisconnected += OnClientDisconnected;
+        _server!.ClientHello += OnClientHello;
 
         UpdateHasSessions();
         ApplySelectedFromActiveTab();
@@ -121,7 +122,7 @@ public partial class DashboardViewModel : ViewModelBase
             return;
         }
 
-        if (!SessionTabs.Any(t => t.IsActive))
+        if (!SessionTabs.Any(t => t.IsActive) || SelectedSessionView == null)
             ApplySelectedFromActiveTab();
     }
 
@@ -142,14 +143,12 @@ public partial class DashboardViewModel : ViewModelBase
                 waitingTab.Session.ClientId = conn.Id;
                 waitingTab.Session.IsConnected = true;
             }
+            SetActiveTab(waitingTab);
 
             return;
         }
 
-        var endpoint = conn.RemoteEndPoint?.ToString();
-        var header = string.IsNullOrWhiteSpace(endpoint)
-            ? $"Session {SessionTabs.Count + 1}"
-            : $"Session {SessionTabs.Count + 1} ({endpoint})";
+        var header = $"Session {SessionTabs.Count + 1}";
 
         AddSessionTab(header, conn.Id, TabConnectionState.Connected, activate: SessionTabs.Count == 0);
         SukiDialogService.ShowInfoToast("Neue Session", "Neue Session wurde automatisch eröffnet.");
@@ -166,6 +165,21 @@ public partial class DashboardViewModel : ViewModelBase
         }
     }
 
+    private void OnClientHello(SocketServerHost.SocketConnection conn, ClientHello hello)
+    {
+        Console.WriteLine("Info " + hello);
+        if (string.IsNullOrWhiteSpace(hello.SessionId))
+            return;
+
+        var tab = SessionTabs.FirstOrDefault(t => t.ClientId == conn.Id);
+        if (tab?.Session == null)
+            return;
+
+      
+        tab.Session.ClientName = hello.SessionId;
+        tab.Header = hello.SessionId;
+    }
+
     // ---- Commands ----
 
     [RelayCommand]
@@ -173,6 +187,8 @@ public partial class DashboardViewModel : ViewModelBase
     {
         var idx = SessionTabs.Count + 1;
         AddSessionTab($"Session {idx}", clientId: null, connectionState: TabConnectionState.Inactive, activate: true);
+        if (SelectedSessionView == null)
+            ApplySelectedFromActiveTab();
     }
 
     [RelayCommand]
@@ -200,7 +216,12 @@ public partial class DashboardViewModel : ViewModelBase
             _sessionNameHandlers.Remove(tab.Session);
         }
 
-        tab.Session?.Dispose();
+        if (tab.Session != null)
+        {
+            SessionStore.SaveSession(tab.Session);
+            SessionStore.MarkSessionClosed(tab.Session.SessionId);
+            tab.Session.Dispose();
+        }
         SessionTabs.Remove(tab);
 
         if (!wasActive || SessionTabs.Count == 0)

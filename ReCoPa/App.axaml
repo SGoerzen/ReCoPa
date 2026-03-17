@@ -3,6 +3,7 @@
              xmlns:local="using:ReCoPa"
              x:Class="ReCoPa.App"
              xmlns:sukiUi="clr-namespace:SukiUI;assembly=SukiUI"
+             xmlns:sukiControls="clr-namespace:SukiUI.Controls;assembly=SukiUI"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:conv="clr-namespace:ReCoPa.Converters"
              RequestedThemeVariant="Default">
@@ -32,6 +33,10 @@
      <Application.Styles>
          <!-- https://kikipoulet.github.io/SukiUI/documentation/getting-started -->
          <sukiUi:SukiTheme />
+         <Style Selector="sukiControls|SukiToast">
+             <Setter Property="MinWidth" Value="420" />
+             <Setter Property="MaxWidth" Value="640" />
+         </Style>
          <StyleInclude Source="avares://ReCoPa/Styles/Controls.axaml"/>
          <avalonia:MaterialIconStyles />
      </Application.Styles>

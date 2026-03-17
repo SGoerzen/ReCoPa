@@ -42,6 +42,7 @@ public static class SessionStore
             return;
 
         Directory.CreateDirectory(BasePath);
+        var index = LoadIndex() ?? new SessionIndex();
 
         var snapshots = new List<SessionSnapshot>();
         foreach (var tab in tabs)
@@ -64,10 +65,35 @@ public static class SessionStore
             snapshots.Add(snapshot);
         }
 
-        var index = new SessionIndex
-        {
-            SessionIds = snapshots.Select(s => s.Id).ToList()
-        };
+        index.SessionIds = snapshots.Select(s => s.Id).ToList();
+
+        var indexPath = Path.Combine(BasePath, IndexFileName);
+        File.WriteAllText(indexPath, JsonSerializer.Serialize(index, JsonOptions));
+    }
+
+    public static void MarkSessionClosed(Guid sessionId)
+    {
+        if (sessionId == Guid.Empty)
+            return;
+
+        Directory.CreateDirectory(BasePath);
+        var index = LoadIndex() ?? new SessionIndex();
+        if (!index.ClosedSessionIds.Contains(sessionId))
+            index.ClosedSessionIds.Add(sessionId);
+        index.SessionIds.Remove(sessionId);
+
+        var indexPath = Path.Combine(BasePath, IndexFileName);
+        File.WriteAllText(indexPath, JsonSerializer.Serialize(index, JsonOptions));
+    }
+
+    public static void MarkSessionReopened(Guid sessionId)
+    {
+        if (sessionId == Guid.Empty)
+            return;
+
+        Directory.CreateDirectory(BasePath);
+        var index = LoadIndex() ?? new SessionIndex();
+        index.ClosedSessionIds.Remove(sessionId);
 
         var indexPath = Path.Combine(BasePath, IndexFileName);
         File.WriteAllText(indexPath, JsonSerializer.Serialize(index, JsonOptions));
@@ -78,7 +104,9 @@ public static class SessionStore
         if (!Directory.Exists(BasePath))
             return Array.Empty<SessionSnapshot>();
 
-        var orderedIds = TryLoadIndex();
+        var index = LoadIndex();
+        var orderedIds = index?.SessionIds;
+        var closedIds = index?.ClosedSessionIds ?? new List<Guid>();
 
         var sessions = new List<SessionSnapshot>();
         IEnumerable<string> files = Directory.EnumerateFiles(BasePath, "session.json", SearchOption.AllDirectories);
@@ -97,7 +125,7 @@ public static class SessionStore
             {
                 var json = File.ReadAllText(file);
                 var snapshot = JsonSerializer.Deserialize<SessionSnapshot>(json);
-                if (snapshot != null)
+                if (snapshot != null && !closedIds.Contains(snapshot.Id))
                     sessions.Add(snapshot);
             }
             catch
@@ -135,7 +163,7 @@ public static class SessionStore
         }
     }
 
-    private static List<Guid>? TryLoadIndex()
+    private static SessionIndex? LoadIndex()
     {
         try
         {
@@ -144,8 +172,7 @@ public static class SessionStore
                 return null;
 
             var json = File.ReadAllText(path);
-            var index = JsonSerializer.Deserialize<SessionIndex>(json);
-            return index?.SessionIds;
+            return JsonSerializer.Deserialize<SessionIndex>(json);
         }
         catch
         {
@@ -291,4 +318,5 @@ public sealed class ToggleSnapshot
 public sealed class SessionIndex
 {
     public List<Guid> SessionIds { get; set; } = new();
+    public List<Guid> ClosedSessionIds { get; set; } = new();
 }

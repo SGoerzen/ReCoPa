@@ -84,15 +84,20 @@ public partial class App : Application
                 hub.Publish(eventName, payload);
         };
         
-        Socket.ClientDisconnected += c =>
-        {
-            Console.WriteLine($"Client disconnected: {c.RemoteEndPoint}");
-            MainWindow.ToastManager.CreateToast().WithTitle($"Client disconnected: {c.RemoteEndPoint}").QuickShow();
-        };
         Socket.ClientConnected += c =>
         {
             Console.WriteLine($"Client connected: {c.RemoteEndPoint}");
-            MainWindow.ToastManager.CreateToast().WithTitle($"Client connected: {c.RemoteEndPoint}").QuickShow();
+        };
+        Socket.ClientHello += (_, hello) =>
+        {
+            var sessionId = string.IsNullOrWhiteSpace(hello.SessionId) ? "unknown-session" : hello.SessionId;
+            MainWindow.ToastManager.CreateToast().WithTitle($"Client connected: {sessionId}").QuickShow();
+        };
+        Socket.ClientDisconnected += c =>
+        {
+            var sessionId = string.IsNullOrWhiteSpace(c.ClientSessionId) ? "unknown-session" : c.ClientSessionId;
+            Console.WriteLine($"Client disconnected: {sessionId}");
+            MainWindow.ToastManager.CreateToast().WithTitle($"Client disconnected: {sessionId}").QuickShow();
         };
 
         // ✅ cover unexpected exits/crashes too

@@ -9,7 +9,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Avalonia.Threading;
 using Newtonsoft.Json;
 
 namespace ReCoPa.Network
@@ -41,6 +40,7 @@ namespace ReCoPa.Network
 
         public event Action<SocketConnection>? ClientConnected;
         public event Action<SocketConnection>? ClientDisconnected;
+        public event Action<SocketConnection, ClientHello>? ClientHello;
         public event Action<string, string>? EventReceived; // eventName,payload
         public event Action<Exception>? Error;
 
@@ -49,11 +49,25 @@ namespace ReCoPa.Network
             _opt = options ?? new SocketServerOptions();
             _uiPost = uiPost;
             
-            // Built-in: accept "hello" to store headers into connection.ClientHeaders
-            _router.On("hello", ctx =>
+            // Built-in: accept "hello" (and "hello" for backward-compat)
+            void OnHello(SocketEventContext ctx)
             {
-                TryReadHeaders(ctx.Payload, ctx.Connection.ClientHeaders);
-            });
+                var hello = ParseHello(ctx.Payload);
+                if (hello.Headers.Count > 0)
+                {
+                    foreach (var kv in hello.Headers)
+                        ctx.Connection.ClientHeaders[kv.Key] = kv.Value;
+                }
+
+                if (!string.IsNullOrWhiteSpace(hello.SessionId))
+                    ctx.Connection.ClientSessionId = hello.SessionId;
+
+                void invoke() => ClientHello?.Invoke(ctx.Connection, hello);
+                if (_uiPost != null) _uiPost(invoke);
+                else invoke();
+            }
+
+            _router.On("hello", OnHello);
 
             // Built-in: respond to heartbeat from clients
             _router.On("heartbeat:pong", async ctx =>
@@ -312,6 +326,67 @@ namespace ReCoPa.Network
             catch { /* ignore malformed hello */ }
         }
 
+        private static ClientHello ParseHello(string payload)
+        {
+            var result = new ClientHello();
+            if (string.IsNullOrWhiteSpace(payload))
+                return result;
+
+            try
+            {
+                using var doc = JsonDocument.Parse(payload);
+                var root = doc.RootElement;
+
+                if (root.TryGetProperty("headers", out var headersEl) && headersEl.ValueKind == JsonValueKind.Object)
+                {
+                    foreach (var prop in headersEl.EnumerateObject())
+                    {
+                        result.Headers[prop.Name] = prop.Value.ValueKind == JsonValueKind.String
+                            ? (prop.Value.GetString() ?? "")
+                            : prop.Value.ToString();
+                    }
+                }
+
+                if (TryReadString(root, "sessionId", out var sessionId)
+                    || TryReadString(root, "session_id", out sessionId))
+                {
+                    result.SessionId = sessionId;
+                }
+
+                if (root.TryGetProperty("meta", out var metaEl) && metaEl.ValueKind == JsonValueKind.Object)
+                {
+                    foreach (var prop in metaEl.EnumerateObject())
+                    {
+                        result.Meta[prop.Name] = prop.Value.ValueKind == JsonValueKind.String
+                            ? (prop.Value.GetString() ?? "")
+                            : prop.Value.ToString();
+                    }
+                }
+            }
+            catch
+            {
+                return result;
+            }
+
+            return result;
+        }
+
+        private static bool TryReadString(JsonElement element, string name, out string value)
+        {
+            value = string.Empty;
+            if (!element.TryGetProperty(name, out var prop))
+                return false;
+
+            if (prop.ValueKind == JsonValueKind.String)
+            {
+                value = prop.GetString() ?? string.Empty;
+                return !string.IsNullOrWhiteSpace(value);
+            }
+
+            value = prop.ToString();
+            return !string.IsNullOrWhiteSpace(value);
+        }
+
         // ============================================================
         // Supporting types (kept in same file for convenience)
         // ============================================================
@@ -353,6 +428,7 @@ namespace ReCoPa.Network
             public EndPoint? RemoteEndPoint => _tcp.Client.RemoteEndPoint;
             public bool IsConnected => _tcp.Connected;
             public Dictionary<string, string> ClientHeaders { get; } = new(StringComparer.OrdinalIgnoreCase);
+            public string? ClientSessionId { get; internal set; }
 
             public event Action<SocketConnection>? Disconnected;
             public event Action<Exception>? Error;
@@ -563,5 +639,7 @@ namespace ReCoPa.Network
                 return cts;
             }
         }
+
+        
     }
 }

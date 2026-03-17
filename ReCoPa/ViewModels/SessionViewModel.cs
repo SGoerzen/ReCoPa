@@ -62,7 +62,6 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
             Interval = TimeSpan.FromSeconds(1)
         };
         _timer.Tick += OnTick;
-        _timer.Start();
 
         SubscribeToSocket();
     }
@@ -122,7 +121,8 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
             return;
 
         _ = EmitAsync("tracking:pause");
-        IsTrackingPaused = !IsTrackingPaused;
+        IsTrackingPaused = true;
+        _timer.Stop();
     }
 
     [RelayCommand]
@@ -131,6 +131,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         _ = EmitAsync("tracking:stop");
         IsTrackingRunning = false;
         IsTrackingPaused = false;
+        _timer.Stop();
     }
 
     [RelayCommand]
@@ -138,9 +139,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     {
         if (IsTrackingRunning)
         {
-            _ = EmitAsync("tracking:stop");
-            IsTrackingRunning = false;
-            IsTrackingPaused = false;
+            StopTracking();
             return;
         }
 
@@ -224,6 +223,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         if (_server == null)
             return;
 
+        _subscriptions.Add(_server.On("info", HandleMeta));
         _subscriptions.Add(_server.On("meta", HandleMeta));
         _subscriptions.Add(_server.On("statements", HandleStatement));
     }
@@ -242,6 +242,8 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
             GameObjectsCount = gameObjects;
         if (TryReadInt(root, "heartRate", out var heartRate))
             HeartRate = heartRate;
+        else if (TryReadDouble(root, "heartRate", out var heartRateDouble))
+            HeartRate = (int)Math.Round(heartRateDouble);
         if (TryReadDouble(root, "fps", out var fps))
             Fps = fps;
         if (TryReadDouble(root, "score", out var score))
@@ -314,6 +316,15 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
                 element = data;
             else if (element.TryGetProperty("meta", out var meta) && meta.ValueKind == JsonValueKind.Object)
                 element = meta;
+            else if (element.ValueKind == JsonValueKind.String)
+            {
+                var nested = element.GetString();
+                if (!string.IsNullOrWhiteSpace(nested))
+                {
+                    using var nestedDoc = JsonDocument.Parse(nested);
+                    element = nestedDoc.RootElement.Clone();
+                }
+            }
 
             root = element.Clone();
             return true;
@@ -426,5 +437,6 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         _ = EmitAsync("tracking:start");
         IsTrackingRunning = true;
         IsTrackingPaused = false;
+        _timer.Start();
     }
 }

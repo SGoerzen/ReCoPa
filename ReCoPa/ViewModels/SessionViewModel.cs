@@ -38,6 +38,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private bool isEyeTrackingEnabled = true;
     [ObservableProperty] private bool isTrackingRunning;
     [ObservableProperty] private bool isTrackingPaused;
+    [ObservableProperty] private bool isEyeCalibrationRunning;
     [ObservableProperty] private bool isEditingSessionName;
     [ObservableProperty] private string sessionNameEdit = string.Empty;
     [ObservableProperty] private string currentView = "Visualizations";
@@ -50,6 +51,8 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
 
     public string StartStopText => IsTrackingRunning ? "Stop" : "Start";
     public MaterialIconKind StartStopIcon => IsTrackingRunning ? MaterialIconKind.Stop : MaterialIconKind.PlayCircle;
+    public string EyeCalibrationText => IsEyeCalibrationRunning ? "Stop Eye Calibration" : "Start Eye Calibration";
+    public MaterialIconKind EyeCalibrationIcon => IsEyeCalibrationRunning ? MaterialIconKind.Stop : MaterialIconKind.Eye;
 
     public SessionViewModel(string? clientName = null, SocketServerHost? server = null, Guid? clientId = null)
     {
@@ -111,7 +114,15 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void StartCalibration()
     {
+        if (IsEyeCalibrationRunning)
+        {
+            _ = EmitAsync("calibration:stop");
+            IsEyeCalibrationRunning = false;
+            return;
+        }
+
         _ = EmitAsync("calibration:start");
+        IsEyeCalibrationRunning = true;
     }
 
     [RelayCommand]
@@ -194,6 +205,12 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         OnPropertyChanged(nameof(StartStopIcon));
     }
 
+    partial void OnIsEyeCalibrationRunningChanged(bool value)
+    {
+        OnPropertyChanged(nameof(EyeCalibrationText));
+        OnPropertyChanged(nameof(EyeCalibrationIcon));
+    }
+
     public void Dispose()
     {
         _timer.Stop();
@@ -253,8 +270,18 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
             IsTrackingRunning = isTracking;
         if (TryReadBool(root, "isTrackingPaused", out var isTrackingPaused))
             IsTrackingPaused = isTrackingPaused;
-        if (TryReadBool(root, "isCalibrated", out var isCalibrated))
+        if (TryReadBool(root, "isCalibrating", out var isCalibrating))
+            IsEyeCalibrationRunning = isCalibrating;
+        if (TryReadBool(root, "isCalibratable", out var isCalibratable)
+            || TryReadBool(root, "is_calibratable", out isCalibratable))
+        {
+            IsEyeTrackingEnabled = isCalibratable;
+        }
+        else if (TryReadBool(root, "isCalibrated", out var isCalibrated))
+        {
+            // Backward compatibility for payloads that do not yet send isCalibratable.
             IsEyeTrackingEnabled = isCalibrated;
+        }
     }
 
     private void HandleStatement(string payload)
@@ -432,6 +459,7 @@ public partial class SessionViewModel : ViewModelBase, IDisposable
         HeartRate = (int)Math.Round(Clamp(heartBase + _rng.Next(-4, 5), 60, 140));
     }
 
+    [RelayCommand]
     private void StartTracking()
     {
         _ = EmitAsync("tracking:start");

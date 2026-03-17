@@ -8,6 +8,7 @@ public struct TrackingMeta
     public bool isTracking;
     public bool isTrackingPaused;
     public bool isCalibrated;
+    public bool isCalibratable;
     public string computerName;
     public string actorName;
     public string actorEmail;

@@ -81,6 +81,9 @@ public partial class SidebarView : UserControl
     public static readonly StyledProperty<ICommand?> StopTrackingCommandProperty =
         AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(StopTrackingCommand));
 
+    public static readonly StyledProperty<ICommand?> StartTrackingCommandProperty =
+        AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(StartTrackingCommand));
+
     public static readonly StyledProperty<ICommand?> StartStopTrackingCommandProperty =
         AvaloniaProperty.Register<SidebarView, ICommand?>(nameof(StartStopTrackingCommand));
 
@@ -111,6 +114,12 @@ public partial class SidebarView : UserControl
     public static readonly StyledProperty<MaterialIconKind> StartStopIconProperty =
         AvaloniaProperty.Register<SidebarView, MaterialIconKind>(nameof(StartStopIcon), MaterialIconKind.Stop);
 
+    public static readonly StyledProperty<string> EyeCalibrationTextProperty =
+        AvaloniaProperty.Register<SidebarView, string>(nameof(EyeCalibrationText), "Start Eye Calibration");
+
+    public static readonly StyledProperty<MaterialIconKind> EyeCalibrationIconProperty =
+        AvaloniaProperty.Register<SidebarView, MaterialIconKind>(nameof(EyeCalibrationIcon), MaterialIconKind.Eye);
+
     public static readonly StyledProperty<bool> IsEditingSessionNameProperty =
         AvaloniaProperty.Register<SidebarView, bool>(nameof(IsEditingSessionName));
 
@@ -132,6 +141,7 @@ public partial class SidebarView : UserControl
     public ICommand? NavigateSettingsCommand { get => GetValue(NavigateSettingsCommandProperty); set => SetValue(NavigateSettingsCommandProperty, value); }
 
     public ICommand? StartEyeCalibrationCommand { get => GetValue(StartEyeCalibrationCommandProperty); set => SetValue(StartEyeCalibrationCommandProperty, value); }
+    public ICommand? StartTrackingCommand { get => GetValue(StartTrackingCommandProperty); set => SetValue(StartTrackingCommandProperty, value); }
     public ICommand? PauseTrackingCommand { get => GetValue(PauseTrackingCommandProperty); set => SetValue(PauseTrackingCommandProperty, value); }
     public ICommand? StopTrackingCommand { get => GetValue(StopTrackingCommandProperty); set => SetValue(StopTrackingCommandProperty, value); }
     public ICommand? StartStopTrackingCommand { get => GetValue(StartStopTrackingCommandProperty); set => SetValue(StartStopTrackingCommandProperty, value); }
@@ -145,6 +155,8 @@ public partial class SidebarView : UserControl
     public bool IsTrackingRunning { get => GetValue(IsTrackingRunningProperty); set => SetValue(IsTrackingRunningProperty, value); }
     public string StartStopText { get => GetValue(StartStopTextProperty); set => SetValue(StartStopTextProperty, value); }
     public MaterialIconKind StartStopIcon { get => GetValue(StartStopIconProperty); set => SetValue(StartStopIconProperty, value); }
+    public string EyeCalibrationText { get => GetValue(EyeCalibrationTextProperty); set => SetValue(EyeCalibrationTextProperty, value); }
+    public MaterialIconKind EyeCalibrationIcon { get => GetValue(EyeCalibrationIconProperty); set => SetValue(EyeCalibrationIconProperty, value); }
     public bool IsEditingSessionName { get => GetValue(IsEditingSessionNameProperty); set => SetValue(IsEditingSessionNameProperty, value); }
     public string SessionNameEdit { get => GetValue(SessionNameEditProperty); set => SetValue(SessionNameEditProperty, value); }
 }

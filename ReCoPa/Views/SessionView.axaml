@@ -26,6 +26,8 @@
                            IsTrackingRunning="{Binding IsTrackingRunning}"
                            StartStopText="{Binding StartStopText}"
                            StartStopIcon="{Binding StartStopIcon}"
+                           EyeCalibrationText="{Binding EyeCalibrationText}"
+                           EyeCalibrationIcon="{Binding EyeCalibrationIcon}"
                            IsEditingSessionName="{Binding IsEditingSessionName}"
                            SessionNameEdit="{Binding SessionNameEdit, Mode=TwoWay}"
                            NavigateVisualizationsCommand="{Binding NavigateVisualizationsCommand}"

@@ -20,8 +20,8 @@
                     ToolTip.Tip="Eye tracking not available on this device"
                     Command="{Binding StartEyeCalibrationCommand, RelativeSource={RelativeSource AncestorType=views:SidebarView}}">
                     <StackPanel Orientation="Horizontal" Spacing="10">
-                        <material:MaterialIcon Kind="Eye" Width="18" Height="18" />
-                        <TextBlock Text="Start Eye Calibration" VerticalAlignment="Center" />
+                        <material:MaterialIcon Kind="{Binding EyeCalibrationIcon, RelativeSource={RelativeSource AncestorType=views:SidebarView}}" Width="18" Height="18" />
+                        <TextBlock Text="{Binding EyeCalibrationText, RelativeSource={RelativeSource AncestorType=views:SidebarView}}" VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
 

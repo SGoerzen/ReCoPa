@@ -16,9 +16,9 @@
         <!-- MAIN -->
         <Grid>
             <ContentPresenter Content="{Binding SelectedSessionView}"
-                              IsVisible="{Binding HasSessions}"/>
+                              IsVisible="{Binding HasSelectedSessionView}"/>
 
-            <Border IsVisible="{Binding HasSessions, Converter={StaticResource BoolInvertConverter}}"
+            <Border IsVisible="{Binding HasSelectedSessionView, Converter={StaticResource BoolInvertConverter}}"
                     Background="White"
                     Padding="40">
                 <StackPanel HorizontalAlignment="Center"

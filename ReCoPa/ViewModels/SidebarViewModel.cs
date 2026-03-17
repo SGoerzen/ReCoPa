@@ -18,7 +18,7 @@ public class SidebarViewModel : ViewModelBase
             Console.WriteLine(meta);
             IsTrackingRunning = meta.isTracking;
             IsTrackingPaused = meta.isTrackingPaused;
-            IsEyeTrackingEnabled = meta.isCalibrated;
+            IsEyeTrackingEnabled = meta.isCalibratable;
             RaiseTrackingUi();
         });
     }

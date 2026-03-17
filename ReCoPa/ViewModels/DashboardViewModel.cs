@@ -19,7 +19,9 @@ public partial class DashboardViewModel : ViewModelBase
     public ObservableCollection<TabViewModel> SessionTabs { get; } = new();
 
     [ObservableProperty] private bool hasSessions;
-    [ObservableProperty] private object? selectedSessionView;
+    [ObservableProperty] private TabViewModel? activeTab;
+    public object? SelectedSessionView => ActiveTab?.SessionView;
+    public bool HasSelectedSessionView => SelectedSessionView != null;
     
     public DashboardViewModel(SocketServerHost? server = null)
     {
@@ -38,14 +40,17 @@ public partial class DashboardViewModel : ViewModelBase
     private void ApplySelectedFromActiveTab()
     {
         var active = SessionTabs.FirstOrDefault(t => t.IsActive) ?? SessionTabs.FirstOrDefault();
-        SelectedSessionView = active?.SessionView;
+        if (active != null)
+            SetActiveTab(active);
+        else
+            ActiveTab = null;
     }
 
     private void SetActiveTab(TabViewModel tab)
     {
         foreach (var t in SessionTabs) t.IsActive = false;
         tab.IsActive = true;
-        SelectedSessionView = tab.SessionView;
+        ActiveTab = tab;
     }
 
     private void AddSessionTab(string header, Guid? clientId, TabConnectionState connectionState, bool activate)
@@ -118,11 +123,14 @@ public partial class DashboardViewModel : ViewModelBase
 
         if (!HasSessions)
         {
-            SelectedSessionView = null;
+            ActiveTab = null;
             return;
         }
 
-        if (!SessionTabs.Any(t => t.IsActive) || SelectedSessionView == null)
+        var activeTabIsValid = ActiveTab != null && SessionTabs.Contains(ActiveTab);
+        var selectedViewIsValid = ActiveTab?.SessionView != null;
+
+        if (!SessionTabs.Any(t => t.IsActive) || !activeTabIsValid || !selectedViewIsValid)
             ApplySelectedFromActiveTab();
     }
 
@@ -187,8 +195,7 @@ public partial class DashboardViewModel : ViewModelBase
     {
         var idx = SessionTabs.Count + 1;
         AddSessionTab($"Session {idx}", clientId: null, connectionState: TabConnectionState.Inactive, activate: true);
-        if (SelectedSessionView == null)
-            ApplySelectedFromActiveTab();
+        ApplySelectedFromActiveTab();
     }
 
     [RelayCommand]
@@ -210,6 +217,9 @@ public partial class DashboardViewModel : ViewModelBase
         var index = SessionTabs.IndexOf(tab);
         var wasActive = tab.IsActive;
 
+        if (wasActive)
+            ActiveTab = null;
+
         if (tab.Session != null && _sessionNameHandlers.TryGetValue(tab.Session, out var handler))
         {
             tab.Session.PropertyChanged -= handler;
@@ -229,5 +239,11 @@ public partial class DashboardViewModel : ViewModelBase
 
         var nextIndex = Math.Min(index, SessionTabs.Count - 1);
         SetActiveTab(SessionTabs[nextIndex]);
+    }
+
+    partial void OnActiveTabChanged(TabViewModel? value)
+    {
+        OnPropertyChanged(nameof(SelectedSessionView));
+        OnPropertyChanged(nameof(HasSelectedSessionView));
     }
 }
